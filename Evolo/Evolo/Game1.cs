@@ -334,17 +334,17 @@ namespace Evolo
                 switch (gameState)
                 {
                     case "Playing":
-                        cloud.Draw(spriteBatch);
+                        cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
                         fieldManager.Draw(spriteBatch);
                         break;
                     case "GameOver":
                         break;
                     case "MenuScreen":
-                        cloud.Draw(spriteBatch);
+                        cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
                         menus.Draw(spriteBatch);
                         break;
                     case "Credits":
-                        cloud.Draw(spriteBatch);
+                        cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
                         credits.DrawCredits(spriteBatch);
                         break;
                     case "SplashScreen":
@@ -369,10 +369,6 @@ namespace Evolo
                 //DEBUG USE: 
                 if (Convert.ToBoolean(GlobalVar.OptionsArray[9]) == true)
                 {
-                    //TESTING BACKGROUND MOVING
-                    spriteBatch.DrawString(SeqoeUIMonoNormal, "Backgroud POS " + menus.backgroundMoving.ToString(), new Vector2(1, 1), Color.Wheat);
-                    spriteBatch.DrawString(SeqoeUIMonoNormal, "Cloud Speed " + cloud.cloudSpeed[1].ToString(), new Vector2(1, 25), Color.Wheat);
-
                     spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME1 TIME: " + (milliScecondsElapsedGameTime / 1000).ToString() + "s", new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 3 + 10) * GlobalVar.ScaleSize.Y)), Color.Black);
                     spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME STATE: " + GlobalVar.GameState.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 2 + 10) * GlobalVar.ScaleSize.Y)), Color.Black);
                     spriteBatch.DrawString(SeqoeUIMonoNormal, "MOUSE POS: " + "X-" + mouseStateCurrent.X.ToString() + " Y-" + mouseStateCurrent.X.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 1 + 10) * GlobalVar.ScaleSize.Y)), Color.Black);

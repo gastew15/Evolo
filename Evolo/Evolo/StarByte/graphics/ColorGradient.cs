@@ -5,47 +5,58 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Evolo.StarByte.graphics
+/*
+ *  StarByte Color Gradient System
+ *  Author: G. Stewart
+ *  Version: 11/3/14
+ */
+
+namespace StarByte.graphics
 {
     class ColorGradient
     {
-        Color drawColor;
-        //Set Variables Testing
-        Vector3 blockColor = new Vector3(0, 0, 0);
-        Vector3 orginalBlockColor = new Vector3(0, 0, 0);
-        Vector3 endBlockColor = new Vector3(255, 255, 255);
-        Boolean trippedRed, trippedGreen, trippedBlue;
+        private Color bBlockDrawColor;
+        private Vector3 blockColor = new Vector3(0, 0, 0);
+        private Vector3 orginalBlockColor;
+        private Vector3 endBlockColor;
+        private Boolean trippedRed, trippedGreen, trippedBlue;
+        private Vector3 pixelsRequiredToIncrease = new Vector3(0, 0, 0);
+        private int totalDistanceToTravel;
 
-        //Variables
-        Vector3 pixelsRequiredToIncrease = new Vector3(0, 0, 0);
-        int totalDistanceToTravel;
-
-        public ColorGradient()
+        public ColorGradient(Vector3 orginalBlockColor, Vector3 endBlockColor)
         {
-
+            this.orginalBlockColor = orginalBlockColor;
+            this.endBlockColor = endBlockColor;
         }
 
-        public void Initilize()
+        public void Update(Vector2 position, int totalDistanceToTravel)
         {
+            this.totalDistanceToTravel = totalDistanceToTravel;
 
-        }
-
-        public void Update(float millisecondsElapsedGameTime, float distanceToTravelTotal)
-        {
-            totalDistanceToTravel = (int)(GlobalVar.ScreenSize.Y);
-
+            //Amount of pixels that are required to go by before the color changes values either up or down.
             pixelsRequiredToIncrease.X = (float)(totalDistanceToTravel / (endBlockColor.X - orginalBlockColor.X));
             pixelsRequiredToIncrease.Y = (float)(totalDistanceToTravel / (endBlockColor.Y - orginalBlockColor.Y));
             pixelsRequiredToIncrease.Z = (float)(totalDistanceToTravel / (endBlockColor.Z - orginalBlockColor.Z));
 
-            if (pixelsRequiredToIncrease.X > 1 && pixelsRequiredToIncrease != null)
+            //Red Update Color Main Logic Block
+            if ((int)pixelsRequiredToIncrease.X != 0 && pixelsRequiredToIncrease != null)
             {
-
-                if (distanceToTravelTotal % Math.Round(pixelsRequiredToIncrease.X) == 0)
+                //Checks to see if the required distance of pixels has passed
+                if (position.Y % Math.Round(pixelsRequiredToIncrease.X) == 0)
                 {
+                    //Checks if a color is able & ready to increase/decrease
                     if (blockColor.X + 1 <= 255 && trippedRed == false)
                     {
-                        blockColor.X = blockColor.X + 1;
+                        //Decides if it should increment up or down in value
+                        if (pixelsRequiredToIncrease.X > 0)
+                            blockColor.X = blockColor.X + 1;
+                        else
+                            blockColor.X = blockColor.X - 1;
+
+                        //checks to see if the value is less than zero, so that it will set it to the top. (For decreasing)
+                        if (blockColor.X < 0)
+                            blockColor.X = blockColor.X + 255;
+
                         trippedRed = true;
                     }
                 }
@@ -54,15 +65,27 @@ namespace Evolo.StarByte.graphics
                     trippedRed = false;
                 }
 
-            }
-            if (pixelsRequiredToIncrease.Y > 1 && pixelsRequiredToIncrease != null)
-            {
+            } //End of Red Update
 
-                if (distanceToTravelTotal % Math.Round(pixelsRequiredToIncrease.Y) == 0)
+            //Green Update Color Main Logic Block
+            if ((int)pixelsRequiredToIncrease.Y != 0 && pixelsRequiredToIncrease != null)
+            {
+                //Checks to see if the required distance of pixels has passed
+                if (position.Y % Math.Round(pixelsRequiredToIncrease.Y) == 0)
                 {
+                    //Checks if a color is able & ready to increase/decrease
                     if (blockColor.Y + 1 <= 255 && trippedGreen == false)
                     {
-                        blockColor.Y = blockColor.Y + 1;
+                        //Decides if it should increment up or down in value
+                        if(pixelsRequiredToIncrease.Y > 0)
+                            blockColor.Y = blockColor.Y + 1;
+                        else
+                            blockColor.Y = blockColor.Y - 1;
+
+                        //checks to see if the value is less than zero, so that it will set it to the top. (For decreasing)
+                        if (blockColor.Y < 0)
+                            blockColor.Y = blockColor.Y + 255;
+
                         trippedGreen = true;
                     }
                 }
@@ -72,14 +95,26 @@ namespace Evolo.StarByte.graphics
                 }
 
             }
-            if (pixelsRequiredToIncrease.Z > 1 && pixelsRequiredToIncrease != null)
-            {
 
-                if (distanceToTravelTotal % Math.Round(pixelsRequiredToIncrease.Z) == 0)
+            //Blue Update Color Main Logic Block
+            if ((int)pixelsRequiredToIncrease.Z != 0 && pixelsRequiredToIncrease != null)
+            {
+                //Checks to see if the required distance of pixels has passed
+                if (position.Y % Math.Round(pixelsRequiredToIncrease.Z) == 0)
                 {
+                    //Checks if a color is able & ready to increase/decrease
                     if (blockColor.Z + 1 <= 255 && trippedBlue == false)
                     {
-                        blockColor.Z = blockColor.Z + 1;
+                        //Decides if it should increment up or down in value
+                        if (pixelsRequiredToIncrease.Z > 0)
+                            blockColor.Z = blockColor.Z + 1;
+                        else
+                            blockColor.Z = blockColor.Z - 1;
+
+                        //checks to see if the value is less than zero, so that it will set it to the top. (For decreasing)
+                        if (blockColor.Z < 0)
+                            blockColor.Z = blockColor.Z + 255;
+
                         trippedBlue = true;
                     }
                 }
@@ -90,13 +125,18 @@ namespace Evolo.StarByte.graphics
 
             }
 
-            drawColor = new Color(blockColor.X / 255, blockColor.Y / 255, blockColor.Z / 255);
+            //Sets the color to selected R.G.B. Values (Color ranges from 0.0 to 1.0, so it's divided by 255)
+            bBlockDrawColor = new Color(blockColor.X / 255, blockColor.Y / 255, blockColor.Z / 255);
         }
 
-        public Color getDrawColor()
+        public Color GetColor()
         {
-            return drawColor;
+            return bBlockDrawColor;
         }
 
+        public void SetColor(Vector3 blockColor)
+        {
+            this.blockColor = blockColor;
+        }
     }
 }
