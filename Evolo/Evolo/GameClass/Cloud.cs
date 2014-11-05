@@ -12,8 +12,8 @@ namespace Evolo.GameClass
         Texture2D bBlockTexture;
 
         //Test Block Variables
-        ColorGradient[] colorTestBlock = new ColorGradient[37];
-        Rectangle[] bBlockRectangle = new Rectangle[37];
+        ColorGradient[] colorTestBlock = new ColorGradient[40];
+        Rectangle[] bBlockRectangle = new Rectangle[40];
 
         /*
          private Texture2D cloudTexture;
@@ -100,7 +100,7 @@ namespace Evolo.GameClass
                         bBlockRectangle[j].Y++;
                     else
                     {
-                        bBlockRectangle[j].Y = -20;
+                        bBlockRectangle[j].Y = -24;
                         colorTestBlock[j].SetColor(new Vector3(0, 0, 0));
                     }
                 }
