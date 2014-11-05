@@ -12,8 +12,8 @@ namespace Evolo.GameClass
         Texture2D bBlockTexture;
 
         //Test Block Variables
-        ColorGradient colorTestBlock1;
-        Rectangle bBlockRectangle;
+        ColorGradient[] colorTestBlock = new ColorGradient[37];
+        Rectangle[] bBlockRectangle = new Rectangle[37];
 
         /*
          private Texture2D cloudTexture;
@@ -28,10 +28,16 @@ namespace Evolo.GameClass
         public void Initialize()
         {
             //Obviously just the rectangle that the block uses
-            bBlockRectangle = new Rectangle((int)(100 * GlobalVar.ScaleSize.X), 0, (int)(32 * GlobalVar.ScaleSize.Y), (int)(32 * GlobalVar.ScaleSize.Y));
+            for (int i = 0; i < bBlockRectangle.Length; i++)
+            {
+                bBlockRectangle[i] = new Rectangle((int)((0 + (0 * i)) * GlobalVar.ScaleSize.X), (int)((0 + (20 * i)) * GlobalVar.ScaleSize.Y), (int)(1080 * GlobalVar.ScaleSize.X), (int)(32 * GlobalVar.ScaleSize.Y));
+            }
 
             //The set up for the color - First is the RGB Value orginally, and Second is the RGB that it will end at
-            colorTestBlock1 = new ColorGradient(new Vector3(0, 0, 255), new Vector3(255, 0, 0));
+            for (int j = 0; j < colorTestBlock.Length; j++)
+            {
+                colorTestBlock[j] = new ColorGradient(new Vector3(0, 0, 255), new Vector3(255, 0, 0));
+            }
 
             /*
             cloudRandom = new Random();
@@ -74,22 +80,29 @@ namespace Evolo.GameClass
         }
 
         public void Update(GameTime gameTime, float millisecondsElapsedGameTime)
-        {
-            //Does a size update to the rectangle
-            bBlockRectangle = new Rectangle(bBlockRectangle.X, bBlockRectangle.Y, (int)(32 * GlobalVar.ScaleSize.X), (int)(32 * GlobalVar.ScaleSize.Y));
+        {   
 
             //Test Block Update
-            colorTestBlock1.Update(new Vector2(bBlockRectangle.X, bBlockRectangle.Y), (int)(GlobalVar.ScreenSize.Y * GlobalVar.ScaleSize.Y));
-
-            //Just the movement for the test Block
-            if ((millisecondsElapsedGameTime % 2) == 0)
+            for (int i = 0; i < colorTestBlock.Length; i++)
             {
-                if (bBlockRectangle.Y < GlobalVar.ScreenSize.Y)
-                    bBlockRectangle.Y++;
-                else
+                //Does a size update to the rectangle
+                bBlockRectangle[i] = new Rectangle(bBlockRectangle[i].X, bBlockRectangle[i].Y, (int)(1080 * GlobalVar.ScaleSize.X), (int)(32 * GlobalVar.ScaleSize.Y));
+
+                colorTestBlock[i].Update(new Vector2(bBlockRectangle[i].X, bBlockRectangle[i].Y), (int)(GlobalVar.ScreenSize.Y * GlobalVar.ScaleSize.Y));
+            }
+
+            for (int j = 0; j < bBlockRectangle.Length; j++)
+            {
+                //Just the movement for the test Block
+                if ((millisecondsElapsedGameTime % 2) == 0)
                 {
-                    bBlockRectangle.Y = 0;
-                    colorTestBlock1.SetColor(new Vector3(0, 0, 0));
+                    if (bBlockRectangle[j].Y < GlobalVar.ScreenSize.Y)
+                        bBlockRectangle[j].Y++;
+                    else
+                    {
+                        bBlockRectangle[j].Y = -20;
+                        colorTestBlock[j].SetColor(new Vector3(0, 0, 0));
+                    }
                 }
             }
 
@@ -110,8 +123,10 @@ namespace Evolo.GameClass
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
             //Just the test Block Drawing
-            spriteBatch.Draw(bBlockTexture, new Rectangle((int)(bBlockRectangle.X * GlobalVar.ScaleSize.X), (int)(bBlockRectangle.Y * GlobalVar.ScaleSize.Y), bBlockRectangle.Width, bBlockRectangle.Height), null, colorTestBlock1.GetColor(), 0f, new Vector2(), SpriteEffects.None, 1f); 
-
+            for (int j = 0; j < bBlockRectangle.Length; j++)
+            {
+                spriteBatch.Draw(bBlockTexture, new Rectangle((int)(bBlockRectangle[j].X * GlobalVar.ScaleSize.X), (int)(bBlockRectangle[j].Y * GlobalVar.ScaleSize.Y), bBlockRectangle[j].Width, bBlockRectangle[j].Height), null, colorTestBlock[j].GetColor(), 0f, new Vector2(), SpriteEffects.None, 1f);
+            }
             /*
             for (int x = 0; x < cloudnum; x++)
             {

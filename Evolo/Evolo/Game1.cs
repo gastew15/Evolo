@@ -58,7 +58,7 @@ namespace Evolo
         //Variables
 
         //Game
-        String version = "Build V: 1.1.6.0"; // Major, Minor, Build, Revision #
+        String version = "Build V: 1.1.6.1"; // Major, Minor, Build, Revision #
         Boolean tripped = false;
         const int defualtWidth = 1080, defualtHeight = 720;
 
@@ -355,7 +355,7 @@ namespace Evolo
               
 
                 //MOUSE DRAWING LOGIC
-                if (gameState != "Credits" || gameState != "SplashScreen")
+                if ((gameState != "Credits" || gameState != "SplashScreen") && GlobalVar.OptionsArray[7].Equals("false"))
                     spriteBatch.Draw(gameMouseTexture, new Vector2(mouseStateCurrent.X, mouseStateCurrent.Y), null, Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
 
                 //Draws Version Info and Current FPS
