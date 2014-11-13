@@ -167,7 +167,6 @@ namespace Evolo.GameClass
                     down = true;
             }
 
-
             //Handles Menu States
             switch (menuState)
             {

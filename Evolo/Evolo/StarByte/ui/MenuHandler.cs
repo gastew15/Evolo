@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Audio;
 /*
  *  StarByte MenuHandler
  *  Author: G. Stewart
- *  Version: 9/24/14
+ *  Version: 11/6/14
  */
 
 namespace StarByte.ui
@@ -28,6 +28,7 @@ namespace StarByte.ui
         private Boolean testButtonMouseOver, isPressedUp, isPressedDown, isPressedEnter;
         private KeyboardState keybState;
         private SoundEffect menuHoverChangeSoundEffect, menuClickedSoundEffect;
+        private Boolean overRideButtonPress = false;
 
         //Basic
         public MenuHandler(Texture2D menuTitle, Vector2 startingPos, Vector2 menuTitlePos, int verticalSpacing, Texture2D buttonBackground, String[] buttonText, SpriteFont font, SoundEffect menuHoverChangeSoundEffect, SoundEffect menuClickedSoundEffect, Vector2 screenSize)
@@ -176,7 +177,7 @@ namespace StarByte.ui
                 else
                     testButtonMouseOver = false;
 
-                if (testButtonMouseOver == true && (mouseStateCurrent.LeftButton == ButtonState.Pressed && mouseStatePrevious.LeftButton == ButtonState.Released))
+                if ((testButtonMouseOver == true && (mouseStateCurrent.LeftButton == ButtonState.Pressed && mouseStatePrevious.LeftButton == ButtonState.Released)) || overRideButtonPress == true)
                 {
                     //testButtonDrawColor = Color.Red;
                     if (soundNotMuted == true)
@@ -187,6 +188,7 @@ namespace StarByte.ui
                     menuNumberSelected = j + 1;
                     menuNumberHoverPrevious = j + 1;
                     textColor[j] = Color.Green;
+                    overRideButtonPress = false;
                 }
                 else if (testButtonMouseOver == true)
                 {
@@ -315,7 +317,7 @@ namespace StarByte.ui
                 else
                     testButtonMouseOver = false;
 
-                if (testButtonMouseOver == true && (mouseStateCurrent.LeftButton == ButtonState.Pressed && mouseStatePrevious.LeftButton == ButtonState.Released))
+                if ((testButtonMouseOver == true && (mouseStateCurrent.LeftButton == ButtonState.Pressed && mouseStatePrevious.LeftButton == ButtonState.Released)) || overRideButtonPress == true)
                 {
                     //testButtonDrawColor = Color.Red;
                     if (soundNotMuted == true)
@@ -326,6 +328,7 @@ namespace StarByte.ui
                     menuNumberSelected = j + 1;
                     menuNumberHoverPrevious = j + 1;
                     textColor[j] = Color.Green;
+                    overRideButtonPress = false;
                 }
                 else if (testButtonMouseOver == true)
                 {
@@ -397,6 +400,13 @@ namespace StarByte.ui
         public void setMenuHoverNumber(int menuNumberHover)
         {
             this.menuNumberHover = menuNumberHover;
+        }
+
+        public void setSimulatedButtonPress(int buttonToPress)
+        {
+            menuNumberHover = buttonToPress;
+            menuNumberHoverPrevious = buttonToPress;
+            overRideButtonPress = true;
         }
     }
 }

@@ -250,7 +250,7 @@ namespace Evolo
 
                     case "Playing":
                         //MediaPlayer.Pause(mainMenuMusic);
-                        fieldManager.Update(milliScecondsElapsedGameTime);
+                        fieldManager.Update(gameTime);
                         cloud.Update(gameTime, milliScecondsElapsedGameTime);
                         tripped = false;
                         break;
@@ -335,7 +335,7 @@ namespace Evolo
                 {
                     case "Playing":
                         cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
-                        fieldManager.Draw(spriteBatch);
+                        fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         break;
                     case "GameOver":
                         break;

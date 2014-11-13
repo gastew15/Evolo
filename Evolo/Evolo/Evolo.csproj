@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameClass\Cloud.cs" />
+    <Compile Include="GameClass\Copy of FieldManager.cs" />
     <Compile Include="GameClass\Credits.cs" />
     <Compile Include="GameClass\FieldManager.cs" />
     <Compile Include="GameClass\Menus.cs" />

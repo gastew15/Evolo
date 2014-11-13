@@ -15,26 +15,36 @@ namespace Evolo.GameClass
     {
 
         //Gamefield Boolean array
-        Boolean[,] gameField = new Boolean[26, 22];
-        Texture2D blockTexture, playerTexture;
-        Vector2 gridStartPos, player1GridPos, levelStartPoint, levelEndPoint;
-        SpriteEffects player1SpriteEffects;
-        Random random = new Random();
-        int tetristype;
-        bool spawn = true;
-        Vector2 tetromeno1GridPos = new Vector2(13, 0);
-        float lastupdate = 0;
-        bool leftDown = true;
-        bool rightDown = true;
-        bool wallCollisionLeft = false;
-        bool wallCollisionRight = false;
-        bool keyleftDown, keyrightDown;
-        bool keyADown, keyDDown, keyWDown;
-        bool player1Jump = false;
+        private Boolean[,] gameField = new Boolean[26, 22];
+        private Texture2D blockTexture, playerTexture;
+        private Vector2 gridStartPos, player1GridPos, levelStartPoint, levelEndPoint;
+        private SpriteEffects player1SpriteEffects;
+        private Random random = new Random();
+        private int tetristype = 5;
+        private bool keyLeftDown, keyRightDown, keyUpDown;
+        private bool keyADown, keyDDown, keyWDown;
+        private bool player1Jump = false;
 
-        //TEMP
-        Tetromeno tetromeno1;
-        Player player1;
+        private int milisecondsElapsedTetromenoTime = 0;
+        private int milisecondsTetromenoFallTime = 300;
+        private int milisecondsTetromenoLockDelayTime = 400;
+
+        private int farthestLeft, farthestRight, farthestUp, farthestDown;
+        private Vector2[] farthestBlocks;
+        private int activeTetromeno = 0;
+        private int lastActiveTetromeno = 0;
+        int rotation = 0;
+
+        private List <Tetromeno> tetromeno = new List<Tetromeno>();
+        private List <Vector2> tetromenoGridPos = new List<Vector2>();
+        private Vector2[] lastPosition, position;
+        private int sameYPosNum;
+        private Boolean canNotMoveRight, canNotMoveLeft;
+
+        private String testingStringData = "";
+
+        //Temp
+        private Player player1;
 
         public FieldManager()
         {
@@ -43,7 +53,7 @@ namespace Evolo.GameClass
 
         public void Intilize()
         {
-            player1SpriteEffects = SpriteEffects.None;   
+            player1SpriteEffects = SpriteEffects.None;
         }
 
         public void LoadContent(ContentManager Content)
@@ -52,184 +62,249 @@ namespace Evolo.GameClass
             playerTexture = Content.Load<Texture2D>("Sprites and pictures/CharacterTest");
 
             //Teromeno Set Up Reference 
-            //tetromeno1 = new Tetromeno(1, blockTexture);
+            tetromeno.Add(new Tetromeno(tetristype, blockTexture));
+            tetromenoGridPos.Add(new Vector2(13, 0));
 
             //Temp levelSP
             levelStartPoint = new Vector2(1, 17);
 
+            lastPosition = new Vector2[tetromeno[activeTetromeno].getPositions().Length];
+            position = new Vector2[tetromeno[activeTetromeno].getPositions().Length];
+            sameYPosNum = 0;
+
+            lastActiveTetromeno = activeTetromeno;
+
+            for (int i = 0; i < 22; i++)
+            {
+                gameField[17, i] = true;
+            }
+
             //Player Set Up
-            player1 = new Player(playerTexture);
-            player1GridPos = levelStartPoint;
+            //player1 = new Player(playerTexture);
+            //player1GridPos = levelStartPoint;
  
         }
 
-        public void Update(float milliScecondsElapsedGameTime)
+        public void Update(GameTime gameTime)
         {
+            milisecondsElapsedTetromenoTime += gameTime.ElapsedGameTime.Milliseconds;
             gridStartPos = new Vector2((GlobalVar.ScreenSize.X / 2) - (((blockTexture.Width * GlobalVar.ScaleSize.X) * gameField.GetLength(0)) / 2), (GlobalVar.ScreenSize.Y / 2) - (((blockTexture.Height * GlobalVar.ScaleSize.Y) * (gameField.GetLength(1) + 2)) / 2));
-            tetristype = random.Next(1, 8);
+            canNotMoveRight = false;
+            canNotMoveLeft = false;
 
-            if (spawn == true)
+            /*
+            * Tetromeno Put into Grid
+            */
             {
-                tetromeno1 = new Tetromeno(tetristype, blockTexture);
-                spawn = false;
-            }
-            else
-            {
+                //gameField = new Boolean[26, 22];
+                int xstuff, ystuff;
 
-            }
-            //Code to check and move the Tetromeno
-
-            if (tetromeno1GridPos.Y != 21)
-            {
-
-                if (milliScecondsElapsedGameTime % 82 == 0)
+                for (int p = 0; p < tetromeno[activeTetromeno].getPositions().Length; p++)
                 {
-                    //if (milliScecondsElapsedGameTime - lastupdate == 500)
-                    //{
-                    tetromeno1GridPos.Y += 1;
-                    lastupdate = milliScecondsElapsedGameTime;
-                    //}
-                    //if (milliScecondsElapsedGameTime - lastupdate != 500)
-                    //{
-                    //tetromeno1GridPos.Y += (milliScecondsElapsedGameTime - lastupdate / 500);
-                    //lastupdate = milliScecondsElapsedGameTime;
-                    //}
+                    if(lastActiveTetromeno == activeTetromeno)
+                        gameField[(int)lastPosition[p].X, (int)(lastPosition[p].Y)] = false;
+
+                    //gameField[13, 0] = true;
+                    if ((int)(tetromeno[activeTetromeno].getPositions()[p].X) < 0)
+                        xstuff = 0;
+                    else
+                        xstuff = (int)(tetromeno[activeTetromeno].getPositions()[p].X);
+                    if ((int)(tetromeno[activeTetromeno].getPositions()[p].Y) < 0)
+                        ystuff = 0;
+                    else
+                        ystuff = (int)(tetromeno[activeTetromeno].getPositions()[p].Y);
+
+                    position[p] = new Vector2(xstuff, ystuff);
+
+                    gameField[(int)position[p].X, (int)position[p].Y] = true;
+
+                    /*
+                     * Testing Area
+                     */
+
+
+                    /*
+                     * 
+                     */
+
+                    lastPosition[p] = new Vector2(xstuff, ystuff);
+                }
+            }
+
+            lastActiveTetromeno = activeTetromeno;
+
+            /*
+             * Tetromeno Movement Keys
+             */
+            {
+                //Finds bounds of blocks to use for collisions
+                farthestBlocks = tetromeno[activeTetromeno].getPositions();
+                farthestLeft = gameField.GetLength(0) - 1;
+                farthestRight = 0;
+                farthestUp = gameField.GetLength(1) - 1;
+                farthestDown = 0;
+
+                for (int i = 0; i < farthestBlocks.Length; i++)
+                {
+                    //Left
+                    if (farthestBlocks[i].X < farthestLeft)
+                    {
+                        farthestLeft = (int)farthestBlocks[i].X;
+                    }
+                    //Right
+                    if (farthestBlocks[i].X > farthestRight)
+                    {
+                        farthestRight = (int)farthestBlocks[i].X;
+                    }
+                    //Up (Not being Used ATM)
+                    if (farthestBlocks[i].Y < farthestUp)
+                    {
+                        farthestUp = (int)farthestBlocks[i].Y;
+                    }
+                    //Down
+                    if (farthestBlocks[i].Y > farthestDown)
+                    {
+                        farthestDown = (int)farthestBlocks[i].Y;
+                    }
                 }
 
+                /*
+                 * Testing
+                 */
+                
+                //Find Y Values
+                Boolean yPosAlreadyInList = false;
+                List<int> yValuesUsed = new List<int> { };
 
-                if (leftDown == true)
+                for (int w = 0; w < position.Length; w++)
                 {
-                    if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                    if (yValuesUsed != null)
                     {
-                        for (int i = 0; i < 4; i++)
+                        for (int j = 0; j < yValuesUsed.Count; j++)
                         {
-                            if (tetromeno1.getPositions()[i].X == (gridStartPos.X + ((blockTexture.Width * GlobalVar.ScaleSize.X) * 3)))
+                            if (position[w].Y == yValuesUsed[j])
                             {
-                                wallCollisionLeft = true;
+                                yPosAlreadyInList = true;
                             }
                         }
-                        if (wallCollisionLeft == false)
+                        if (yPosAlreadyInList == false)
                         {
-                            leftDown = false;
-                            tetromeno1GridPos.X -= 1;
-                        }
-                        if (wallCollisionLeft == true)
-                        {
-                            wallCollisionLeft = false;
+                            yValuesUsed.Add((int)position[w].Y);
                         }
                     }
+                    else
+                    {
+                        yValuesUsed.Add((int)position[w].Y);
+                    }
+                    yPosAlreadyInList = false;
                 }
-                if (Keyboard.GetState().IsKeyUp(Keys.Left))
-                    if (leftDown == false)
-                    {
-                        leftDown = true;
-                    }
 
 
-                if (rightDown == true)
+
+                testingStringData = "\n" + "yValuesUsed:";
+                for (int m = 0; m < yValuesUsed.Count; m++)
                 {
-                    if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                    {
-                        for (int j = 0; j < 4; j++)
-                        {
-                            if (tetromeno1.getPositions()[j].X == (gridStartPos.X + ((blockTexture.Width * GlobalVar.ScaleSize.X) * 22)))
-                            {
-                                wallCollisionRight = true;
-                            }
-                        }
-                        if (wallCollisionRight == false)
-                        {
-                            rightDown = false;
-                            tetromeno1GridPos.X += 1;
-                        }
-                        if (wallCollisionRight == true)
-                        {
-                            wallCollisionRight = false;
-                        }
-                    }
+                    testingStringData += "\n" + (m + 1) + ": " + yValuesUsed[m];
                 }
-                if (Keyboard.GetState().IsKeyUp(Keys.Right))
-                    if (rightDown == false)
-                    {
-                        rightDown = true;
-                    }
-            }
-            else
-            {
 
-                if ((milliScecondsElapsedGameTime - lastupdate) % 41 != 0)
+                /*
+                 * 
+                 */
+
+                //Left
+                if (farthestLeft > 3)
                 {
-                    #region Lock Delay Movement
-                    if (leftDown == true)
+                    if (keyLeftDown == true)
                     {
                         if (Keyboard.GetState().IsKeyDown(Keys.Left))
                         {
-                            for (int i = 0; i < 4; i++)
-                            {
-                                if (tetromeno1.getPositions()[i].X == (gridStartPos.X + ((blockTexture.Width * GlobalVar.ScaleSize.X) * 3)))
-                                {
-                                    wallCollisionLeft = true;
-                                }
-                            }
-                            if (wallCollisionLeft == false)
-                            {
-                                leftDown = false;
-                                tetromeno1GridPos.X -= 1;
-                            }
-                            if (wallCollisionLeft == true)
-                            {
-                                wallCollisionLeft = false;
-                            }
+                            keyLeftDown = false;
+                            tetromenoGridPos[activeTetromeno] = new Vector2(tetromenoGridPos[activeTetromeno].X - 1, tetromenoGridPos[activeTetromeno].Y);
                         }
                     }
-                    if (Keyboard.GetState().IsKeyUp(Keys.Left))
-                        if (leftDown == false)
+                    else if (Keyboard.GetState().IsKeyUp(Keys.Left))
+                    {
+                        if (keyLeftDown == false)
                         {
-                            leftDown = true;
+                            keyLeftDown = true;
                         }
+                    }
+                }
 
-
-                    if (rightDown == true)
+                //Right
+                if (farthestRight < gameField.GetLength(0) - 4 && canNotMoveRight == false)
+                {
+                    if (keyRightDown == true)
                     {
                         if (Keyboard.GetState().IsKeyDown(Keys.Right))
                         {
-                            for (int j = 0; j < 4; j++)
-                            {
-                                if (tetromeno1.getPositions()[j].X == (gridStartPos.X + ((blockTexture.Width * GlobalVar.ScaleSize.X) * 22)))
-                                {
-                                    wallCollisionRight = true;
-                                }
-                            }
-                            if (wallCollisionRight == false)
-                            {
-                                rightDown = false;
-                                tetromeno1GridPos.X += 1;
-                            }
-                            if (wallCollisionRight == true)
-                            {
-                                wallCollisionRight = false;
-                            }
+                            keyRightDown = false;
+                            tetromenoGridPos[activeTetromeno] = new Vector2(tetromenoGridPos[activeTetromeno].X + 1, tetromenoGridPos[activeTetromeno].Y);
                         }
                     }
-                    if (Keyboard.GetState().IsKeyUp(Keys.Right))
-                        if (rightDown == false)
+                    else if (Keyboard.GetState().IsKeyUp(Keys.Right))
+                    {
+                        if (keyRightDown == false)
                         {
-                            rightDown = true;
+                            keyRightDown = true;
                         }
-                    #endregion
+                    }
                 }
 
+                //Down
+                if (farthestDown < gameField.GetLength(1) - 1)
+                {
+                    while (milisecondsElapsedTetromenoTime - milisecondsTetromenoFallTime >= 1)
+                    {
+                        tetromenoGridPos[activeTetromeno] = new Vector2(tetromenoGridPos[activeTetromeno].X, tetromenoGridPos[activeTetromeno].Y + 1);
+                        milisecondsElapsedTetromenoTime -= milisecondsTetromenoFallTime;
+                    }
+                }
                 else
                 {
-                    spawn = true;
-                    tetromeno1GridPos.Y = 1;
-                    tetromeno1GridPos.X = 13;
+                    if (milisecondsElapsedTetromenoTime - milisecondsTetromenoLockDelayTime >= 1)
+                    {
+                        tetristype = random.Next(1, 7);
+                        activeTetromeno += 1;
+                        tetromeno.Add(new Tetromeno(tetristype, blockTexture));
+                        tetromenoGridPos.Add(new Vector2(13, 0));
+                        milisecondsElapsedTetromenoTime -= milisecondsTetromenoLockDelayTime;
+                    }
                 }
-            }
+
+                //Up
+                if (farthestUp > 0 && tetristype != 5)
+                {
+                    if (keyUpDown == true)
+                    {
+                        if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                        {
+                            keyUpDown = false;
+                            if (rotation < 3)
+                                rotation++;
+                            else
+                                rotation = 0;
+
+                            tetromeno[activeTetromeno].setRotation(rotation);
+                            //tetromenoGridPos[activeTetromeno] = new Vector2(tetromenoGridPos[activeTetromeno].X + 1, tetromenoGridPos[activeTetromeno].Y);
+                        }
+                    }
+                    else if (Keyboard.GetState().IsKeyUp(Keys.Up))
+                    {
+                        if (keyUpDown == false)
+                        {
+                            keyUpDown = true;
+                        }
+                    }
+                }
+
+            } //End Tetromeno Movement
 
             /*
              * Player Movement Keys
              */
+
+            /*
             {
                 //Left
                 if (keyADown == true)
@@ -299,13 +374,20 @@ namespace Evolo.GameClass
 
                     }
                 }
-            }//End Player Movement
+             
+            }
+             */
+            //End Player Movement
 
-            tetromeno1.Update(new Vector2(gridStartPos.X + (tetromeno1GridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (tetromeno1GridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), GlobalVar.ScaleSize);
-            player1.Update(new Vector2(gridStartPos.X + (player1GridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (player1GridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), GlobalVar.ScaleSize, Color.White);
+            for (int k = 0; k < tetromeno.Count; k++)
+            {
+                tetromeno[k].Update(tetromenoGridPos[k], gridStartPos, GlobalVar.ScaleSize);
+            }
+            
+            //player1.Update(new Vector2(gridStartPos.X + (player1GridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (player1GridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), GlobalVar.ScaleSize, Color.White);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
 
             //TEMP BACKDROP FOR POS TESTING
@@ -321,16 +403,26 @@ namespace Evolo.GameClass
                         backdropColor = Color.LightCoral; 
                     else
                         backdropColor = Color.White;
+
+                    if (gameField[j, i] == true)
+                    {
+                        //backdropColor = Color.Blue;
+                    }
                   
                     //Draws the block to the screen at the specified point based on the for loop
                     spriteBatch.Draw(blockTexture, new Vector2(gridStartPos.X + ((blockTexture.Width * GlobalVar.ScaleSize.X) * j), gridStartPos.Y + ((blockTexture.Height * GlobalVar.ScaleSize.Y) * i)), null, backdropColor, 0, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 0);
+
+                    spriteBatch.DrawString(font, "Left: " + farthestLeft.ToString() + " " + "Right: " + farthestRight.ToString() + "\n" + "Up: " + farthestUp.ToString() + " " + "Down: " + farthestDown.ToString() + "\nSame YPos: " + sameYPosNum + testingStringData, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.Wheat);
                 }
             }
 
             //Temp Teromeno Set Up
-            tetromeno1.Draw(spriteBatch);
+            for (int k = 0; k < tetromeno.Count; k++)
+            {
+                tetromeno[k].Draw(spriteBatch);
+            }
 
-            player1.Draw(spriteBatch, player1SpriteEffects);
+            //player1.Draw(spriteBatch, player1SpriteEffects);
         }
 
         public Boolean[,] getGameField()
