@@ -32,7 +32,6 @@ namespace Evolo
         OptionsHandler optionsHandler;
 
         //TEMP CLASSES
-        DateTime dateTime;
         FieldManager fieldManager;
         Cloud cloud;
         SplashScreenManager splashScreen;
@@ -58,9 +57,9 @@ namespace Evolo
         //Variables
 
         //Game
-        String version = "Build V: 1.1.6.1"; // Major, Minor, Build, Revision #
+        String version = "Build V: 1.1.7.2"; // Major, Minor, Build, Revision #
         Boolean tripped = false;
-        const int defualtWidth = 1080, defualtHeight = 720;
+        const int defualtWidth = 1280, defualtHeight = 720;
 
         //Keys
         string[] keyBindingInfo = new string[5];
@@ -99,7 +98,6 @@ namespace Evolo
                 optionsHandler = new OptionsHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo");
 
                 gameTime = new GameTime();
-                dateTime = new DateTime();
                 //Loads and sets option values
                 GlobalVar.OptionsArray = optionsHandler.loadOptions();
 
@@ -363,15 +361,15 @@ namespace Evolo
                 if (Convert.ToBoolean(GlobalVar.OptionsArray[8]) == true)
                 {
                     if (!gameState.Equals("SplashScreen") && !gameState.Equals("Credits")) 
-                        spriteBatch.DrawString(SeqoeUIMonoNormal, "FPS: " + fpsManager.getFPS(), new Vector2((GlobalVar.ScreenSize.X - (SeqoeUIMonoNormal.MeasureString("FPS: " + fpsManager.getFPS()).X) * GlobalVar.ScaleSize.X) - 10, (5 * GlobalVar.ScaleSize.Y)), Color.Black, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                        spriteBatch.DrawString(SeqoeUIMonoNormal, "FPS: " + fpsManager.getFPS(), new Vector2((GlobalVar.ScreenSize.X - (SeqoeUIMonoNormal.MeasureString("FPS: " + fpsManager.getFPS()).X) * GlobalVar.ScaleSize.X) - 10, (5 * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 }
 
                 //DEBUG USE: 
                 if (Convert.ToBoolean(GlobalVar.OptionsArray[9]) == true)
                 {
-                    spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME1 TIME: " + (milliScecondsElapsedGameTime / 1000).ToString() + "s", new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 3 + 10) * GlobalVar.ScaleSize.Y)), Color.Black);
-                    spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME STATE: " + GlobalVar.GameState.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 2 + 10) * GlobalVar.ScaleSize.Y)), Color.Black);
-                    spriteBatch.DrawString(SeqoeUIMonoNormal, "MOUSE POS: " + "X-" + mouseStateCurrent.X.ToString() + " Y-" + mouseStateCurrent.X.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 1 + 10) * GlobalVar.ScaleSize.Y)), Color.Black);
+                    spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME1 TIME: " + (milliScecondsElapsedGameTime / 1000).ToString() + "s", new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 3 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
+                    spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME STATE: " + GlobalVar.GameState.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 2 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
+                    spriteBatch.DrawString(SeqoeUIMonoNormal, "MOUSE POS: " + "X-" + mouseStateCurrent.X.ToString() + " Y-" + mouseStateCurrent.X.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 1 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
                 }
 
                 spriteBatch.End();

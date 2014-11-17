@@ -11,8 +11,8 @@ using Microsoft.Xna.Framework.Input;
 
 /**
  * Evolo tetromeno handler to handle the artibutes and movement of indivudal blocks with-in the tetromeno
- * Author: Dalton, Josh, Gavin
- * Version: 10/10/14
+ * Author: Dalton, Josh, Gavin, Kurtis
+ * Version: 11/5/14
  */
 
 namespace Evolo.GameClass

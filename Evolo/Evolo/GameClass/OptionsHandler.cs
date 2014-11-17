@@ -18,7 +18,7 @@ namespace Evolo.GameClass
         {
             this.folderLocation = folderLocation;
             //TEMP / Defualt Values
-            optionsArray = new string[13] { "1080", "720", "W", "S", "A", "D", "SPACE", "false", "false", "false", "true", "true", "4" };
+            optionsArray = new string[13] { "1280", "720", "W", "S", "A", "D", "SPACE", "false", "false", "false", "true", "true", "4" };
         }
 
         public void writeOptions(string[] optionsArray)

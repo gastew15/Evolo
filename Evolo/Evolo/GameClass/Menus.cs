@@ -20,8 +20,6 @@ namespace Evolo.GameClass
         public Vector2 backgroundMoving;
         public Boolean down = true;
         private Texture2D menuBackground;
-        
-
 
         private MenuHandler mainMenu, optionsMenu, optionsResolutionMenu, optionsKeybindingMenu, pauseMenu, debugMenu, saveSlotMenu;
         private WindowSizeManager windowSizeManager;
@@ -74,7 +72,7 @@ namespace Evolo.GameClass
 
             optionsKeybindingMenuButtonText = new String[6] { "Forward: " + keyBindingInfo[0], "Backward: " + keyBindingInfo[1], "Left: " + keyBindingInfo[2], "Right: " + keyBindingInfo[3], "Brake: " + keyBindingInfo[4], "Back" };
             optionsMenuButtonText = new String[7] { "Resolution", "Key Bindings", "Debug Options", "Sound: OFF", "Music: OFF", "Exit & Save", "Exit W/O Saving" };
-            optionsResolutionMenuButtonText = new String[7] { "Full Screen", "800 x 600", "1080 x 720", "1366 x 768", "1600 x 900", "1920 x 1080", "Back" };
+            optionsResolutionMenuButtonText = new String[7] { "Full Screen", "800 x 600", "1280 x 720", "1366 x 768", "1600 x 900", "1920 x 1080", "Back" };
             mainMenuButtonText = new String[6] { "Start New Game", "Load Game", "Options","Credits","Help", "Quit" };
             pauseMenuButtonText = new String[4] { "Resume", "Save", "Options", "Exit" };
             debugMenuButtonText = new String[4] { "Cursor: Game", "FPS: Off", "Debug Info: Off", "Back"};
@@ -133,10 +131,16 @@ namespace Evolo.GameClass
             //debugMenu = new MenuHandler(optionsTitle, debugSP, new Vector2(), mainMenuVerticalSpacing, menuButtonBackground, debugMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
             saveSlotMenu = new MenuHandler(menuTitle, saveSlotMenuSP, new Vector2(), mainMenuVerticalSpacing, menuButtonBackground, saveSlotMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
 
-            if( GlobalVar.OptionsArray[10] == "true")
+            if(Boolean.Parse(GlobalVar.OptionsArray[10]) == true)
                 optionsMenuButtonText[3] = "Sound: ON";
-            if( GlobalVar.OptionsArray[11] == "true")
+            if(Boolean.Parse(GlobalVar.OptionsArray[11]) == true)
                 optionsMenuButtonText[4] = "Music: ON";
+            if (Boolean.Parse(GlobalVar.OptionsArray[7]) == true)
+                debugMenuButtonText[0] = "Cursor: Hardware";
+            if (Boolean.Parse(GlobalVar.OptionsArray[8]) == true)
+                debugMenuButtonText[1] = "FPS: On";
+            if (Boolean.Parse(GlobalVar.OptionsArray[9]) == true)
+                debugMenuButtonText[2] = "Debug Info: On";
 
             #endregion
         }
@@ -343,7 +347,7 @@ namespace Evolo.GameClass
                     {
                         if (!(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width < 1080) && !(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height < 720))
                         {
-                            GlobalVar.OptionsArray[0] = "1080";
+                            GlobalVar.OptionsArray[0] = "1280";
                             GlobalVar.OptionsArray[1] = "720";
                             GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
                             windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), this.isFullScreen);
