@@ -134,16 +134,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites and Pictures\splashScreen1.png">
-      <Name>splashScreen1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Sprites and Pictures\splashScreen2.png">
-      <Name>splashScreen2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Sounds\Music\" />
@@ -151,6 +141,23 @@
   <ItemGroup>
     <Compile Include="Sprites and Pictures\SkyBlock1.png">
       <Name>SkyBlock1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites and Pictures\CognativeThought.png">
+      <Name>CognativeThought</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Sprites and Pictures\StarbyteLogo.png">
+      <Name>StarbyteLogo</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Sprites and Pictures\TwistedTransistors.png">
+      <Name>TwistedTransistors</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

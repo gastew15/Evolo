@@ -57,7 +57,7 @@ namespace Evolo
         //Variables
 
         //Game
-        String version = "Build V: 1.1.7.2"; // Major, Minor, Build, Revision #
+        String version = "Build V: 1.1.7.3"; // Major, Minor, Build, Revision #
         Boolean tripped = false;
         const int defualtWidth = 1280, defualtHeight = 720;
 
@@ -128,7 +128,7 @@ namespace Evolo
                 cloud = new Cloud();
                 fieldManager = new FieldManager();
                 //Change to real values later
-                splashScreenWaitTime = new float[2] { 1.0f, 1.0f };
+                splashScreenWaitTime = new float[3] { 2.0f, 2.0f, 4.0f };
                 fieldManager.Intilize();
                 cloud.Initialize();
 
@@ -165,9 +165,10 @@ namespace Evolo
                 //TEMP LOAD CONTENT
                 cloud.LoadContent(this.Content);
                 fieldManager.LoadContent(this.Content);
-                splashScreenImages = new Texture2D[2];
-                splashScreenImages[0] = Content.Load<Texture2D>("Sprites and pictures/splashScreen1");
-                splashScreenImages[1] = Content.Load<Texture2D>("Sprites and pictures/splashScreen2");
+                splashScreenImages = new Texture2D[3];
+                splashScreenImages[0] = Content.Load<Texture2D>("Sprites and pictures/CognativeThought");
+                splashScreenImages[1] = Content.Load<Texture2D>("Sprites and pictures/TwistedTransistors");
+                splashScreenImages[2] = Content.Load<Texture2D>("Sprites and pictures/StarbyteLogo");
 
                 gameMouseTexture = Content.Load<Texture2D>("Sprites and pictures/MouseWhite");
 
@@ -262,6 +263,7 @@ namespace Evolo
                     case "SplashScreen":
                         //TEMP UPDATE
                         splashScreen.Update(milliScecondsElapsedGameTime, orginalSplashScreenStartTime);
+                        cloud.Update(gameTime, milliScecondsElapsedGameTime);
                         if (splashScreen.getSplashScreenOver() == true)
                             GlobalVar.GameState = "MenuScreen";
                         break;

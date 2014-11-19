@@ -27,6 +27,9 @@ namespace Evolo.GameClass
         private int milisecondsElapsedTetromenoTime = 0;
         private int milisecondsTetromenoFallTime = 300;
         private int milisecondsTetromenoLockDelayTime = 400;
+        private int milisecondsElapsedPlayerTime = 0;
+        private int milisecondsPlayerJumpTime = 500;
+        private int milisecondsPlayerGravityTime = 200;
 
         //Keyboard Variables / Misc
         private bool keyLeftDown, keyRightDown, keyUpDown;
@@ -53,6 +56,7 @@ namespace Evolo.GameClass
         private List<Vector2> tetromenoGridPos = new List<Vector2>();
         private Vector2[] tetromenoBlocklastPositions, tetromenoBlockPositions;
         private Boolean tetromenoCanNotMoveRight, tetromenoCanNotMoveLeft, tetromenoCanNotMoveDown;
+        private Boolean playerCanNotMoveRight, playerCanNotMoveLeft, playerCanNotMoveDown, playerCanNotMoveUp;
 
         #endregion
 
@@ -84,8 +88,8 @@ namespace Evolo.GameClass
             lastActiveTetromeno = activeTetromeno;
 
             //Player Set Up
-            //player1 = new Player(playerTexture);
-            //player1GridPos = levelStartPoint;
+            player1 = new Player(playerTexture);
+            player1GridPos = levelStartPoint;
 
         }
 
@@ -95,6 +99,7 @@ namespace Evolo.GameClass
 
             //Adds time since last update to the elapsed time for the tetromeno
             milisecondsElapsedTetromenoTime += gameTime.ElapsedGameTime.Milliseconds;
+            milisecondsElapsedPlayerTime += gameTime.ElapsedGameTime.Milliseconds;
 
             //Adjusts the grid Starting Postion for resolution changes & such
             gridStartPos = new Vector2((GlobalVar.ScreenSize.X / 2) - (((blockTexture.Width * GlobalVar.ScaleSize.X) * gameField.GetLength(0)) / 2), (GlobalVar.ScreenSize.Y / 2) - (((blockTexture.Height * GlobalVar.ScaleSize.Y) * (gameField.GetLength(1) + 2)) / 2));
@@ -103,6 +108,11 @@ namespace Evolo.GameClass
             tetromenoCanNotMoveRight = false;
             tetromenoCanNotMoveLeft = false;
             tetromenoCanNotMoveDown = false;
+
+            playerCanNotMoveRight = false;
+            playerCanNotMoveLeft = false;
+            playerCanNotMoveDown = false;
+            playerCanNotMoveUp = false;
 
             //Resets absoluote tetromeno Positions
             absTetromenoBlockFarthestLeft = gameField.GetLength(0);
@@ -310,6 +320,42 @@ namespace Evolo.GameClass
                 }
             }
 
+            #region Player Collision Detection
+
+            //Check
+            if (player1GridPos.X - 1 >= 0 && player1GridPos.X + 1 <= gameField.GetLength(0) && (player1GridPos.Y >= 0 && player1GridPos.Y <= gameField.GetLength(1)))
+            {
+                //Right
+                if(gameField[(int)player1GridPos.X + 1, (int)player1GridPos.Y] == true)
+                {
+                    playerCanNotMoveRight = true;
+                }
+
+                //Left
+                if (gameField[(int)player1GridPos.X - 1, (int)player1GridPos.Y] == true)
+                {
+                    playerCanNotMoveLeft = true;
+                }
+            }
+
+            //Y Check
+            if (player1GridPos.X >= 0 && player1GridPos.X <= gameField.GetLength(0) && (player1GridPos.Y - 1 >= 0 && player1GridPos.Y + 1 <= gameField.GetLength(1)))
+            {
+                //Down
+                if (gameField[(int)player1GridPos.X, (int)player1GridPos.Y + 1] == true)
+                {
+                    playerCanNotMoveDown = true;
+                }
+
+                //Up
+                if (gameField[(int)player1GridPos.X, (int)player1GridPos.Y - 1] == true)
+                {
+                    playerCanNotMoveUp = true;
+                }
+            }
+
+            #endregion
+
             #region Tetromeno Keyboard Input
 
             //Keyboard Input (Left Key)
@@ -411,91 +457,100 @@ namespace Evolo.GameClass
 
             #endregion
 
-            /*
-             * Player Movement Keys
-             */
+            #region Player Movement / Key Input
 
-            /*
+            //Left
+            if (keyADown == true && playerCanNotMoveLeft == false)
             {
-                //Left
-                if (keyADown == true)
+                if (Keyboard.GetState().IsKeyDown(Keys.A))
                 {
-                    if (Keyboard.GetState().IsKeyDown(Keys.A))
-                    {
-                        keyADown = false;
-                        player1SpriteEffects = SpriteEffects.FlipHorizontally;
-                        player1GridPos.X -= 1;
-                    }
+                    keyADown = false;
+                    player1SpriteEffects = SpriteEffects.FlipHorizontally;
+                    player1GridPos.X -= 1;
                 }
-                else if (Keyboard.GetState().IsKeyUp(Keys.A))
-                {
-                    if (keyADown == false)
-                    {
-                        keyADown = true;
-                    }
-                }
-
-                //Right
-                if (keyDDown == true)
-                {
-                    if (Keyboard.GetState().IsKeyDown(Keys.D))
-                    {
-                        keyDDown = false;
-                        player1SpriteEffects = SpriteEffects.None;
-                        player1GridPos.X += 1;
-                    }
-                }
-                else if (Keyboard.GetState().IsKeyUp(Keys.D))
-                {
-                    if (keyDDown == false)
-                    {
-                        keyDDown = true;
-                    }
-                }
-
-                //Up
-                if (keyWDown == true)
-                {
-                    if (Keyboard.GetState().IsKeyDown(Keys.W))
-                    {
-                        if (player1Jump == false)
-                        {
-                            keyWDown = false;
-                            player1GridPos.Y -= 1;
-                            player1Jump = true;
-                        }
-                    }
-                }
-                else if (Keyboard.GetState().IsKeyUp(Keys.W))
-                {
-                    if (keyWDown == false)
-                    {
-                        keyWDown = true;
-                    }
-                }
-
-                //Player Jump Logic
-                if (player1Jump == true)
-                {
-                    if (milliScecondsElapsedGameTime % 220 == 0)
-                    {
-
-                        player1GridPos.Y += 1;
-                        player1Jump = false;
-
-                    }
-                }
-             
             }
-             */
-            //End Player Movement
+            else if (Keyboard.GetState().IsKeyUp(Keys.A))
+            {
+                if (keyADown == false)
+                {
+                    keyADown = true;
+                }
+            }
+
+            //Right
+            if (keyDDown == true && playerCanNotMoveRight == false)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.D))
+                {
+                    keyDDown = false;
+                    player1SpriteEffects = SpriteEffects.None;
+                    player1GridPos.X += 1;
+                }
+            }
+            else if (Keyboard.GetState().IsKeyUp(Keys.D))
+            {
+                if (keyDDown == false)
+                {
+                    keyDDown = true;
+                }
+            }
+
+            //Up
+            if (keyWDown == true && playerCanNotMoveUp == false)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.W))
+                {
+                    if (player1Jump == false)
+                    {
+                        keyWDown = false;
+                        player1GridPos.Y -= 1;
+                        player1Jump = true;
+                    }
+                }
+            }
+            else if (Keyboard.GetState().IsKeyUp(Keys.W))
+            {
+                if (keyWDown == false)
+                {
+                    keyWDown = true;
+                }
+            }
+
+            //Player Jump Logic
+            if (player1Jump == true)
+            {
+                if (gameTime.TotalGameTime.Milliseconds % 220 == 0)
+                {
+                    if (playerCanNotMoveDown == false)
+                    {
+                        player1GridPos.Y += 1;
+                    }
+                    player1Jump = false;
+
+                    //milisecondsElapsedPlayerTime -= milisecondsPlayerJumpTime;
+                }
+            }
+            else
+            {
+                if (player1GridPos.Y < gameField.GetLength(1) - 1 && playerCanNotMoveDown == false)
+                {
+                    while (milisecondsElapsedPlayerTime - milisecondsPlayerGravityTime >= 0)
+                    {
+                        player1GridPos.Y += 1;
+
+                        milisecondsElapsedPlayerTime -= milisecondsPlayerGravityTime;
+                    }
+                }
+            }
+
+            #endregion
 
             for (int k = 0; k < tetromeno.Count; k++)
             {
                 tetromeno[k].Update(tetromenoGridPos[k], gridStartPos, GlobalVar.ScaleSize);
             }
 
-            //player1.Update(new Vector2(gridStartPos.X + (player1GridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (player1GridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), GlobalVar.ScaleSize, Color.White);
+            player1.Update(new Vector2(gridStartPos.X + (player1GridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (player1GridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), GlobalVar.ScaleSize, Color.White);
         }
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
@@ -526,9 +581,14 @@ namespace Evolo.GameClass
                     //Draws the block to the screen at the specified point based on the for loop
                     spriteBatch.Draw(blockTexture, new Vector2(gridStartPos.X + ((blockTexture.Width * GlobalVar.ScaleSize.X) * j), gridStartPos.Y + ((blockTexture.Height * GlobalVar.ScaleSize.Y) * i)), null, backdropColor, 0, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 0);
 
+                    //spriteBatch.DrawString(SeqoeUIMonoNormal, "FPS: " + fpsManager.getFPS(), new Vector2((GlobalVar.ScreenSize.X - (SeqoeUIMonoNormal.MeasureString("FPS: " + fpsManager.getFPS()).X) * GlobalVar.ScaleSize.X) - 10, (5 * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+
                     //Prints out Debug Info About the Block
                     if (Boolean.Parse(GlobalVar.OptionsArray[9]) == true)
-                        spriteBatch.DrawString(font, "AbsLeft: " + absTetromenoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetromenoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetromenoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetromenoCanNotMoveLeft + "\nMove Right: " + !tetromenoCanNotMoveRight + "\nMove Down: " + !tetromenoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.Wheat);
+                    {
+                        spriteBatch.DrawString(font, "AbsLeft: " + absTetromenoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetromenoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetromenoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetromenoCanNotMoveLeft + "\nMove Right: " + !tetromenoCanNotMoveRight + "\nMove Down: " + !tetromenoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                        spriteBatch.DrawString(font, "Player Pos: " + "X: " + player1GridPos.X + " Y: " + player1GridPos.Y + "\nMove Left: " + !playerCanNotMoveLeft + "\nMove Right: " + !playerCanNotMoveRight + "\nMove Down: " + !playerCanNotMoveDown + "\nMove Up: " + !playerCanNotMoveUp, new Vector2(10 * GlobalVar.ScaleSize.X, 300 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    }
                 }
             }
 
@@ -538,7 +598,7 @@ namespace Evolo.GameClass
                 tetromeno[k].Draw(spriteBatch);
             }
 
-            //player1.Draw(spriteBatch, player1SpriteEffects);
+            player1.Draw(spriteBatch, player1SpriteEffects);
         }
 
         public Boolean[,] getGameField()

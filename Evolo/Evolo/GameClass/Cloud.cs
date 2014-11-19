@@ -30,7 +30,7 @@ namespace Evolo.GameClass
             //Obviously just the rectangle that the block uses
             for (int i = 0; i < bBlockRectangle.Length; i++)
             {
-                bBlockRectangle[i] = new Rectangle((int)((0 + (0 * i)) * GlobalVar.ScaleSize.X), (int)((0 + (20 * i)) * GlobalVar.ScaleSize.Y), (int)(1080 * GlobalVar.ScaleSize.X), (int)(32 * GlobalVar.ScaleSize.Y));
+                bBlockRectangle[i] = new Rectangle((int)((0 + (0 * i)) * GlobalVar.ScaleSize.X), (int)((0 + (20 * i)) * GlobalVar.ScaleSize.Y), (int)(GlobalVar.ScreenSize.X * GlobalVar.ScaleSize.X), (int)(32 * GlobalVar.ScaleSize.Y));
             }
 
             //The set up for the color - First is the RGB Value orginally, and Second is the RGB that it will end at
@@ -86,7 +86,7 @@ namespace Evolo.GameClass
             for (int i = 0; i < colorTestBlock.Length; i++)
             {
                 //Does a size update to the rectangle
-                bBlockRectangle[i] = new Rectangle(bBlockRectangle[i].X, bBlockRectangle[i].Y, (int)(1080 * GlobalVar.ScaleSize.X), (int)(32 * GlobalVar.ScaleSize.Y));
+                bBlockRectangle[i] = new Rectangle(bBlockRectangle[i].X, bBlockRectangle[i].Y, (int)(GlobalVar.ScreenSize.X * GlobalVar.ScaleSize.X), (int)(32 * GlobalVar.ScaleSize.Y));
 
                 colorTestBlock[i].Update(new Vector2(bBlockRectangle[i].X, bBlockRectangle[i].Y), (int)(GlobalVar.ScreenSize.Y * GlobalVar.ScaleSize.Y));
             }
