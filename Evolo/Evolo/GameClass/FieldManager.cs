@@ -21,7 +21,7 @@ namespace Evolo.GameClass
 
         //Gamefield Variables
         private Boolean[,] gameField = new Boolean[26, 22];
-        private Vector2 gridStartPos, player1GridPos, levelStartPoint, levelEndPoint;
+        private Vector2 gridStartPos, levelStartPoint, levelEndPoint;
 
         //Timing Variables
         private int milisecondsElapsedTetromenoTime = 0;
@@ -44,6 +44,7 @@ namespace Evolo.GameClass
         private SpriteEffects player1SpriteEffects;
         private bool player1Jump = false;
         private Player player1;
+        private Vector2 player1GridPos, player1GridPosPrevious;
 
         //Tetromeno Variables
         private int tetristype = 5;
@@ -68,6 +69,8 @@ namespace Evolo.GameClass
         public void Intilize()
         {
             player1SpriteEffects = SpriteEffects.None;
+
+            player1GridPosPrevious = player1GridPos;
         }
 
         public void LoadContent(ContentManager Content)
@@ -95,6 +98,7 @@ namespace Evolo.GameClass
 
         public void Update(GameTime gameTime)
         {
+
             #region Local Variable Reseting
 
             //Adds time since last update to the elapsed time for the tetromeno
@@ -288,7 +292,9 @@ namespace Evolo.GameClass
 
             #endregion
 
-            //Collision Detection (Left / Right)
+            #region Teromeno Collision Detection
+
+            //(Left / Right)
             for (int i = 0; i < farthestTetromenoBlockLeft.Length; i++)
             {
                 if (farthestTetromenoBlockLeft[i] > 0)
@@ -308,7 +314,7 @@ namespace Evolo.GameClass
                 }
             }
 
-            //Collision Detection (Down)
+            //(Down)
             for (int q = 0; q < absTetromenoBlockFarthestRight - absTetromenoBlockFarthestLeft; q++)
             {
                 if (absTetromenoBlockFarthestDown < gameField.GetLength(1) - 1)
@@ -320,13 +326,18 @@ namespace Evolo.GameClass
                 }
             }
 
+            #endregion
+
             #region Player Collision Detection
 
+            //Fail safe for player falling out of array
             if (player1GridPos.Y > gameField.GetLength(1) - 1)
-                player1GridPos.Y = gameField.GetLength(1) - 1;
+            {
+                player1GridPos.Y = player1GridPosPrevious.Y;
+            }
 
             //Check
-            if (player1GridPos.X - 1 >= 0 && player1GridPos.X + 1 <= gameField.GetLength(0) && (player1GridPos.Y >= 0 && player1GridPos.Y < gameField.GetLength(1)))
+            if (player1GridPos.X - 1 >= 0 && player1GridPos.X + 1 < gameField.GetLength(0)  && (player1GridPos.Y >= 0 && player1GridPos.Y < gameField.GetLength(1)))
             {
                 //Right
                 if(gameField[(int)player1GridPos.X + 1, (int)player1GridPos.Y] == true)
@@ -342,7 +353,7 @@ namespace Evolo.GameClass
             }
 
             //Y Check
-            if (player1GridPos.X >= 0 && player1GridPos.X <= gameField.GetLength(0) && (player1GridPos.Y - 1 >= 0 && player1GridPos.Y + 1 < gameField.GetLength(1)))
+            if (player1GridPos.X >= 0 && player1GridPos.X + 1 < gameField.GetLength(0) && (player1GridPos.Y - 1 >= 0 && player1GridPos.Y + 1 < gameField.GetLength(1)))
             {
                 //Down
                 if (gameField[(int)player1GridPos.X, (int)player1GridPos.Y + 1] == true)
@@ -463,7 +474,7 @@ namespace Evolo.GameClass
             #region Player Movement / Key Input
 
             //Left
-            if (keyADown == true && playerCanNotMoveLeft == false)
+            if (keyADown == true && playerCanNotMoveLeft == false && player1GridPos.X > 0)
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.A))
                 {
@@ -481,7 +492,7 @@ namespace Evolo.GameClass
             }
 
             //Right
-            if (keyDDown == true && playerCanNotMoveRight == false)
+            if (keyDDown == true && playerCanNotMoveRight == false && player1GridPos.X < gameField.GetLength(0) - 1)
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.D))
                 {
@@ -548,11 +559,13 @@ namespace Evolo.GameClass
 
             #endregion
 
+            //Termeno Updates
             for (int k = 0; k < tetromeno.Count; k++)
             {
                 tetromeno[k].Update(tetromenoGridPos[k], gridStartPos, GlobalVar.ScaleSize);
             }
 
+            //Player Update
             player1.Update(new Vector2(gridStartPos.X + (player1GridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (player1GridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), GlobalVar.ScaleSize, Color.White);
         }
 
@@ -602,6 +615,9 @@ namespace Evolo.GameClass
             }
 
             player1.Draw(spriteBatch, player1SpriteEffects);
+
+            //Store in Variable Last
+            player1GridPosPrevious = player1GridPos;
         }
 
         public Boolean[,] getGameField()
