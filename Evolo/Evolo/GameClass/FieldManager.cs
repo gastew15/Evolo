@@ -322,8 +322,11 @@ namespace Evolo.GameClass
 
             #region Player Collision Detection
 
+            if (player1GridPos.Y > gameField.GetLength(1) - 1)
+                player1GridPos.Y = gameField.GetLength(1) - 1;
+
             //Check
-            if (player1GridPos.X - 1 >= 0 && player1GridPos.X + 1 <= gameField.GetLength(0) && (player1GridPos.Y >= 0 && player1GridPos.Y <= gameField.GetLength(1)))
+            if (player1GridPos.X - 1 >= 0 && player1GridPos.X + 1 <= gameField.GetLength(0) && (player1GridPos.Y >= 0 && player1GridPos.Y < gameField.GetLength(1)))
             {
                 //Right
                 if(gameField[(int)player1GridPos.X + 1, (int)player1GridPos.Y] == true)
@@ -339,7 +342,7 @@ namespace Evolo.GameClass
             }
 
             //Y Check
-            if (player1GridPos.X >= 0 && player1GridPos.X <= gameField.GetLength(0) && (player1GridPos.Y - 1 >= 0 && player1GridPos.Y + 1 <= gameField.GetLength(1)))
+            if (player1GridPos.X >= 0 && player1GridPos.X <= gameField.GetLength(0) && (player1GridPos.Y - 1 >= 0 && player1GridPos.Y + 1 < gameField.GetLength(1)))
             {
                 //Down
                 if (gameField[(int)player1GridPos.X, (int)player1GridPos.Y + 1] == true)
@@ -587,7 +590,7 @@ namespace Evolo.GameClass
                     if (Boolean.Parse(GlobalVar.OptionsArray[9]) == true)
                     {
                         spriteBatch.DrawString(font, "AbsLeft: " + absTetromenoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetromenoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetromenoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetromenoCanNotMoveLeft + "\nMove Right: " + !tetromenoCanNotMoveRight + "\nMove Down: " + !tetromenoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                        spriteBatch.DrawString(font, "Player Pos: " + "X: " + player1GridPos.X + " Y: " + player1GridPos.Y + "\nMove Left: " + !playerCanNotMoveLeft + "\nMove Right: " + !playerCanNotMoveRight + "\nMove Down: " + !playerCanNotMoveDown + "\nMove Up: " + !playerCanNotMoveUp, new Vector2(10 * GlobalVar.ScaleSize.X, 300 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                        spriteBatch.DrawString(font, "Player Pos: " + "X: " + player1GridPos.X + " Y: " + player1GridPos.Y + "\nMove Left: " + !playerCanNotMoveLeft + "\nMove Right: " + !playerCanNotMoveRight + "\nMove Down: " + !playerCanNotMoveDown + "\nMove Up: " + !playerCanNotMoveUp, new Vector2(10 * GlobalVar.ScaleSize.X, 225 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                     }
                 }
             }
