@@ -79,8 +79,12 @@ namespace Evolo.GameClass
             playerTexture = Content.Load<Texture2D>("Sprites and pictures/CharacterTest");
 
             //Teromeno Set Up Reference 
+            tetristype = random.Next(1, 7);
             tetromeno.Add(new Tetromeno(tetristype, blockTexture));
             tetromenoGridPos.Add(new Vector2(13, 0));
+            tetristype = 1;
+            tetromeno.Add(new Tetromeno(tetristype, blockTexture));
+            tetromenoGridPos.Add(new Vector2(28.5f, 4));
 
             //Temp levelSP
             levelStartPoint = new Vector2(1, 17);
@@ -464,7 +468,8 @@ namespace Evolo.GameClass
                     tetristype = random.Next(1, 7);
                     activeTetromeno += 1;
                     tetromeno.Add(new Tetromeno(tetristype, blockTexture));
-                    tetromenoGridPos.Add(new Vector2(13, 0));
+                    tetromenoGridPos.Add(new Vector2(28.5f, 4));
+                    tetromenoGridPos[activeTetromeno] = new Vector2(13,0);
                     milisecondsElapsedTetromenoTime -= milisecondsTetromenoLockDelayTime;
                 }
             }
