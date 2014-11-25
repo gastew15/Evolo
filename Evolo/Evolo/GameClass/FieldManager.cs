@@ -58,6 +58,11 @@ namespace Evolo.GameClass
         private Boolean tetromenoCanNotMoveRight, tetromenoCanNotMoveLeft, tetromenoCanNotMoveDown, tetromenoCanNotMoveUp;
         private Boolean playerCanNotMoveRight, playerCanNotMoveLeft, playerCanNotMoveDown, playerCanNotMoveUp;
 
+        //Platform Variables
+        private EndPlatform platform;
+        private Texture2D platformTexture;
+        private Vector2 platformGridPos;
+
         #endregion
 
         public FieldManager()
@@ -76,9 +81,10 @@ namespace Evolo.GameClass
         {
             blockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
             playerTexture = Content.Load<Texture2D>("Sprites and pictures/CharacterTest");
+            platformTexture = Content.Load<Texture2D>("Sprites and pictures/EndPlatform");
 
             //Teromeno Set Up Reference 
-            tetristype = random.Next(1, 7);
+            tetristype = random.Next(1, 8);
             tetromeno.Add(new Tetromeno(tetristype, blockTexture));
             tetromenoGridPos.Add(new Vector2(13, 0));
             tetristype = 1;
@@ -97,6 +103,9 @@ namespace Evolo.GameClass
             player1 = new Player(playerTexture);
             player1GridPos = levelStartPoint;
 
+            //Platform Set Up
+            platform = new EndPlatform(platformTexture);
+            platformGridPos = new Vector2(23, 10);
         }
 
         public void Update(GameTime gameTime)
@@ -586,7 +595,7 @@ namespace Evolo.GameClass
                 if (milisecondsElapsedTetromenoTime - milisecondsTetromenoLockDelayTime >= 1)
                 {
                     //Setting various variables required to spawn a new clean tetromeno
-                    tetristype = random.Next(1, 7);
+                    tetristype = random.Next(1, 8);
                     activeTetromeno += 1;
                     tetromeno.Add(new Tetromeno(tetristype, blockTexture));
                     tetromenoGridPos.Add(new Vector2(28.5f, 4));
@@ -697,6 +706,7 @@ namespace Evolo.GameClass
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
+            
 
             //TEMP BACKDROP FOR POS TESTING
             Color backdropColor;
@@ -744,6 +754,7 @@ namespace Evolo.GameClass
 
             //Store in Variable Last
             player1GridPosPrevious = player1GridPos;
+            platform.Draw(spriteBatch, new Vector2(gridStartPos.X + (platformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (platformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))));
         }
 
         public Boolean[,] getGameField()
