@@ -80,7 +80,7 @@
     <Compile Include="GameClass\Menus.cs" />
     <Compile Include="GameClass\OptionsHandler.cs" />
     <Compile Include="GameClass\Player.cs" />
-    <Compile Include="GameClass\Tetromeno.cs" />
+    <Compile Include="GameClass\Tetromino.cs" />
     <Compile Include="GameClass\WindowSizeManager.cs" />
     <Compile Include="GlobalVar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

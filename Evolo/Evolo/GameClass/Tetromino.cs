@@ -9,16 +9,15 @@ using Microsoft.Xna.Framework.Input;
 
 
 /**
- * Evolo tetromeno handler to handle the artibutes and movement of indivudal blocks with-in the tetromeno
+ * Evolo tetromino handler to handle the artibutes and movement of indivudal blocks with-in the tetromino
  * Author: Dalton, Josh, Gavin, Kurtis
  * Version: 11/24/14
  */
 
 namespace Evolo.GameClass
 {
-    class Tetromeno
+    class Tetromino
     {
-
 
         //Small Block Texture
         Texture2D blockTexture;
@@ -34,20 +33,20 @@ namespace Evolo.GameClass
         //Start Position
         Vector2 gridStartPosition;
 
-        //Tetromeno Color
+        //tetromino Color
         Color drawColor;
 
         //Spawn point for dominant block
         Vector2 drawPoint; // X, Y
 
-        //Tetromeno Type
-        int tetromenoType;
+        //tetromino Type
+        int tetrominoType;
 
         int roation = 0;
 
-        public Tetromeno(int tetromenoType, Texture2D blockTexture)
+        public Tetromino(int tetrominoType, Texture2D blockTexture)
         {
-            this.tetromenoType = tetromenoType;
+            this.tetrominoType = tetrominoType;
             this.blockTexture = blockTexture;
         }
 
@@ -58,7 +57,7 @@ namespace Evolo.GameClass
             this.gridStartPosition = gridStartPosition;
 
 
-                switch (tetromenoType)
+                switch (tetrominoType)
                 {
                     //I  Block
                     case 1:
@@ -196,7 +195,7 @@ namespace Evolo.GameClass
 
         public int getTetrisType()
         {
-            return tetromenoType;
+            return tetrominoType;
         }
     }
 }
