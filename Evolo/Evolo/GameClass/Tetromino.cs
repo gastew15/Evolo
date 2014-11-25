@@ -1,5 +1,4 @@
-﻿#region Using
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,19 +6,18 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-#endregion
+
 
 /**
- * Evolo tetromeno handler to handle the artibutes and movement of indivudal blocks with-in the tetromeno
+ * Evolo tetromino handler to handle the artibutes and movement of indivudal blocks with-in the tetromino
  * Author: Dalton, Josh, Gavin, Kurtis
- * Version: 11/5/14
+ * Version: 11/24/14
  */
 
 namespace Evolo.GameClass
 {
-    class Tetromeno
+    class Tetromino
     {
-
 
         //Small Block Texture
         Texture2D blockTexture;
@@ -35,20 +33,20 @@ namespace Evolo.GameClass
         //Start Position
         Vector2 gridStartPosition;
 
-        //Tetromeno Color
+        //tetromino Color
         Color drawColor;
 
         //Spawn point for dominant block
         Vector2 drawPoint; // X, Y
 
-        //Tetromeno Type
-        int tetromenoType;
+        //tetromino Type
+        int tetrominoType;
 
         int roation = 0;
 
-        public Tetromeno(int tetromenoType, Texture2D blockTexture)
+        public Tetromino(int tetrominoType, Texture2D blockTexture)
         {
-            this.tetromenoType = tetromenoType;
+            this.tetrominoType = tetrominoType;
             this.blockTexture = blockTexture;
         }
 
@@ -59,11 +57,8 @@ namespace Evolo.GameClass
             this.gridStartPosition = gridStartPosition;
 
 
-                switch (tetromenoType)
+                switch (tetrominoType)
                 {
-                        /*
-                         * NOTE REPLACE ALL 1's with Width or height of the block...... Also change the draw so it works right too.
-                         */
                     //I  Block
                     case 1:
 
@@ -196,6 +191,11 @@ namespace Evolo.GameClass
         public void setRotation(int rotation)
         {
             this.roation = rotation;
+        }
+
+        public int getTetrisType()
+        {
+            return tetrominoType;
         }
     }
 }
