@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Content;
 /**
  * Evolo Field Manager to handle most game related operations for the player and tetromenos
  * Author: Dalton, Josh, Gavin
- * Version: 11/16/14
+ * Version: 11/24/14
  */
 
 namespace Evolo.GameClass
@@ -28,7 +28,6 @@ namespace Evolo.GameClass
         private int milisecondsTetromenoFallTime = 300;
         private int milisecondsTetromenoLockDelayTime = 400;
         private int milisecondsElapsedPlayerTime = 0;
-        private int milisecondsPlayerJumpTime = 500;
         private int milisecondsPlayerGravityTime = 200;
 
         //Keyboard Variables / Misc
@@ -48,15 +47,15 @@ namespace Evolo.GameClass
 
         //Tetromeno Variables
         private int tetristype = 5;
-        private int absTetromenoBlockFarthestLeft, absTetromenoBlockFarthestRight, absTetromenoBlockFarthestDown;
-        private int[] farthestTetromenoBlockLeft, farthestTetromenoBlockRight, farthestTetromenoBlockDown;
+        private int absTetromenoBlockFarthestLeft, absTetromenoBlockFarthestRight, absTetromenoBlockFarthestDown, absTetromenoBlockFarthestUp;
+        private int[] farthestTetromenoBlockLeft, farthestTetromenoBlockRight, farthestTetromenoBlockDown, farthestTetromenoBlockUp;
         private int activeTetromeno = 0;
         private int lastActiveTetromeno = 0;
         int tetromenoRotation = 0;
         private List<Tetromeno> tetromeno = new List<Tetromeno>();
         private List<Vector2> tetromenoGridPos = new List<Vector2>();
         private Vector2[] tetromenoBlocklastPositions, tetromenoBlockPositions;
-        private Boolean tetromenoCanNotMoveRight, tetromenoCanNotMoveLeft, tetromenoCanNotMoveDown;
+        private Boolean tetromenoCanNotMoveRight, tetromenoCanNotMoveLeft, tetromenoCanNotMoveDown, tetromenoCanNotMoveUp;
         private Boolean playerCanNotMoveRight, playerCanNotMoveLeft, playerCanNotMoveDown, playerCanNotMoveUp;
 
         #endregion
@@ -116,6 +115,7 @@ namespace Evolo.GameClass
             tetromenoCanNotMoveRight = false;
             tetromenoCanNotMoveLeft = false;
             tetromenoCanNotMoveDown = false;
+            tetromenoCanNotMoveUp = false;
 
             playerCanNotMoveRight = false;
             playerCanNotMoveLeft = false;
@@ -124,6 +124,7 @@ namespace Evolo.GameClass
 
             //Resets absoluote tetromeno Positions
             absTetromenoBlockFarthestLeft = gameField.GetLength(0);
+            absTetromenoBlockFarthestUp = gameField.GetLength(1);
             absTetromenoBlockFarthestRight = 0;
             absTetromenoBlockFarthestDown = 0;
 
@@ -179,10 +180,13 @@ namespace Evolo.GameClass
 
             #region Teromeno Block Constraint Information
 
+            //Finds the parts of the axis relative to their opposite
+
+             #region X's On Y Values
 
             //Local Varaibles used in calculations
             Boolean yPosAlreadyInList = false;
-            List<int> yValuesUsed = new List<int>();
+            List<int> yValuesUsedForX = new List<int>();
             List<List<int>> xValuesUsed = new List<List<int>>();
 
             //Finds all the unqiue Y Values in tetromeno's indivdual blocks
@@ -190,39 +194,39 @@ namespace Evolo.GameClass
             {
                 List<int> yPosSublist = new List<int>();
 
-                if (yValuesUsed != null)
+                if (yValuesUsedForX != null)
                 {
-                    for (int j = 0; j < yValuesUsed.Count; j++)
+                    for (int j = 0; j < yValuesUsedForX.Count; j++)
                     {
-                        if (tetromenoBlockPositions[w].Y == yValuesUsed[j])
+                        if (tetromenoBlockPositions[w].Y == yValuesUsedForX[j])
                         {
                             yPosAlreadyInList = true;
                         }
                     }
                     if (yPosAlreadyInList == false)
                     {
-                        yValuesUsed.Add((int)tetromenoBlockPositions[w].Y);
+                        yValuesUsedForX.Add((int)tetromenoBlockPositions[w].Y);
 
                     }
                 }
                 else
                 {
-                    yValuesUsed.Add((int)tetromenoBlockPositions[w].Y);
+                    yValuesUsedForX.Add((int)tetromenoBlockPositions[w].Y);
 
                 }
                 yPosAlreadyInList = false;
             }
 
-            yValuesUsed.Sort();
+            yValuesUsedForX.Sort();
 
             //Finds the X values that exist relative to the Y values in the Tetrimino
-            for (int k = 0; k < yValuesUsed.Count; k++)
+            for (int k = 0; k < yValuesUsedForX.Count; k++)
             {
                 List<int> xHoldingValues = new List<int>();
 
                 for (int i = 0; i < tetromenoBlockPositions.Length; i++)
                 {
-                    if (tetromenoBlockPositions[i].Y == yValuesUsed[k])
+                    if (tetromenoBlockPositions[i].Y == yValuesUsedForX[k])
                     {
                         xHoldingValues.Add((int)tetromenoBlockPositions[i].X);
                     }
@@ -230,13 +234,69 @@ namespace Evolo.GameClass
                 xValuesUsed.Add(xHoldingValues);
             }
 
+            #endregion
+
+             #region Y's On X Values
+
+            //Local Varaibles used in calculations
+            Boolean xPosAlreadyInList = false;
+            List<int> xValuesUsedForY = new List<int>();
+            List<List<int>> yValuesUsed = new List<List<int>>();
+
+            //Finds all the unqiue X Values in tetromeno's indivdual blocks
+            for (int g = 0; g < tetromenoBlockPositions.Length; g++)
+            {
+                List<int> xPosSublist = new List<int>();
+
+                if (xValuesUsedForY != null)
+                {
+                    for (int j = 0; j < xValuesUsedForY.Count; j++)
+                    {
+                        if (tetromenoBlockPositions[g].X == xValuesUsedForY[j])
+                        {
+                            xPosAlreadyInList = true;
+                        }
+                    }
+                    if (xPosAlreadyInList == false)
+                    {
+                        xValuesUsedForY.Add((int)tetromenoBlockPositions[g].X);
+
+                    }
+                }
+                else
+                {
+                    xValuesUsedForY.Add((int)tetromenoBlockPositions[g].X);
+
+                }
+                xPosAlreadyInList = false;
+            }
+
+            xValuesUsedForY.Sort();
+
+            //Finds the Y values that exist relative to the X values in the Tetrimino
+            for (int q  = 0; q < xValuesUsedForY.Count; q++)
+            {
+                List<int> yHoldingValues = new List<int>();
+
+                for (int i = 0; i < tetromenoBlockPositions.Length; i++)
+                {
+                    if (tetromenoBlockPositions[i].X == xValuesUsedForY[q])
+                    {
+                        yHoldingValues.Add((int)tetromenoBlockPositions[i].Y);
+                    }
+                }
+                yValuesUsed.Add(yHoldingValues);
+            }
+
+            #endregion
+
             //Debug Info Write
             debugStringData = "\n" + "yValuesUsed:";
-            for (int m = 0; m < yValuesUsed.Count; m++)
+            for (int m = 0; m < yValuesUsedForX.Count; m++)
             {
                 xValuesUsed[m].Sort();
 
-                debugStringData += "\nY" + (m + 1) + ": " + yValuesUsed[m];
+                debugStringData += "\nY" + (m + 1) + ": " + yValuesUsedForX[m];
 
                 debugStringData += " X's:";
                 for (int j = 0; j < xValuesUsed[m].Count; j++)
@@ -249,9 +309,12 @@ namespace Evolo.GameClass
             //Sets array index size for the farthest blocks
             farthestTetromenoBlockLeft = new int[xValuesUsed.Count];
             farthestTetromenoBlockRight = new int[xValuesUsed.Count];
-            farthestTetromenoBlockDown = new int[xValuesUsed.Count];
+            farthestTetromenoBlockDown = new int[yValuesUsed.Count];
+            farthestTetromenoBlockUp = new int[yValuesUsed.Count];
 
-            //Checks the farthest x Values for their repsective Y's in the List, aswell as the farthestdown Y Value
+            #region extremas of X Values on the Y axis
+
+            //Checks the farthest x Values for their repsective Y's in the List
             for (int p = 0; p < xValuesUsed.Count; p++)
             {
                 int mostRightXOnY = 0;
@@ -284,15 +347,48 @@ namespace Evolo.GameClass
                 {
                     absTetromenoBlockFarthestLeft = mostLeftXOnY;
                 }
+            }
 
-                //Checks for Farthest Down Y Value
-                if (yValuesUsed[p] > absTetromenoBlockFarthestDown)
+            #endregion
+
+            #region extremas of Y Values on the X axis
+
+            //Checks the farthest Y Values for their repsective X's in the List
+            for (int v = 0; v < yValuesUsed.Count; v++)
+            {
+                int mostUpYOnX = gameField.GetLength(1);
+                int mostDownYOnX = 0;
+
+                //Checks for Max Y values On X
+                for (int i = 0; i < yValuesUsed[v].Count; i++)
                 {
-                    absTetromenoBlockFarthestDown = yValuesUsed[p];
+                    if (yValuesUsed[v][i] < mostUpYOnX)
+                    {
+                        mostUpYOnX = yValuesUsed[v][i];
+                    }
+
+                    if (yValuesUsed[v][i] > mostDownYOnX)
+                    {
+                        mostDownYOnX = yValuesUsed[v][i];
+                    }
                 }
 
-                farthestTetromenoBlockDown[p] = yValuesUsed[p];
+                farthestTetromenoBlockDown[v] = mostDownYOnX;
+                farthestTetromenoBlockUp[v] = mostUpYOnX;
+
+                //Checks for Overall Max Y Values
+                if (mostUpYOnX < absTetromenoBlockFarthestUp)
+                {
+                    absTetromenoBlockFarthestUp = mostUpYOnX;
+                }
+
+                if (mostDownYOnX > absTetromenoBlockFarthestDown)
+                {
+                    absTetromenoBlockFarthestDown = mostDownYOnX;
+                }
             }
+
+            #endregion
 
             #endregion
 
@@ -303,7 +399,7 @@ namespace Evolo.GameClass
             {
                 if (farthestTetromenoBlockLeft[i] > 0)
                 {
-                    if (gameField[farthestTetromenoBlockLeft[i] - 1, yValuesUsed[i]] == true)
+                    if (gameField[farthestTetromenoBlockLeft[i] - 1, yValuesUsedForX[i]] == true)
                     {
                         tetromenoCanNotMoveLeft = true;
                     }
@@ -311,13 +407,37 @@ namespace Evolo.GameClass
 
                 if (farthestTetromenoBlockRight[i] < gameField.GetLength(0))
                 {
-                    if (gameField[farthestTetromenoBlockRight[i] + 1, yValuesUsed[i]] == true)
+                    if (gameField[farthestTetromenoBlockRight[i] + 1, yValuesUsedForX[i]] == true)
                     {
                         tetromenoCanNotMoveRight = true;
                     }
                 }
             }
 
+
+
+
+            //(Up / Down)
+            for (int i = 0; i < farthestTetromenoBlockUp.Length; i++)
+            {
+                if (farthestTetromenoBlockUp[i] > 0)
+                {
+                    if (gameField[xValuesUsedForY[i], farthestTetromenoBlockUp[i] - 1] == true)
+                    {
+                        tetromenoCanNotMoveUp = true;
+                    }
+                }
+
+                if (farthestTetromenoBlockDown[i] < gameField.GetLength(1) - 1)
+                {
+                    if (gameField[xValuesUsedForY[i], farthestTetromenoBlockDown[i] + 1] == true)
+                    {
+                        tetromenoCanNotMoveDown = true;
+                    }
+                }
+            }
+
+            /*
             //(Down)
             for (int q = 0; q < absTetromenoBlockFarthestRight - absTetromenoBlockFarthestLeft; q++)
             {
@@ -329,6 +449,7 @@ namespace Evolo.GameClass
                     }
                 }
             }
+             */
 
             #endregion
 
@@ -417,7 +538,7 @@ namespace Evolo.GameClass
             }
 
             //Keyboard Input (Up Key) *Rotation
-            if (tetristype != 5)
+            if (tetromeno[activeTetromeno].getTetrisType() != 5)
             {
                 if (keyUpDown == true)
                 {
@@ -585,9 +706,9 @@ namespace Evolo.GameClass
                 for (int i = 0; i < gameField.GetLength(1); i++)
                 {
                     if (j < 3 || j > 22)
-                        backdropColor = Color.LightSeaGreen;
+                        backdropColor = Color.LightGray;
                     else if (i < 2)
-                        backdropColor = Color.LightCoral;
+                        backdropColor = Color.DarkGray;
                     else
                         backdropColor = Color.White;
 

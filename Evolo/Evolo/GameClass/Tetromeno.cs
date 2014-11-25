@@ -1,5 +1,4 @@
-﻿#region Using
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,12 +6,12 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-#endregion
+
 
 /**
  * Evolo tetromeno handler to handle the artibutes and movement of indivudal blocks with-in the tetromeno
  * Author: Dalton, Josh, Gavin, Kurtis
- * Version: 11/5/14
+ * Version: 11/24/14
  */
 
 namespace Evolo.GameClass
@@ -61,9 +60,6 @@ namespace Evolo.GameClass
 
                 switch (tetromenoType)
                 {
-                        /*
-                         * NOTE REPLACE ALL 1's with Width or height of the block...... Also change the draw so it works right too.
-                         */
                     //I  Block
                     case 1:
 
@@ -196,6 +192,11 @@ namespace Evolo.GameClass
         public void setRotation(int rotation)
         {
             this.roation = rotation;
+        }
+
+        public int getTetrisType()
+        {
+            return tetromenoType;
         }
     }
 }
