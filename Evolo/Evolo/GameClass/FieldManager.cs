@@ -24,9 +24,9 @@ namespace Evolo.GameClass
         private Vector2 gridStartPos, levelStartPoint, levelEndPoint;
 
         //Timing Variables
-        private int milisecondsElapsedtetrominoTime = 0;
-        private int milisecondstetrominoFallTime = 300;
-        private int milisecondstetrominoLockDelayTime = 400;
+        private int milisecondsElapsedTetrominoTime = 0;
+        private int milisecondsTetrominoFallTime = 300;
+        private int milisecondsTetrominoLockDelayTime = 400;
         private int milisecondsElapsedPlayerTime = 0;
         private int milisecondsPlayerGravityTime = 200;
 
@@ -61,6 +61,11 @@ namespace Evolo.GameClass
         private Boolean tetrominoCanNotMoveRight, tetrominoCanNotMoveLeft, tetrominoCanNotMoveDown, tetrominoCanNotMoveUp;
         private Boolean tetrominoCanRotate;
 
+        //Platform Variables
+        private EndPlatform platform;
+        private Texture2D platformTexture;
+        private Vector2 platformGridPos;
+
         #endregion
 
         public FieldManager()
@@ -79,6 +84,7 @@ namespace Evolo.GameClass
         {
             blockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
             playerTexture = Content.Load<Texture2D>("Sprites and pictures/CharacterTest");
+            platformTexture = Content.Load<Texture2D>("Sprites and pictures/EndPlatform");
 
             //Teromeno Set Up Reference 
             tetristype = random.Next(1, 8);
@@ -100,6 +106,9 @@ namespace Evolo.GameClass
             player1 = new Player(playerTexture);
             player1GridPos = levelStartPoint;
 
+            //Platform Set Up
+            platform = new EndPlatform(platformTexture);
+            platformGridPos = new Vector2(23, 10);
         }
 
         public void Update(GameTime gameTime)
@@ -108,7 +117,7 @@ namespace Evolo.GameClass
             #region Local Variable Reseting
 
             //Adds time since last update to the elapsed time for the tetromino
-            milisecondsElapsedtetrominoTime += gameTime.ElapsedGameTime.Milliseconds;
+            milisecondsElapsedTetrominoTime += gameTime.ElapsedGameTime.Milliseconds;
             milisecondsElapsedPlayerTime += gameTime.ElapsedGameTime.Milliseconds;
 
             //Adjusts the grid Starting Postion for resolution changes & such
@@ -586,17 +595,17 @@ namespace Evolo.GameClass
             if (absTetrominoBlockFarthestDown < gameField.GetLength(1) - 1 && tetrominoCanNotMoveDown == false)
             {
                 //Checks if the block can move down based off the elapsed time, and makes up for any lost movement since the last update
-                while (milisecondsElapsedtetrominoTime - milisecondstetrominoFallTime >= 1)
+                while (milisecondsElapsedTetrominoTime - milisecondsTetrominoFallTime >= 1)
                 {
                     //Move the tetromino down one and takes away 1 movement worth of time from the elapsed time
                     tetrominoGridPos[activeTetromino] = new Vector2(tetrominoGridPos[activeTetromino].X, tetrominoGridPos[activeTetromino].Y + 1);
-                    milisecondsElapsedtetrominoTime -= milisecondstetrominoFallTime;
+                    milisecondsElapsedTetrominoTime -= milisecondsTetrominoFallTime;
                 }
             }
             else
             {
                 //Checks for block lock delay before locking in place and spawning new block
-                if (milisecondsElapsedtetrominoTime - milisecondstetrominoLockDelayTime >= 1)
+                if (milisecondsElapsedTetrominoTime - milisecondsTetrominoLockDelayTime >= 1)
                 {
                     //Setting various variables required to spawn a new clean tetromino
                     tetristype = random.Next(1, 8);
@@ -604,7 +613,7 @@ namespace Evolo.GameClass
                     tetromino.Add(new Tetromino(tetristype, blockTexture));
                     tetrominoGridPos.Add(new Vector2(28.5f, 4));
                     tetrominoGridPos[activeTetromino] = new Vector2(13,0);
-                    milisecondsElapsedtetrominoTime -= milisecondstetrominoLockDelayTime;
+                    milisecondsElapsedTetrominoTime -= milisecondsTetrominoLockDelayTime;
                 }
             }
 
@@ -710,6 +719,7 @@ namespace Evolo.GameClass
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
+            
 
             //TEMP BACKDROP FOR POS TESTING
             Color backdropColor;
@@ -757,6 +767,7 @@ namespace Evolo.GameClass
 
             //Store in Variable Last
             player1GridPosPrevious = player1GridPos;
+            platform.Draw(spriteBatch, new Vector2(gridStartPos.X + (platformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (platformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))));
         }
 
         public Boolean[,] getGameField()
