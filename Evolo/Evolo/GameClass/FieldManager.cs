@@ -118,6 +118,10 @@ namespace Evolo.GameClass
             //Platform Set Up
             platform = new EndPlatform(platformTexture);
             platformGridPos = new Vector2(23, 10);
+            for (int i = 0; i < 2; i++)
+            {
+                gameField[(int)platformGridPos.X + i, (int)platformGridPos.Y] = true;
+            }
         }
 
         public void Update(GameTime gameTime)
