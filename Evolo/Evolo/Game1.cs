@@ -57,7 +57,7 @@ namespace Evolo
         //Variables
 
         //Game
-        String version = "Build V: 1.1.7.5"; // Major, Minor, Build, Revision #
+        String version = "Build V: 1.1.7.7"; // Major, Minor, Build, Revision #
         Boolean tripped = false;
         const int defualtWidth = 1280, defualtHeight = 720;
 
