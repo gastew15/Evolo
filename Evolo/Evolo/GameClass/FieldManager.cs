@@ -56,6 +56,7 @@ namespace Evolo.GameClass
         int tetrominoLastRotation = 0;
         private List<Tetromino> tetromino = new List<Tetromino>();
         private List<Vector2> tetrominoGridPos = new List<Vector2>();
+        private int[] tetrominoHistory = new int[4];
         private Vector2 tetrominoLastGridPos = new Vector2();
         private Vector2[] tetrominoBlockLastPositions, tetrominoBlockPositions;
         private Boolean tetrominoCanNotMoveRight, tetrominoCanNotMoveLeft, tetrominoCanNotMoveDown, tetrominoCanNotMoveUp;
@@ -73,6 +74,7 @@ namespace Evolo.GameClass
             player1SpriteEffects = SpriteEffects.None;
 
             player1GridPosPrevious = player1GridPos;
+
         }
 
         public void LoadContent(ContentManager Content)
@@ -82,9 +84,16 @@ namespace Evolo.GameClass
 
             //Teromeno Set Up Reference 
             tetristype = random.Next(1, 8);
+            tetrominoHistoryAddItem(tetristype);
             tetromino.Add(new Tetromino(tetristype, blockTexture));
             tetrominoGridPos.Add(new Vector2(13, 0));
             tetristype = random.Next(1, 8);
+            if (tetristype == tetrominoHistory[0])
+            {
+                tetristype = random.Next(1, 8);
+            }
+
+            tetrominoHistoryAddItem(tetristype);
             tetromino.Add(new Tetromino(tetristype, blockTexture));
             tetrominoGridPos.Add(new Vector2(28.5f, 4));
 
@@ -189,7 +198,7 @@ namespace Evolo.GameClass
 
             //Finds the parts of the axis relative to their opposite
 
-             #region X's On Y Values
+            #region X's On Y Values
 
             //Local Varaibles used in calculations
             Boolean yPosAlreadyInList = false;
@@ -243,7 +252,7 @@ namespace Evolo.GameClass
 
             #endregion
 
-             #region Y's On X Values
+            #region Y's On X Values
 
             //Local Varaibles used in calculations
             Boolean xPosAlreadyInList = false;
@@ -281,7 +290,7 @@ namespace Evolo.GameClass
             xValuesUsedForY.Sort();
 
             //Finds the Y values that exist relative to the X values in the Tetrimino
-            for (int q  = 0; q < xValuesUsedForY.Count; q++)
+            for (int q = 0; q < xValuesUsedForY.Count; q++)
             {
                 List<int> yHoldingValues = new List<int>();
 
@@ -452,10 +461,10 @@ namespace Evolo.GameClass
             }
 
             //Check
-            if (player1GridPos.X - 1 >= 0 && player1GridPos.X + 1 < gameField.GetLength(0)  && (player1GridPos.Y >= 0 && player1GridPos.Y < gameField.GetLength(1)))
+            if (player1GridPos.X - 1 >= 0 && player1GridPos.X + 1 < gameField.GetLength(0) && (player1GridPos.Y >= 0 && player1GridPos.Y < gameField.GetLength(1)))
             {
                 //Right
-                if(gameField[(int)player1GridPos.X + 1, (int)player1GridPos.Y] == true)
+                if (gameField[(int)player1GridPos.X + 1, (int)player1GridPos.Y] == true)
                 {
                     playerCanNotMoveRight = true;
                 }
@@ -598,12 +607,29 @@ namespace Evolo.GameClass
                 //Checks for block lock delay before locking in place and spawning new block
                 if (milisecondsElapsedtetrominoTime - milisecondstetrominoLockDelayTime >= 1)
                 {
-                    //Setting various variables required to spawn a new clean tetromino
-                    tetristype = random.Next(1, 8);
+                    //Setting various variables required to spawn a new clean tetromin
+
+                    bool repeat = false;
+                    int index = 0;
+                    do
+                    {
+                        tetristype = random.Next(1, 8);
+                        for (int i = 0; i < tetrominoHistory.Length; i++)
+                        {
+                            if (tetristype == tetrominoHistory[i])
+                                repeat = true;
+
+                        }
+                        index++;
+                    }
+                    while (repeat == true && index != 3);
+
+                    tetrominoHistoryAddItem(tetristype);
+
                     activeTetromino += 1;
                     tetromino.Add(new Tetromino(tetristype, blockTexture));
                     tetrominoGridPos.Add(new Vector2(28.5f, 4));
-                    tetrominoGridPos[activeTetromino] = new Vector2(13,0);
+                    tetrominoGridPos[activeTetromino] = new Vector2(13, 0);
                     milisecondsElapsedtetrominoTime -= milisecondstetrominoLockDelayTime;
                 }
             }
@@ -762,6 +788,15 @@ namespace Evolo.GameClass
         public Boolean[,] getGameField()
         {
             return gameField;
+        }
+
+        private void tetrominoHistoryAddItem(int tetromino)
+        {
+            for(int i = 3; i > 0; i--)
+            {
+                tetrominoHistory[i] = tetrominoHistory[i - 1];
+            }
+            tetrominoHistory[0] = tetromino;
         }
 
     }
