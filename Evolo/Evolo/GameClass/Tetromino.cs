@@ -197,5 +197,20 @@ namespace Evolo.GameClass
         {
             return tetrominoType;
         }
+
+        public void setTetrisType(int tetrominoType)
+        {
+            this.tetrominoType = tetrominoType;
+        }
+
+        public int getRotation()
+        {
+            return roation;
+        }
+
+        public void setColorTemp(Color color)
+        {
+            this.drawColor = color;
+        }
     }
 }
