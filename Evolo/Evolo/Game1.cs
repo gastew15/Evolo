@@ -30,6 +30,7 @@ namespace Evolo
         SpriteFont SeqoeUIMonoNormal, MenuFont;
         FPSManager fpsManager;
         OptionsHandler optionsHandler;
+        LevelEndScreen endGame;
 
         //TEMP CLASSES
         FieldManager fieldManager;
@@ -266,6 +267,9 @@ namespace Evolo
                         cloud.Update(gameTime, milliScecondsElapsedGameTime);
                         if (splashScreen.getSplashScreenOver() == true)
                             GlobalVar.GameState = "MenuScreen";
+                        break;
+                    case "GameOver":
+                        endGame.SetGameOver(true);
                         break;
                 }
 
