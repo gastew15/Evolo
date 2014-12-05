@@ -627,11 +627,16 @@ namespace Evolo.GameClass
                     do
                     {
                         tetristype = random.Next(1, 8);
-                        for (int i = 0; i < tetrominoHistory.Length; i++)
-                        {
-                            if (tetristype == tetrominoHistory[i])
-                                repeat = true;
+                        //for (int i = 0; i < tetrominoHistory.Length; i++)
+                        //{
+                        //    if (tetristype == tetrominoHistory[i])
+                        //        repeat = true;
 
+                        //}
+
+                        if (tetrominoHistory.Contains<int>(tetristype))
+                        {
+                            repeat = true;
                         }
                         index++;
                     }
@@ -785,6 +790,12 @@ namespace Evolo.GameClass
                     {
                         spriteBatch.DrawString(font, "AbsLeft: " + absTetrominoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetrominoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetrominoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetrominoCanNotMoveLeft + "\nMove Right: " + !tetrominoCanNotMoveRight + "\nMove Down: " + !tetrominoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                         spriteBatch.DrawString(font, "Player Pos: " + "X: " + player1GridPos.X + " Y: " + player1GridPos.Y + "\nMove Left: " + !playerCanNotMoveLeft + "\nMove Right: " + !playerCanNotMoveRight + "\nMove Down: " + !playerCanNotMoveDown + "\nMove Up: " + !playerCanNotMoveUp, new Vector2(10 * GlobalVar.ScaleSize.X, 225 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                        
+                        for (int p = 0; p < tetrominoHistory.Length; p++)
+                        {
+                            spriteBatch.DrawString(font,"History: " + tetrominoHistory[p].ToString() + " , ", new Vector2((10 + (10 * p)) * GlobalVar.ScaleSize.X, 400 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                        }
+                        
                     }
                 }
             }
