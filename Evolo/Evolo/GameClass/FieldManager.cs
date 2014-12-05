@@ -61,6 +61,7 @@ namespace Evolo.GameClass
         private Vector2[] tetrominoBlockLastPositions, tetrominoBlockPositions;
         private Boolean tetrominoCanNotMoveRight, tetrominoCanNotMoveLeft, tetrominoCanNotMoveDown, tetrominoCanNotMoveUp;
         private Boolean tetrominoCanRotate;
+        private Tetromino rotationTestTetromino;
 
         //Platform Variables
         private EndPlatform platform;
@@ -93,12 +94,16 @@ namespace Evolo.GameClass
             tetrominoHistoryAddItem(tetristype);
             tetromino.Add(new Tetromino(tetristype, blockTexture));
             tetrominoGridPos.Add(new Vector2(13, 0));
+
+            //Rotation Tetromino Test Set Up
+            rotationTestTetromino = new Tetromino(tetristype, blockTexture);
+
+            //Next Teromino Set Up Reference 
             tetristype = random.Next(1, 8);
             if (tetristype == tetrominoHistory[0])
             {
                 tetristype = random.Next(1, 8);
             }
-
             tetrominoHistoryAddItem(tetristype);
             tetromino.Add(new Tetromino(tetristype, blockTexture));
             tetrominoGridPos.Add(new Vector2(28.5f, 4));
@@ -552,20 +557,60 @@ namespace Evolo.GameClass
             //Keyboard Input (Up Key) *Rotation
             if (tetromino[activeTetromino].getTetrisType() != 5)
             {
+                //Sets test block rotation one ahead of the current rotation
+                if (tetrominoRotation < 3)
+                    rotationTestTetromino.setRotation(tetrominoRotation + 1);
+                else
+                    rotationTestTetromino.setRotation(0);
+
                 if (keyUpDown == true)
                 {
                     if (Keyboard.GetState().IsKeyDown(Keys.Up))
                     {
                         keyUpDown = false;
 
-                        //Sets current roation value based off 0 - 3
-                        if (tetrominoRotation < 3)
-                            tetrominoRotation++;
-                        else
-                            tetrominoRotation = 0;
+                        //Rotation Checking
+                        for (int p = 0; p < rotationTestTetromino.getPositions().Length; p++)
+                        {
+                            //check if the rotation would be inside the game field bounds
+                            if (((int)rotationTestTetromino.getPositions()[p].X > 2 && (int)rotationTestTetromino.getPositions()[p].X < gameField.GetLength(0) - 3) && ((int)rotationTestTetromino.getPositions()[p].Y > 0 && (int)rotationTestTetromino.getPositions()[p].Y < gameField.GetLength(1)))
+                            {
+                                //checks if the rotation will collide with any blocks set to active                           
+                                if (gameField[(int)rotationTestTetromino.getPositions()[p].X, (int)rotationTestTetromino.getPositions()[p].Y] == true)
+                                {
+                                    //checks if the postions that are true are part of the main active tetromino before setting to true.
+                                    Boolean tripped = false;
+                                    for (int q = 0; q < tetromino[activeTetromino].getPositions().Length; q++)
+                                    {
+                                        if (rotationTestTetromino.getPositions()[p] == tetromino[activeTetromino].getPositions()[q])
+                                        {
+                                            tripped = true;
+                                        }
+                                    }
 
-                        //Sends roation value to the currently active tetromino
-                        tetromino[activeTetromino].setRotation(tetrominoRotation);
+                                    if (tripped == false)
+                                    {
+                                        tetrominoCanRotate = false;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                tetrominoCanRotate = false;
+                            }
+                        }
+
+                        if (tetrominoCanRotate == true)
+                        {
+                            //Sets current roation value based off 0 - 3
+                            if (tetrominoRotation < 3)
+                                tetrominoRotation++;
+                            else
+                                tetrominoRotation = 0;
+
+                            //Sends roation value to the currently active tetromino
+                            tetromino[activeTetromino].setRotation(tetrominoRotation);
+                        }
                     }
                 }
                 else if (Keyboard.GetState().IsKeyUp(Keys.Up))
@@ -575,29 +620,6 @@ namespace Evolo.GameClass
                         keyUpDown = true;
                     }
                 }
-            }
-
-            //Checks for rotation out of array
-            for (int a = 0; a < tetromino[activeTetromino].getPositions().Length; a++)
-            {
-                if ((tetromino[activeTetromino].getPositions()[a].X >= 3 && tetromino[activeTetromino].getPositions()[a].X <= gameField.GetLength(0) - 4) && (tetromino[activeTetromino].getPositions()[a].Y >= 0 && tetromino[activeTetromino].getPositions()[a].Y <= gameField.GetLength(1) - 1))
-                {
-                    if (!(gameField[(int)tetromino[activeTetromino].getPositions()[a].X, (int)tetromino[activeTetromino].getPositions()[a].Y] == true))
-                    {
-                        tetrominoCanRotate = false;
-                    }
-                }
-                else
-                {
-                    tetrominoCanRotate = false;
-                }
-            }
-
-            //Fixes probelm if it occurs
-            if (tetrominoCanRotate == false)
-            {
-                tetrominoGridPos[activeTetromino] = tetrominoLastGridPos;
-                tetrominoRotation = tetrominoLastRotation;
             }
 
             #endregion
@@ -627,12 +649,7 @@ namespace Evolo.GameClass
                     do
                     {
                         tetristype = random.Next(1, 8);
-                        //for (int i = 0; i < tetrominoHistory.Length; i++)
-                        //{
-                        //    if (tetristype == tetrominoHistory[i])
-                        //        repeat = true;
 
-                        //}
 
                         if (tetrominoHistory.Contains<int>(tetristype))
                         {
@@ -648,8 +665,12 @@ namespace Evolo.GameClass
                     tetromino.Add(new Tetromino(tetristype, blockTexture));
                     tetrominoGridPos.Add(new Vector2(28.5f, 4));
                     tetrominoGridPos[activeTetromino] = new Vector2(13, 0);
-                    milisecondsElapsedTetrominoTime -= milisecondsTetrominoLockDelayTime;
-                    tetrominoGridPos[activeTetromino] = new Vector2(13,0);
+                    tetrominoRotation = 0;
+                    tetrominoLastRotation = 0;
+
+                    rotationTestTetromino.setTetrisType(tetromino[activeTetromino].getTetrisType());
+                    rotationTestTetromino.setRotation(0);
+
                     milisecondsElapsedTetrominoTime -= milisecondsTetrominoLockDelayTime;
                 }
             }
@@ -744,21 +765,23 @@ namespace Evolo.GameClass
 
             #endregion
 
-            //Termeno Updates
+            //Tetromino Updates
             for (int k = 0; k < tetromino.Count; k++)
             {
                 tetromino[k].Update(tetrominoGridPos[k], gridStartPos, GlobalVar.ScaleSize);
             }
 
+            rotationTestTetromino.Update(tetrominoGridPos[activeTetromino], gridStartPos, GlobalVar.ScaleSize);
+
             //Player Update
             player1.Update(new Vector2(gridStartPos.X + (player1GridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (player1GridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), GlobalVar.ScaleSize, Color.White);
+
+            //Store in Variable Last
+            player1GridPosPrevious = player1GridPos;
         }
 
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
-            
-
-            //TEMP BACKDROP FOR POS TESTING
             Color backdropColor;
             //For Loop for drawing blocks to the screen
             for (int j = 0; j < gameField.GetLength(0); j++)
@@ -772,13 +795,17 @@ namespace Evolo.GameClass
                     else
                         backdropColor = Color.White;
 
-                    //HitBox Debug
-                    /*
-                    if (gameField[j, i] == true)
+                    if (gameField[j, i] == false)
                     {
-                        backdropColor = Color.Blue;
+                        backdropColor.A = 255;
                     }
-                    */
+                    else
+                    {
+                        //HitBox Debug
+                        //backdropColor = Color.Blue;
+
+                        backdropColor.A = 255;
+                    }
 
                     //Draws the block to the screen at the specified point based on the for loop
                     spriteBatch.Draw(blockTexture, new Vector2(gridStartPos.X + ((blockTexture.Width * GlobalVar.ScaleSize.X) * j), gridStartPos.Y + ((blockTexture.Height * GlobalVar.ScaleSize.Y) * i)), null, backdropColor, 0, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 0);
@@ -788,17 +815,22 @@ namespace Evolo.GameClass
                     //Prints out Debug Info About the Block
                     if (Boolean.Parse(GlobalVar.OptionsArray[9]) == true)
                     {
+
                         spriteBatch.DrawString(font, "AbsLeft: " + absTetrominoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetrominoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetrominoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetrominoCanNotMoveLeft + "\nMove Right: " + !tetrominoCanNotMoveRight + "\nMove Down: " + !tetrominoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                         spriteBatch.DrawString(font, "Player Pos: " + "X: " + player1GridPos.X + " Y: " + player1GridPos.Y + "\nMove Left: " + !playerCanNotMoveLeft + "\nMove Right: " + !playerCanNotMoveRight + "\nMove Down: " + !playerCanNotMoveDown + "\nMove Up: " + !playerCanNotMoveUp, new Vector2(10 * GlobalVar.ScaleSize.X, 225 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                         
                         for (int p = 0; p < tetrominoHistory.Length; p++)
                         {
-                            spriteBatch.DrawString(font,"History: " + tetrominoHistory[p].ToString() + " , ", new Vector2((10 + (10 * p)) * GlobalVar.ScaleSize.X, 400 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                            spriteBatch.DrawString(font,tetrominoHistory[p].ToString(), new Vector2((10 + (10 * p)) * GlobalVar.ScaleSize.X, 400 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                         }
-                        
+
                     }
                 }
             }
+
+            //ghost rotationTestTetromino collsion Block Debug drawing
+            //rotationTestTetromino.setColorTemp(Color.Black);
+            //rotationTestTetromino.Draw(spriteBatch);
 
             //tetromino Draw
             for (int k = 0; k < tetromino.Count; k++)
@@ -808,8 +840,6 @@ namespace Evolo.GameClass
 
             player1.Draw(spriteBatch, player1SpriteEffects);
 
-            //Store in Variable Last
-            player1GridPosPrevious = player1GridPos;
             platform.Draw(spriteBatch, new Vector2(gridStartPos.X + (platformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (platformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))));
         }
 
@@ -820,7 +850,7 @@ namespace Evolo.GameClass
 
         private void tetrominoHistoryAddItem(int tetromino)
         {
-            for(int i = 3; i > 0; i--)
+            for (int i = 3; i > 0; i--)
             {
                 tetrominoHistory[i] = tetrominoHistory[i - 1];
             }

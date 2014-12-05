@@ -30,6 +30,7 @@ namespace Evolo
         SpriteFont SeqoeUIMonoNormal, MenuFont;
         FPSManager fpsManager;
         OptionsHandler optionsHandler;
+        LevelEndScreen endGame;
 
         //TEMP CLASSES
         FieldManager fieldManager;
@@ -57,7 +58,7 @@ namespace Evolo
         //Variables
 
         //Game
-        String version = "Build V: 1.1.7.7"; // Major, Minor, Build, Revision #
+        String version = "Build V: 1.1.8.0"; // Major, Minor, Build, Revision #
         Boolean tripped = false;
         const int defualtWidth = 1280, defualtHeight = 720;
 
@@ -266,6 +267,9 @@ namespace Evolo
                         cloud.Update(gameTime, milliScecondsElapsedGameTime);
                         if (splashScreen.getSplashScreenOver() == true)
                             GlobalVar.GameState = "MenuScreen";
+                        break;
+                    case "GameOver":
+                        endGame.SetGameOver(true);
                         break;
                 }
 
