@@ -70,7 +70,7 @@ namespace Evolo.GameClass
             optionsHandler = new OptionsHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo");
             //saveHandler = new SaveHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo\\Save.dat", 7);
 
-            optionsKeybindingMenuButtonText = new String[6] { "Forward: " + keyBindingInfo[0], "Backward: " + keyBindingInfo[1], "Left: " + keyBindingInfo[2], "Right: " + keyBindingInfo[3], "Brake: " + keyBindingInfo[4], "Back" };
+            optionsKeybindingMenuButtonText = new String[8] { "Player Left: " + keyBindingInfo[0], "Player Right: " + keyBindingInfo[1], "Player Up: " + keyBindingInfo[2], "TetrominoLeft: " + keyBindingInfo[3], "TetrominoRight: " + keyBindingInfo[4], "TetrominoRotate: " + keyBindingInfo[5], "TetrominoDown: " + keyBindingInfo[6], "Back" };
             optionsMenuButtonText = new String[7] { "Resolution", "Key Bindings", "Debug Options", "Sound: OFF", "Music: OFF", "Exit & Save", "Exit W/O Saving" };
             optionsResolutionMenuButtonText = new String[7] { "Full Screen", "800 x 600", "1280 x 720", "1366 x 768", "1600 x 900", "1920 x 1080", "Back" };
             mainMenuButtonText = new String[6] { "Start New Game", "Load Game", "Options","Credits","Help", "Quit" };
@@ -81,7 +81,7 @@ namespace Evolo.GameClass
             mainMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
             optionsMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray};
             optionsResolutionMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
-            optionsKeybindingMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
+            optionsKeybindingMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
             pauseMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
             debugMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
             saveSlotMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
@@ -131,15 +131,15 @@ namespace Evolo.GameClass
             //debugMenu = new MenuHandler(optionsTitle, debugSP, new Vector2(), mainMenuVerticalSpacing, menuButtonBackground, debugMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
             saveSlotMenu = new MenuHandler(menuTitle, saveSlotMenuSP, new Vector2(), mainMenuVerticalSpacing, menuButtonBackground, saveSlotMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
 
-            if(Boolean.Parse(GlobalVar.OptionsArray[10]) == true)
+            if(Boolean.Parse(GlobalVar.OptionsArray[12]) == true)
                 optionsMenuButtonText[3] = "Sound: ON";
-            if(Boolean.Parse(GlobalVar.OptionsArray[11]) == true)
+            if(Boolean.Parse(GlobalVar.OptionsArray[13]) == true)
                 optionsMenuButtonText[4] = "Music: ON";
-            if (Boolean.Parse(GlobalVar.OptionsArray[7]) == true)
-                debugMenuButtonText[0] = "Cursor: Hardware";
-            if (Boolean.Parse(GlobalVar.OptionsArray[8]) == true)
-                debugMenuButtonText[1] = "FPS: On";
             if (Boolean.Parse(GlobalVar.OptionsArray[9]) == true)
+                debugMenuButtonText[0] = "Cursor: Hardware";
+            if (Boolean.Parse(GlobalVar.OptionsArray[10]) == true)
+                debugMenuButtonText[1] = "FPS: On";
+            if (Boolean.Parse(GlobalVar.OptionsArray[11]) == true)
                 debugMenuButtonText[2] = "Debug Info: On";
 
             #endregion
@@ -185,7 +185,7 @@ namespace Evolo.GameClass
                         new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((menuTitle.Height + menuButtonBackdrop.Height) * GlobalVar.ScaleSize.Y)) / 2)),
                         GlobalVar.ScaleSize, 
                         mainMenuColors, 
-                        Convert.ToBoolean(GlobalVar.OptionsArray[10]));
+                        Convert.ToBoolean(GlobalVar.OptionsArray[12]));
                     //Example for menu to gamemode
                     pausedLast = false;
                     if (mainMenu.menuNumberSelection() == 1)
@@ -214,7 +214,7 @@ namespace Evolo.GameClass
                 #endregion
                 #region Pause Menu Update
                 case "PauseMenu":
-                    pauseMenu.Update(gameTime, mouseStateCurrent, mouseStatePrevious, GlobalVar.ScreenSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), (GlobalVar.ScreenSize.Y / 2) - ((((menuButtonBackground.Height * GlobalVar.ScaleSize.Y) * pauseMenuButtonText.Length) + ((mainMenuVerticalSpacing * GlobalVar.ScaleSize.Y) * (pauseMenuButtonText.Length - 1))) / 2)), new Vector2(),GlobalVar.ScaleSize, pauseMenuColors, Convert.ToBoolean(GlobalVar.OptionsArray[10]));
+                    pauseMenu.Update(gameTime, mouseStateCurrent, mouseStatePrevious, GlobalVar.ScreenSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), (GlobalVar.ScreenSize.Y / 2) - ((((menuButtonBackground.Height * GlobalVar.ScaleSize.Y) * pauseMenuButtonText.Length) + ((mainMenuVerticalSpacing * GlobalVar.ScaleSize.Y) * (pauseMenuButtonText.Length - 1))) / 2)), new Vector2(),GlobalVar.ScaleSize, pauseMenuColors, Convert.ToBoolean(GlobalVar.OptionsArray[12]));
                     pausedLast = true;
                     if (pauseMenu.menuNumberSelection() == 1)
                     {
@@ -242,7 +242,7 @@ namespace Evolo.GameClass
                         new Vector2((GlobalVar.ScreenSize.X / 2) - ((optionsTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((optionsTitle.Height + menuButtonBackdropOptions.Height) * GlobalVar.ScaleSize.Y)) / 2)),
                         GlobalVar.ScaleSize, 
                         optionsMenuColors,
-                        Convert.ToBoolean(GlobalVar.OptionsArray[10]));
+                        Convert.ToBoolean(GlobalVar.OptionsArray[12]));
                     //Example for menu to gamemode
                     if (optionsMenu.menuNumberSelection() == 1)
                         menuState = "OptionsResolutionMenu";
@@ -252,27 +252,27 @@ namespace Evolo.GameClass
                         menuState = "debugMenu";
                     else if (optionsMenu.menuNumberSelection() == 4)
                     {
-                        if (Convert.ToBoolean(GlobalVar.OptionsArray[10]) == false)
+                        if (Convert.ToBoolean(GlobalVar.OptionsArray[12]) == false)
                         {
-                            GlobalVar.OptionsArray[10] = "true";
+                            GlobalVar.OptionsArray[12] = "true";
                             optionsMenuButtonText[3] = "Sound: ON";
                         }
                         else
                         {
-                            GlobalVar.OptionsArray[10] = "false";
+                            GlobalVar.OptionsArray[12] = "false";
                             optionsMenuButtonText[3] = "Sound: OFF";
                         }
                     }
                     else if (optionsMenu.menuNumberSelection() == 5)
                     {
-                        if (Convert.ToBoolean(GlobalVar.OptionsArray[11]) == false)
+                        if (Convert.ToBoolean(GlobalVar.OptionsArray[13]) == false)
                         {
-                            GlobalVar.OptionsArray[11] = "true";
+                            GlobalVar.OptionsArray[13] = "true";
                             optionsMenuButtonText[4] = "Music: ON";
                         }
                         else
                         {
-                            GlobalVar.OptionsArray[11] = "false";
+                            GlobalVar.OptionsArray[13] = "false";
                             optionsMenuButtonText[4] = "Music: OFF";
                         }
                     }
@@ -311,7 +311,7 @@ namespace Evolo.GameClass
                         new Vector2((GlobalVar.ScreenSize.X / 2) - ((optionsTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((optionsTitle.Height + menuButtonBackdropOptions.Height) * GlobalVar.ScaleSize.Y)) / 2)),
                         GlobalVar.ScaleSize,
                         optionsResolutionMenuColors, 
-                        Convert.ToBoolean(GlobalVar.OptionsArray[10]));
+                        Convert.ToBoolean(GlobalVar.OptionsArray[12]));
                     //Example for menu to gamemode
                     if (optionsResolutionMenu.menuNumberSelection() == 1)
                     {
@@ -398,7 +398,7 @@ namespace Evolo.GameClass
                         new Vector2((GlobalVar.ScreenSize.X / 2) - ((optionsTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((optionsTitle.Height + menuButtonBackdrop.Height) * GlobalVar.ScaleSize.Y)) / 2)),
                         GlobalVar.ScaleSize, 
                         optionsKeybindingMenuColors, 
-                        Convert.ToBoolean(GlobalVar.OptionsArray[10]));
+                        Convert.ToBoolean(GlobalVar.OptionsArray[12]));
                     if (optionsKeybindingMenu.menuNumberSelection() == 6)
                         menuState = "OptionsMenu";
                     break;
@@ -414,44 +414,44 @@ namespace Evolo.GameClass
                         new Vector2((GlobalVar.ScreenSize.X / 2) - ((optionsTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((optionsTitle.Height + menuButtonBackdropDebug.Height) * GlobalVar.ScaleSize.Y)) / 2)),
                         GlobalVar.ScaleSize, 
                         debugMenuColors,
-                        Convert.ToBoolean(GlobalVar.OptionsArray[10]));
+                        Convert.ToBoolean(GlobalVar.OptionsArray[12]));
                     if (debugMenu.menuNumberSelection() == 1)
                     {
-                        if (Convert.ToBoolean(GlobalVar.OptionsArray[7]) == false)
+                        if (Convert.ToBoolean(GlobalVar.OptionsArray[9]) == false)
                         {
-                            GlobalVar.OptionsArray[7] = "true";
+                            GlobalVar.OptionsArray[9] = "true";
                             debugMenuButtonText[0] = "Cursor: Hardware";
                         }
                         else
                         {
-                            GlobalVar.OptionsArray[7] = "false";
+                            GlobalVar.OptionsArray[9] = "false";
                             debugMenuButtonText[0] = "Cursor: Game";
                         }
                     }
                     else if (debugMenu.menuNumberSelection() == 2)
                     {
-                        if (Convert.ToBoolean(GlobalVar.OptionsArray[8]) == false)
+                        if (Convert.ToBoolean(GlobalVar.OptionsArray[10]) == false)
                         {
-                            GlobalVar.OptionsArray[8] = "true";
+                            GlobalVar.OptionsArray[10] = "true";
                             debugMenuButtonText[1] = "FPS: On";
                         }
                         else
                         {
-                            GlobalVar.OptionsArray[8] = "false";
+                            GlobalVar.OptionsArray[10] = "false";
                             debugMenuButtonText[1] = "FPS: Off";
                         }
                     }
                     else if (debugMenu.menuNumberSelection() == 3)
                     {
-                        if (Convert.ToBoolean(GlobalVar.OptionsArray[9]) == false)
+                        if (Convert.ToBoolean(GlobalVar.OptionsArray[11]) == false)
                         {
-                            GlobalVar.OptionsArray[9] = "true";
+                            GlobalVar.OptionsArray[11] = "true";
                             debugMenuButtonText[2] = "Debug Info: On";
 
                         }
                         else
                         {
-                            GlobalVar.OptionsArray[9] = "false";
+                            GlobalVar.OptionsArray[11] = "false";
                             debugMenuButtonText[2] = "Debug Info: Off";
                         }
                     }
@@ -461,7 +461,7 @@ namespace Evolo.GameClass
                 #endregion
                 #region Save Slot Menu Update
                 case "SaveSlotMenu":
-                    saveSlotMenu.Update(gameTime, mouseStateCurrent, mouseStatePrevious, GlobalVar.ScreenSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), (GlobalVar.ScreenSize.Y / 2) - ((((menuButtonBackground.Height * GlobalVar.ScaleSize.Y) * saveSlotMenuButtonText.Length) + ((mainMenuVerticalSpacing * GlobalVar.ScaleSize.Y) * (saveSlotMenuButtonText.Length - 1))) / 2)),  new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), GlobalVar.ScaleSize, saveSlotMenuColors, Convert.ToBoolean(GlobalVar.OptionsArray[10]));
+                    saveSlotMenu.Update(gameTime, mouseStateCurrent, mouseStatePrevious, GlobalVar.ScreenSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), (GlobalVar.ScreenSize.Y / 2) - ((((menuButtonBackground.Height * GlobalVar.ScaleSize.Y) * saveSlotMenuButtonText.Length) + ((mainMenuVerticalSpacing * GlobalVar.ScaleSize.Y) * (saveSlotMenuButtonText.Length - 1))) / 2)),  new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), GlobalVar.ScaleSize, saveSlotMenuColors, Convert.ToBoolean(GlobalVar.OptionsArray[12]));
                     if (saveSlotMenu.menuNumberSelection() == 1)
                     {
                         //saveHandler.SaveData(new String[] { "Test 1", "Test 2", "Test 3" }, 3);
@@ -493,15 +493,15 @@ namespace Evolo.GameClass
             else
                 optionsMenuColors[4] = Color.DimGray;
              */
-            if (Convert.ToBoolean(GlobalVar.OptionsArray[7]) == true)
+            if (Convert.ToBoolean(GlobalVar.OptionsArray[9]) == true)
                 debugMenuColors[0] = Color.LimeGreen;
             else
                 debugMenuColors[0] = Color.DimGray;
-            if (Convert.ToBoolean(GlobalVar.OptionsArray[8]) == true)
+            if (Convert.ToBoolean(GlobalVar.OptionsArray[10]) == true)
                 debugMenuColors[1] = Color.Gold;
             else
                 debugMenuColors[1] = Color.DimGray;
-            if (Convert.ToBoolean(GlobalVar.OptionsArray[9]) == true)
+            if (Convert.ToBoolean(GlobalVar.OptionsArray[11]) == true)
                 debugMenuColors[2] = Color.Firebrick;
             else
                 debugMenuColors[2] = Color.DimGray;

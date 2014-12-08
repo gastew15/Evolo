@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Content;
 /**
  * Evolo Field Manager to handle most game related operations for the player and tetrominos
  * Author: Dalton, Josh, Gavin
- * Version: 11/24/14
+ * Version: 12/8/14
  */
 
 namespace Evolo.GameClass
@@ -47,13 +47,13 @@ namespace Evolo.GameClass
         private Boolean playerCanNotMoveRight, playerCanNotMoveLeft, playerCanNotMoveDown, playerCanNotMoveUp;
 
         //tetromino Variables
-        private int tetristype = 5;
+        private int tetristype;
         private int absTetrominoBlockFarthestLeft, absTetrominoBlockFarthestRight, absTetrominoBlockFarthestDown, absTetrominoBlockFarthestUp;
         private int[] farthestTetrominoBlockLeft, farthestTetrominoBlockRight, farthestTetrominoBlockDown, farthestTetrominoBlockUp;
         private int activeTetromino = 0;
         private int lastActiveTetromino = 0;
-        int tetrominoRotation = 0;
-        int tetrominoLastRotation = 0;
+        private int tetrominoRotation = 0;
+        private int tetrominoLastRotation = 0;
         private List<Tetromino> tetromino = new List<Tetromino>();
         private List<Vector2> tetrominoGridPos = new List<Vector2>();
         private int[] tetrominoHistory = new int[4];
@@ -813,7 +813,7 @@ namespace Evolo.GameClass
                     //spriteBatch.DrawString(SeqoeUIMonoNormal, "FPS: " + fpsManager.getFPS(), new Vector2((GlobalVar.ScreenSize.X - (SeqoeUIMonoNormal.MeasureString("FPS: " + fpsManager.getFPS()).X) * GlobalVar.ScaleSize.X) - 10, (5 * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
 
                     //Prints out Debug Info About the Block
-                    if (Boolean.Parse(GlobalVar.OptionsArray[9]) == true)
+                    if (Boolean.Parse(GlobalVar.OptionsArray[11]) == true)
                     {
 
                         spriteBatch.DrawString(font, "AbsLeft: " + absTetrominoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetrominoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetrominoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetrominoCanNotMoveLeft + "\nMove Right: " + !tetrominoCanNotMoveRight + "\nMove Down: " + !tetrominoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
@@ -855,6 +855,61 @@ namespace Evolo.GameClass
                 tetrominoHistory[i] = tetrominoHistory[i - 1];
             }
             tetrominoHistory[0] = tetromino;
+        }
+
+        public void resetGameVariables()
+        {
+            gameField = new Boolean[26, 22];
+            milisecondsElapsedTetrominoTime = 0;
+            milisecondsElapsedPlayerTime = 0;
+            player1Jump = false;
+            activeTetromino = 0;
+            lastActiveTetromino = 0;
+            tetrominoRotation = 0;
+            tetrominoLastRotation = 0;
+            tetromino = new List<Tetromino>();
+            tetrominoGridPos = new List<Vector2>();
+            tetrominoHistory = new int[4];
+            player1SpriteEffects = SpriteEffects.None;
+            player1GridPosPrevious = player1GridPos;
+            //Teromeno Set Up Reference 
+            tetristype = random.Next(1, 8);
+            tetrominoHistoryAddItem(tetristype);
+            tetromino.Add(new Tetromino(tetristype, blockTexture));
+            tetrominoGridPos.Add(new Vector2(13, 0));
+
+            //Rotation Tetromino Test Set Up
+            rotationTestTetromino = new Tetromino(tetristype, blockTexture);
+
+            //Next Teromino Set Up Reference 
+            tetristype = random.Next(1, 8);
+            if (tetristype == tetrominoHistory[0])
+            {
+                tetristype = random.Next(1, 8);
+            }
+            tetrominoHistoryAddItem(tetristype);
+            tetromino.Add(new Tetromino(tetristype, blockTexture));
+            tetrominoGridPos.Add(new Vector2(28.5f, 4));
+
+            //Temp levelSP
+            levelStartPoint = new Vector2(1, 17);
+
+            tetrominoBlockLastPositions = new Vector2[tetromino[activeTetromino].getPositions().Length];
+            tetrominoBlockPositions = new Vector2[tetromino[activeTetromino].getPositions().Length];
+
+            lastActiveTetromino = activeTetromino;
+
+            //Player Set Up
+            player1 = new Player(playerTexture);
+            player1GridPos = levelStartPoint;
+
+            //Platform Set Up
+            platform = new EndPlatform(platformTexture);
+            platformGridPos = new Vector2(23, 10);
+            for (int i = 0; i < 2; i++)
+            {
+                gameField[(int)platformGridPos.X + i, (int)platformGridPos.Y] = true;
+            }
         }
 
     }

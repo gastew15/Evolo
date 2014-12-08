@@ -21,8 +21,6 @@ namespace Evolo.GameClass
             this.endPlatform = endPlatform;
         }
 
-
-
         public void Update()
         {
         }

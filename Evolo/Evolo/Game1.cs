@@ -58,12 +58,12 @@ namespace Evolo
         //Variables
 
         //Game
-        String version = "Build V: 1.1.8.0"; // Major, Minor, Build, Revision #
+        String version = "Build V: 1.1.8.2"; // Major, Minor, Build, Revision #
         Boolean tripped = false;
         const int defualtWidth = 1280, defualtHeight = 720;
 
         //Keys
-        string[] keyBindingInfo = new string[5];
+        string[] keyBindingInfo = new string[7];
         Boolean isPressedEsc;
         Texture2D gameMouseTexture;
         //Sounds
@@ -112,14 +112,11 @@ namespace Evolo
                 //Sets Keybinding Info from options Load
                 for (int i = 0; i < keyBindingInfo.Length; i++)
                 {
-                    keyBindingInfo[i] = GlobalVar.OptionsArray[i + 2];
+                    keyBindingInfo[i] = "WIP";//GlobalVar.OptionsArray[i + 2];
                 }
 
                 GlobalVar.ScaleSize = new Vector2(GlobalVar.ScreenSize.X / defualtWidth, GlobalVar.ScreenSize.Y / defualtHeight);
                 GlobalVar.GameState = "SplashScreen";
-                GlobalVar.Health = 100;
-                GlobalVar.Sheild = 200;
-                GlobalVar.Heat = 0;
                 menuState = "MainMenu";
                 //Load up classes we need
                 fpsManager = new FPSManager();
@@ -213,7 +210,7 @@ namespace Evolo
 
                 milliScecondsElapsedGameTime += gameTime.ElapsedGameTime.Milliseconds; //(float)TimeSpan.FromMilliseconds(1.0).Milliseconds;//+=  
 
-                if (GlobalVar.OptionsArray[7] == "true")
+                if (GlobalVar.OptionsArray[9] == "true")
                     this.IsMouseVisible = true;
                 else
                 {
@@ -233,11 +230,8 @@ namespace Evolo
                         if (menus.getMenuState() == "MainMenu")
                         {
                             //Reset Values
-                            GlobalVar.Health = 100;
-                            GlobalVar.Sheild = 200;
-                            GlobalVar.Heat = 0;
                             GlobalVar.Score = 0;
-                            GlobalVar.Currency = 0;
+                            fieldManager.resetGameVariables();
                         }
                         if (songTripped == false)
                         {
@@ -359,19 +353,19 @@ namespace Evolo
               
 
                 //MOUSE DRAWING LOGIC
-                if ((gameState != "Credits" || gameState != "SplashScreen") && GlobalVar.OptionsArray[7].Equals("false"))
+                if ((gameState != "Credits" || gameState != "SplashScreen") && GlobalVar.OptionsArray[9].Equals("false"))
                     spriteBatch.Draw(gameMouseTexture, new Vector2(mouseStateCurrent.X, mouseStateCurrent.Y), null, Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
 
                 //Draws Version Info and Current FPS
                 spriteBatch.DrawString(SeqoeUIMonoNormal, version, new Vector2((GlobalVar.ScreenSize.X / 2) - ((SeqoeUIMonoNormal.MeasureString(version).X / 2) * GlobalVar.ScaleSize.X), (10 * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                if (Convert.ToBoolean(GlobalVar.OptionsArray[8]) == true)
+                if (Convert.ToBoolean(GlobalVar.OptionsArray[10]) == true)
                 {
                     if (!gameState.Equals("SplashScreen") && !gameState.Equals("Credits")) 
                         spriteBatch.DrawString(SeqoeUIMonoNormal, "FPS: " + fpsManager.getFPS(), new Vector2((GlobalVar.ScreenSize.X - (SeqoeUIMonoNormal.MeasureString("FPS: " + fpsManager.getFPS()).X) * GlobalVar.ScaleSize.X) - 10, (5 * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 }
 
                 //DEBUG USE: 
-                if (Convert.ToBoolean(GlobalVar.OptionsArray[9]) == true)
+                if (Convert.ToBoolean(GlobalVar.OptionsArray[11]) == true)
                 {
                     spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME1 TIME: " + (milliScecondsElapsedGameTime / 1000).ToString() + "s", new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 3 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
                     spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME STATE: " + GlobalVar.GameState.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 2 + 10) * GlobalVar.ScaleSize.Y)), Color.White);

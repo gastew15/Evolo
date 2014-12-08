@@ -15,10 +15,6 @@ namespace Evolo
         static Vector2 _screenSize;
         static Vector2 _scaleSize;
         static int _score;
-        static int _currency;
-        static int _health;
-        static int _sheild;
-        static int _heat;
 
         public static String GameState
         {
@@ -101,53 +97,6 @@ namespace Evolo
             set
             {
                 _score = value;
-            }
-        }
-
-        public static int Currency
-        {
-            get
-            {
-                return _currency;
-            }
-            set
-            {
-                _currency = value;
-            }
-        }
-
-        public static int Health
-        {
-            get
-            {
-                return _health;
-            }
-            set
-            {
-                _health = value;
-            }
-        }
-
-        public static int Sheild
-        {
-            get
-            {
-                return _sheild;
-            }
-            set
-            {
-                _sheild = value;
-            }
-        }
-        public static int Heat
-        {
-            get
-            {
-                return _heat;
-            }
-            set
-            {
-                _heat = value;
             }
         }
     }
