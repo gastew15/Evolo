@@ -35,7 +35,7 @@ namespace Evolo.GameClass
         private String[] loadData = new string[]{""};
 
         //Variables
-        private Texture2D menuButtonBackground, optionsTitle, menuButtonBackdropOptions, menuButtonBackdrop, menuButtonBackdropDebug, menuIndicatorLight, menuTitle;
+        private Texture2D menuButtonBackground, optionsTitle, menuButtonBackdropOptions, menuButtonBackdrop, menuButtonBackdropDebug, menuIndicatorLight, menuTitle, pauseTitle, debugTitle;
         private int mainMenuVerticalSpacing = 24;
         private Vector2 optionsCenterMenuSP, mainMenuSP, keybindingCenterMenuSP, pauseMenuSP, debugSP, saveSlotMenuSP;
         private String[] mainMenuButtonText;
@@ -96,15 +96,17 @@ namespace Evolo.GameClass
         {
             this.font = font;
             #region Sound/Sprite Content Loading
-            menuButtonBackdropDebug = Content.Load<Texture2D>("Sprites and Pictures/MenuButtonBackgroundDebug");
-            menuButtonBackdropOptions = Content.Load<Texture2D>("Sprites and Pictures/MenuButtonBackgroundOptions");
-            menuButtonBackdrop = Content.Load<Texture2D>("Sprites and Pictures/menuButtonBackdropMain");
+            menuButtonBackdropDebug = Content.Load<Texture2D>("Sprites and Pictures/ButtonBorder4");
+            menuButtonBackdropOptions = Content.Load<Texture2D>("Sprites and Pictures/ButtonBorder7");
+            menuButtonBackdrop = Content.Load<Texture2D>("Sprites and Pictures/ButtonBorder6");
   
-            menuButtonBackground = Content.Load<Texture2D>("Sprites and Pictures/MenuButtonBackground");
-            menuIndicatorLight = Content.Load<Texture2D>("Sprites and Pictures/menuIndicatorLight");
+            menuButtonBackground = Content.Load<Texture2D>("Sprites and Pictures/ButtonBackground");
 
-            menuTitle = Content.Load<Texture2D>("Sprites and Pictures/Menu_Logo_Colored");
-            optionsTitle = Content.Load<Texture2D>("Sprites and Pictures/Options_LogoColored");
+            menuIndicatorLight = Content.Load<Texture2D>("Sprites and Pictures/menuIndicatorLight");
+            debugTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Debug");
+            pauseTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Pause");
+            menuTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_MainMenu");
+            optionsTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_options");
 
             menuHoverChangeSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuHoverChangeEffect");
             menuClickedSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuClickedEffect");
@@ -120,13 +122,13 @@ namespace Evolo.GameClass
             #endregion
             #region Menu Handlers
             mainMenu = new MenuHandler(menuTitle, menuButtonBackdrop, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBackdrop.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, mainMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
-            pauseMenu = new MenuHandler(menuTitle, pauseMenuSP, new Vector2(), mainMenuVerticalSpacing, menuButtonBackground, pauseMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
+            pauseMenu = new MenuHandler(pauseTitle, pauseMenuSP, new Vector2(), mainMenuVerticalSpacing, menuButtonBackground, pauseMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
             
             optionsMenu = new MenuHandler(optionsTitle, menuButtonBackdropOptions, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBackdropOptions.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((optionsTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, optionsMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
             optionsResolutionMenu = new MenuHandler(optionsTitle, menuButtonBackdropOptions, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBackdrop.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, optionsResolutionMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);       
             optionsKeybindingMenu = new MenuHandler(optionsTitle, menuButtonBackdrop, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBackdrop.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((optionsTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, optionsKeybindingMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
 
-            debugMenu = new MenuHandler(optionsTitle, menuButtonBackdropDebug, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBackdropDebug.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((optionsTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, debugMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
+            debugMenu = new MenuHandler(debugTitle, menuButtonBackdropDebug, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBackdropDebug.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((debugTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, debugMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
           
             //debugMenu = new MenuHandler(optionsTitle, debugSP, new Vector2(), mainMenuVerticalSpacing, menuButtonBackground, debugMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
             saveSlotMenu = new MenuHandler(menuTitle, saveSlotMenuSP, new Vector2(), mainMenuVerticalSpacing, menuButtonBackground, saveSlotMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
@@ -409,9 +411,9 @@ namespace Evolo.GameClass
                         mouseStateCurrent, 
                         mouseStatePrevious, 
                         GlobalVar.ScreenSize,
-                        new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((optionsTitle.Height + menuButtonBackdropDebug.Height) * GlobalVar.ScaleSize.Y)) / 2) + optionsTitle.Height * GlobalVar.ScaleSize.Y),
-                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBackdropDebug.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((optionsTitle.Height + menuButtonBackdropDebug.Height) * GlobalVar.ScaleSize.Y)) / 2) + optionsTitle.Height * GlobalVar.ScaleSize.Y),
-                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((optionsTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((optionsTitle.Height + menuButtonBackdropDebug.Height) * GlobalVar.ScaleSize.Y)) / 2)),
+                        new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((debugTitle.Height + menuButtonBackdropDebug.Height) * GlobalVar.ScaleSize.Y)) / 2) + debugTitle.Height * GlobalVar.ScaleSize.Y),
+                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBackdropDebug.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((debugTitle.Height + menuButtonBackdropDebug.Height) * GlobalVar.ScaleSize.Y)) / 2) + debugTitle.Height * GlobalVar.ScaleSize.Y),
+                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((debugTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((debugTitle.Height + menuButtonBackdropDebug.Height) * GlobalVar.ScaleSize.Y)) / 2)),
                         GlobalVar.ScaleSize, 
                         debugMenuColors,
                         Convert.ToBoolean(GlobalVar.OptionsArray[12]));
