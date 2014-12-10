@@ -35,7 +35,7 @@ namespace Evolo.GameClass
         private String[] loadData = new string[]{""};
 
         //Variables
-        private Texture2D menuButtonBackground, optionsTitle, menuButtonBorder7, menuButtonBorder6, menuButtonBorder4, menuIndicatorLight, menuTitle, pauseTitle, debugTitle, keybindBlockTitle, keybindPlayerTitle;
+        private Texture2D optionsTitle, menuTitle, pauseTitle, debugTitle, keybindBlockTitle, keybindPlayerTitle, menuButtonBackground, menuButtonBorder7, menuButtonBorder6, menuButtonBorder4; 
         private int mainMenuVerticalSpacing = 24;
         private Vector2 optionsCenterMenuSP, mainMenuSP, keybindingCenterMenuSP, pauseMenuSP, debugSP, saveSlotMenuSP;
         private String[] mainMenuButtonText;
@@ -108,8 +108,6 @@ namespace Evolo.GameClass
 
             keybindBlockTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_KeybindBlock");
             keybindPlayerTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_KeybindPlayer");
-
-            menuIndicatorLight = Content.Load<Texture2D>("Sprites and Pictures/menuIndicatorLight");
 
             debugTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Debug");
             pauseTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Pause");

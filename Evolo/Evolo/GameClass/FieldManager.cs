@@ -37,7 +37,7 @@ namespace Evolo.GameClass
         private Random random = new Random();
 
         //Content Variables
-        private Texture2D blockTexture, playerTexture;
+        private Texture2D blockTexture, playerTexture, blankBlockTexture, fullBlockTexture;
 
         //Player Variables
         private SpriteEffects player1SpriteEffects;
@@ -63,6 +63,9 @@ namespace Evolo.GameClass
         private Boolean tetrominoCanRotate;
         private Tetromino rotationTestTetromino;
 
+        //Hud Variabels
+        private Texture2D hudTexture;
+
         //Platform Variables
         private EndPlatform platform;
         private Texture2D platformTexture;
@@ -86,10 +89,12 @@ namespace Evolo.GameClass
         public void LoadContent(ContentManager Content)
         {
             blockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
+            fullBlockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
+            blankBlockTexture = Content.Load<Texture2D>("Sprites and pictures/blankBlock1");
             playerTexture = Content.Load<Texture2D>("Sprites and pictures/CharacterTest");
             platformTexture = Content.Load<Texture2D>("Sprites and pictures/EndPlatform");
-
-            //Teromeno Set Up Reference 
+            hudTexture = Content.Load<Texture2D>("Sprites and pictures/GameHud");
+            //Teromeno Set Up Reference
             tetristype = random.Next(1, 8);
             tetrominoHistoryAddItem(tetristype);
             tetromino.Add(new Tetromino(tetristype, blockTexture));
@@ -783,27 +788,37 @@ namespace Evolo.GameClass
         public void Draw(SpriteBatch spriteBatch, SpriteFont font)
         {
             Color backdropColor;
+
+            //Hud Drawing
+            spriteBatch.Draw(hudTexture, new Vector2(0,0), null, Color.White, 0, new Vector2(0,0), GlobalVar.ScaleSize, SpriteEffects.None, 0);
             //For Loop for drawing blocks to the screen
             for (int j = 0; j < gameField.GetLength(0); j++)
             {
                 for (int i = 0; i < gameField.GetLength(1); i++)
                 {
                     if (j < 3 || j > 22)
+                    {
                         backdropColor = Color.LightGray;
+                    }
                     else if (i < 2)
+                    {
                         backdropColor = Color.DarkGray;
+                    }
                     else
+                    {
                         backdropColor = Color.White;
+                    }
 
                     if (gameField[j, i] == false)
                     {
-                        backdropColor.A = 255;
+                        blockTexture = blankBlockTexture;
+                        backdropColor.A = 15;
                     }
                     else
                     {
                         //HitBox Debug
                         //backdropColor = Color.Blue;
-
+                        blockTexture = fullBlockTexture;
                         backdropColor.A = 255;
                     }
 
@@ -811,21 +826,21 @@ namespace Evolo.GameClass
                     spriteBatch.Draw(blockTexture, new Vector2(gridStartPos.X + ((blockTexture.Width * GlobalVar.ScaleSize.X) * j), gridStartPos.Y + ((blockTexture.Height * GlobalVar.ScaleSize.Y) * i)), null, backdropColor, 0, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 0);
 
                     //spriteBatch.DrawString(SeqoeUIMonoNormal, "FPS: " + fpsManager.getFPS(), new Vector2((GlobalVar.ScreenSize.X - (SeqoeUIMonoNormal.MeasureString("FPS: " + fpsManager.getFPS()).X) * GlobalVar.ScaleSize.X) - 10, (5 * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-
-                    //Prints out Debug Info About the Block
-                    if (Boolean.Parse(GlobalVar.OptionsArray[11]) == true)
-                    {
-
-                        spriteBatch.DrawString(font, "AbsLeft: " + absTetrominoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetrominoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetrominoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetrominoCanNotMoveLeft + "\nMove Right: " + !tetrominoCanNotMoveRight + "\nMove Down: " + !tetrominoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                        spriteBatch.DrawString(font, "Player Pos: " + "X: " + player1GridPos.X + " Y: " + player1GridPos.Y + "\nMove Left: " + !playerCanNotMoveLeft + "\nMove Right: " + !playerCanNotMoveRight + "\nMove Down: " + !playerCanNotMoveDown + "\nMove Up: " + !playerCanNotMoveUp, new Vector2(10 * GlobalVar.ScaleSize.X, 225 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                        
-                        for (int p = 0; p < tetrominoHistory.Length; p++)
-                        {
-                            spriteBatch.DrawString(font,tetrominoHistory[p].ToString(), new Vector2((10 + (10 * p)) * GlobalVar.ScaleSize.X, 400 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                        }
-
-                    }
                 }
+            }
+
+            //Prints out Debug Info About the Block
+            if (Boolean.Parse(GlobalVar.OptionsArray[11]) == true)
+            {
+
+                spriteBatch.DrawString(font, "AbsLeft: " + absTetrominoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetrominoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetrominoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetrominoCanNotMoveLeft + "\nMove Right: " + !tetrominoCanNotMoveRight + "\nMove Down: " + !tetrominoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(font, "Player Pos: " + "X: " + player1GridPos.X + " Y: " + player1GridPos.Y + "\nMove Left: " + !playerCanNotMoveLeft + "\nMove Right: " + !playerCanNotMoveRight + "\nMove Down: " + !playerCanNotMoveDown + "\nMove Up: " + !playerCanNotMoveUp, new Vector2(10 * GlobalVar.ScaleSize.X, 225 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+
+                for (int p = 0; p < tetrominoHistory.Length; p++)
+                {
+                    spriteBatch.DrawString(font, tetrominoHistory[p].ToString(), new Vector2((10 + (10 * p)) * GlobalVar.ScaleSize.X, 400 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                }
+
             }
 
             //ghost rotationTestTetromino collsion Block Debug drawing
@@ -833,6 +848,7 @@ namespace Evolo.GameClass
             //rotationTestTetromino.Draw(spriteBatch);
 
             //tetromino Draw
+            blockTexture = fullBlockTexture;
             for (int k = 0; k < tetromino.Count; k++)
             {
                 tetromino[k].Draw(spriteBatch);
