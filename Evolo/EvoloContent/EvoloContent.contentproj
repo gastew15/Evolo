@@ -84,23 +84,23 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites and Pictures\menuButtonBackdropMain.png">
-      <Name>menuButtonBackdropMain</Name>
+    <Compile Include="Sprites and Pictures\ButtonBorder6.png">
+      <Name>ButtonBorder6</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites and Pictures\MenuButtonBackground.png">
-      <Name>MenuButtonBackground</Name>
+    <Compile Include="Sprites and Pictures\ButtonBackground.png">
+      <Name>ButtonBackground</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites and Pictures\MenuButtonBackgroundDebug.png">
-      <Name>MenuButtonBackgroundDebug</Name>
+    <Compile Include="Sprites and Pictures\ButtonBorder4.png">
+      <Name>ButtonBorder4</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites and Pictures\MenuButtonBackgroundOptions.png">
-      <Name>MenuButtonBackgroundOptions</Name>
+    <Compile Include="Sprites and Pictures\ButtonBorder7.png">
+      <Name>ButtonBorder7</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -109,8 +109,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites and Pictures\Menu_Logo_Colored.png">
-      <Name>Menu_Logo_Colored</Name>
+    <Compile Include="Sprites and Pictures\Logo_MainMenu.png">
+      <Name>Logo_MainMenu</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -124,13 +124,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites and Pictures\Options_Logo.png">
-      <Name>Options_Logo</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Sprites and Pictures\Options_LogoColored.png">
-      <Name>Options_LogoColored</Name>
+    <Compile Include="Sprites and Pictures\Logo_Options.png">
+      <Name>Logo_Options</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -172,6 +167,34 @@
   <ItemGroup>
     <Compile Include="Sprites and Pictures\GameOverScreen.png">
       <Name>GameOverScreen</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites and Pictures\Logo_Pause.png">
+      <Name>Logo_Pause</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites and Pictures\Logo_Debug.png">
+      <Name>Logo_Debug</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites and Pictures\Logo_KeybindBlock.png">
+      <Name>Logo_KeybindBlock</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites and Pictures\Logo_KeybindPlayer.png">
+      <Name>Logo_KeybindPlayer</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
