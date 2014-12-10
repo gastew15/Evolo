@@ -163,8 +163,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites and Pictures\EndPlatform.png">
-      <Name>EndPlatform</Name>
+    <Compile Include="Sprites and Pictures\Platform.png">
+      <Name>Platform</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

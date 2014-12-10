@@ -57,6 +57,11 @@ namespace Evolo.GameClass
         private String previousMenuState;
         private SoundEffect menuHoverChangeSoundEffect, menuClickedSoundEffect;
 
+        //Game Over Variables
+        private Texture2D gameoverScreen;
+        private bool gameOver = false;
+        private Vector2 gameoverPosition;
+
         public Menus(GraphicsDeviceManager graphics)
         {
             this.graphics = graphics;
@@ -90,6 +95,8 @@ namespace Evolo.GameClass
             var mousePosition = new Point(mouseState.X, mouseState.Y);
             this.keyBindingInfo = keyBindingInfo;
             windowSizeManager = new WindowSizeManager(graphics);
+
+           
         }
 
         public void LoadContent(ContentManager Content, SpriteFont font)
