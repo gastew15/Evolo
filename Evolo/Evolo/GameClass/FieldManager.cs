@@ -67,9 +67,13 @@ namespace Evolo.GameClass
         private Texture2D hudTexture;
 
         //Platform Variables
-        private EndPlatform platform;
+        private Platform platform;
         private Texture2D platformTexture;
-        private Vector2 platformGridPos;
+        private Vector2 endPlatformGridPos, startPlatformGridPos;
+
+        //Game Over Variables
+        private Texture2D gameOverScreen;
+
 
         #endregion
 
@@ -90,11 +94,16 @@ namespace Evolo.GameClass
         {
             blockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
             fullBlockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
-            blankBlockTexture = Content.Load<Texture2D>("Sprites and pictures/blankBlock1");
+            blankBlockTexture = Content.Load<Texture2D>("Sprites and pictures/blankBlock3");
             playerTexture = Content.Load<Texture2D>("Sprites and pictures/CharacterTest");
-            platformTexture = Content.Load<Texture2D>("Sprites and pictures/EndPlatform");
+            platformTexture = Content.Load<Texture2D>("Sprites and pictures/Platform");
             hudTexture = Content.Load<Texture2D>("Sprites and pictures/GameHud");
             //Teromeno Set Up Reference
+
+            //Game Over Set Up
+            gameOverScreen = Content.Load<Texture2D>("Sprites and Pictures/GameOverScreen");
+
+            //Teromeno Set Up Reference 
             tetristype = random.Next(1, 8);
             tetrominoHistoryAddItem(tetristype);
             tetromino.Add(new Tetromino(tetristype, blockTexture));
@@ -114,7 +123,7 @@ namespace Evolo.GameClass
             tetrominoGridPos.Add(new Vector2(28.5f, 4));
 
             //Temp levelSP
-            levelStartPoint = new Vector2(1, 17);
+            levelStartPoint = new Vector2(1, 23);
 
             tetrominoBlockLastPositions = new Vector2[tetromino[activeTetromino].getPositions().Length];
             tetrominoBlockPositions = new Vector2[tetromino[activeTetromino].getPositions().Length];
@@ -126,11 +135,13 @@ namespace Evolo.GameClass
             player1GridPos = levelStartPoint;
 
             //Platform Set Up
-            platform = new EndPlatform(platformTexture);
-            platformGridPos = new Vector2(23, 10);
-            for (int i = 0; i < 2; i++)
+            platform = new Platform(platformTexture, platformTexture);
+            endPlatformGridPos = new Vector2(23, 10);
+            startPlatformGridPos = new Vector2(0, 21);
+            for (int i = 0; i < 3; i++)
             {
-                gameField[(int)platformGridPos.X + i, (int)platformGridPos.Y] = true;
+                gameField[(int)endPlatformGridPos.X + i, (int)endPlatformGridPos.Y] = true;
+                //gameField[(int)startPlatformGridPos.X + i, (int)startPlatformGridPos.Y] = true;
             }
         }
 
@@ -515,6 +526,12 @@ namespace Evolo.GameClass
                 }
             }
 
+            //Dalton Sux
+            //if(gameField[(int)player1GridPos.X, (int)player1GridPos.Y] == true)
+           // {
+               // GlobalVar.GameState = "GameOver";
+           // }
+
             #endregion
 
             #region tetromino Keyboard Input
@@ -798,11 +815,7 @@ namespace Evolo.GameClass
                 {
                     if (j < 3 || j > 22)
                     {
-                        backdropColor = Color.LightGray;
-                    }
-                    else if (i < 2)
-                    {
-                        backdropColor = Color.DarkGray;
+                        backdropColor = Color.Blue;
                     }
                     else
                     {
@@ -812,14 +825,14 @@ namespace Evolo.GameClass
                     if (gameField[j, i] == false)
                     {
                         blockTexture = blankBlockTexture;
-                        backdropColor.A = 15;
+                        backdropColor.A = 1;
                     }
                     else
                     {
                         //HitBox Debug
                         //backdropColor = Color.Blue;
                         blockTexture = fullBlockTexture;
-                        backdropColor.A = 255;
+                        backdropColor.A = 25;
                     }
 
                     //Draws the block to the screen at the specified point based on the for loop
@@ -856,7 +869,12 @@ namespace Evolo.GameClass
 
             player1.Draw(spriteBatch, player1SpriteEffects);
 
-            platform.Draw(spriteBatch, new Vector2(gridStartPos.X + (platformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (platformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))));
+            platform.Draw(spriteBatch, new Vector2(gridStartPos.X + (endPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (endPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), new Vector2(gridStartPos.X + (startPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (startPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))));
+
+            if (GlobalVar.GameState == "GameOver")
+            {
+                spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), Color.White);
+            }
         }
 
         public Boolean[,] getGameField()
@@ -920,13 +938,15 @@ namespace Evolo.GameClass
             player1GridPos = levelStartPoint;
 
             //Platform Set Up
-            platform = new EndPlatform(platformTexture);
-            platformGridPos = new Vector2(23, 10);
+            platform = new Platform(platformTexture, platformTexture);
+            endPlatformGridPos = new Vector2(23, 10);
+            startPlatformGridPos = new Vector2(0, 20);
             for (int i = 0; i < 2; i++)
             {
-                gameField[(int)platformGridPos.X + i, (int)platformGridPos.Y] = true;
+                gameField[(int)endPlatformGridPos.X + i, (int)endPlatformGridPos.Y] = true;
+                //gameField[(int)startPlatformGridPos.X + i, (int)startPlatformGridPos.Y] = true;
             }
-        }
 
+        }
     }
 }

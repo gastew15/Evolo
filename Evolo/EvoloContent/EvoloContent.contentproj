@@ -158,8 +158,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites and Pictures\EndPlatform.png">
-      <Name>EndPlatform</Name>
+    <Compile Include="Sprites and Pictures\Platform.png">
+      <Name>Platform</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -209,6 +209,20 @@
   <ItemGroup>
     <Compile Include="Sprites and Pictures\BlankBlock1.png">
       <Name>BlankBlock1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites and Pictures\blankBlock2.png">
+      <Name>blankBlock2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites and Pictures\blankBlock3.png">
+      <Name>blankBlock3</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
