@@ -352,6 +352,7 @@ namespace Evolo
                         break;
                 }
 
+                //if (menuState = "Paused")
               
 
                 //MOUSE DRAWING LOGIC
