@@ -858,7 +858,8 @@ namespace Evolo.GameClass
 
             if (GlobalVar.GameState == "GameOver")
             {
-                spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), Color.White);
+                spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), null, Color.White, 0f, new Vector2(gameOverScreen.Width / 2, gameOverScreen.Height / 2), 5f, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(font, "Game Over", new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2 - 100), Color.Black, 0f, new Vector2((int)font.MeasureString("Game Over").X/2, (int)(font.MeasureString("Game Over").Y/2)), 4f * GlobalVar.ScaleSize, SpriteEffects.None, 1f);
             }
         }
 
