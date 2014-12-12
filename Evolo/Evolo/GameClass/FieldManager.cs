@@ -155,7 +155,7 @@ namespace Evolo.GameClass
             milisecondsElapsedPlayerTime += gameTime.ElapsedGameTime.Milliseconds;
 
             //Adjusts the grid Starting Postion for resolution changes & such
-            gridStartPos = new Vector2((GlobalVar.ScreenSize.X / 2) - (((blockTexture.Width * GlobalVar.ScaleSize.X) * gameField.GetLength(0)) / 2), (GlobalVar.ScreenSize.Y / 2) - (((blockTexture.Height * GlobalVar.ScaleSize.Y) * (gameField.GetLength(1) + 2)) / 2));
+            gridStartPos = new Vector2((GlobalVar.ScreenSize.X / 2) - (((blockTexture.Width * GlobalVar.ScaleSize.X) * gameField.GetLength(0)) / 2), -1 * (blockTexture.Height * GlobalVar.ScaleSize.Y));
 
             //Resets tetromino Movement Booleans
             tetrominoCanNotMoveRight = false;
