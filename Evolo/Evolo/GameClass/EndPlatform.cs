@@ -11,25 +11,27 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Evolo.GameClass
 {
-    class EndPlatform
+    class Platform
     {
         private Texture2D endPlatform;
+        private Texture2D startPlatform;
         private Vector2 origin;
 
-        public EndPlatform(Texture2D endPlatform)
+        public Platform(Texture2D endPlatform, Texture2D startPlatform)
         {
             this.endPlatform = endPlatform;
+            this.startPlatform = startPlatform;
         }
-
-
+        
 
         public void Update()
         {
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position)
+        public void Draw(SpriteBatch spriteBatch, Vector2 endPosition, Vector2 startPosition)
         {
-            spriteBatch.Draw(endPlatform, position, Color.White);
+            spriteBatch.Draw(endPlatform, endPosition, Color.White);
+            spriteBatch.Draw(startPlatform, startPosition, Color.White);
         }
     }
 }

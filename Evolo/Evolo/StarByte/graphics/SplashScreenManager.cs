@@ -34,13 +34,13 @@ namespace StarByte.graphics
 
             if (currentImage == 0)
             {
-                expiredGameTime = ((miliSecondsElapsedGameTime / 1000) - orginalStartTimeInSeconds);
+                expiredGameTime = ((miliSecondsElapsedGameTime / 300) - orginalStartTimeInSeconds);
             }
             else
             {
                 for (int j = 0; j < currentImage; j++)
                 {
-                    expiredGameTime = ((miliSecondsElapsedGameTime / 1000) - (orginalStartTimeInSeconds + waitTime[j]));
+                    expiredGameTime = ((miliSecondsElapsedGameTime / 300) - (orginalStartTimeInSeconds + waitTime[j]));
                 }
             }
 
