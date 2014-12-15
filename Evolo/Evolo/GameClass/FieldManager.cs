@@ -155,7 +155,7 @@ namespace Evolo.GameClass
             milisecondsElapsedPlayerTime += gameTime.ElapsedGameTime.Milliseconds;
 
             //Adjusts the grid Starting Postion for resolution changes & such
-            gridStartPos = new Vector2((GlobalVar.ScreenSize.X / 2) - (((blockTexture.Width * GlobalVar.ScaleSize.X) * gameField.GetLength(0)) / 2), (GlobalVar.ScreenSize.Y / 2) - (((blockTexture.Height * GlobalVar.ScaleSize.Y) * (gameField.GetLength(1) + 2)) / 2));
+            gridStartPos = new Vector2((GlobalVar.ScreenSize.X / 2) - (((blockTexture.Width * GlobalVar.ScaleSize.X) * gameField.GetLength(0)) / 2), -1 * (blockTexture.Height * GlobalVar.ScaleSize.Y));
 
             //Resets tetromino Movement Booleans
             tetrominoCanNotMoveRight = false;
@@ -873,7 +873,8 @@ namespace Evolo.GameClass
 
             if (GlobalVar.GameState == "GameOver")
             {
-                spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), Color.White);
+                spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), null, Color.White, 0f, new Vector2(gameOverScreen.Width / 2, gameOverScreen.Height / 2), 5f, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(font, "Game Over", new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2 - 100), Color.Black, 0f, new Vector2((int)font.MeasureString("Game Over").X/2, (int)(font.MeasureString("Game Over").Y/2)), 4f * GlobalVar.ScaleSize, SpriteEffects.None, 1f);
             }
         }
 
