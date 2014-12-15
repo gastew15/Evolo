@@ -109,11 +109,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites and Pictures\Logo_MainMenu.png">
-      <Name>Logo_MainMenu</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Sprites and Pictures\Menu_Logo_Small.png">
       <Name>Menu_Logo_Small</Name>
       <Importer>TextureImporter</Importer>
@@ -223,6 +218,13 @@
   <ItemGroup>
     <Compile Include="Sprites and Pictures\blankBlock3.png">
       <Name>blankBlock3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites and Pictures\Logo_MainMenu.png">
+      <Name>Logo_MainMenu</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
