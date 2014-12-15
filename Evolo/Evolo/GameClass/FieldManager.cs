@@ -85,7 +85,6 @@ namespace Evolo.GameClass
         public void Intilize()
         {
             player1SpriteEffects = SpriteEffects.None;
-
         }
 
         public void LoadContent(ContentManager Content)
@@ -533,6 +532,15 @@ namespace Evolo.GameClass
                         keyRightDown = true;
                     }
                 }
+            }
+
+            if(Keyboard.GetState().IsKeyDown(Keys.Down))
+            {
+                milisecondsTetrominoFallTime = 100;
+            }
+            else if(Keyboard.GetState().IsKeyUp(Keys.Down))
+            {
+                milisecondsTetrominoFallTime = 300;
             }
 
             //Keyboard Input (Up Key) *Rotation
