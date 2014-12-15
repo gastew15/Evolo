@@ -657,6 +657,11 @@ namespace Evolo.GameClass
                     tetrominoRotation = 0;
                     tetrominoLastRotation = 0;
 
+                    if (tetrominoGridPos[activeTetromino - 1].Y == 0)
+                    {
+                        GlobalVar.GameState = "GameOver";
+                    }
+
                     rotationTestTetromino.setTetrisType(tetromino[activeTetromino].getTetrisType());
                     rotationTestTetromino.setRotation(0);
 
