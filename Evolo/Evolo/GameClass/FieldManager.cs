@@ -86,8 +86,6 @@ namespace Evolo.GameClass
         {
             player1SpriteEffects = SpriteEffects.None;
 
-            player1GridPosPrevious = player1GridPos;
-
         }
 
         public void LoadContent(ContentManager Content)
@@ -103,46 +101,7 @@ namespace Evolo.GameClass
             //Game Over Set Up
             gameOverScreen = Content.Load<Texture2D>("Sprites and Pictures/GameOverScreen");
 
-            //Teromeno Set Up Reference 
-            tetristype = random.Next(1, 8);
-            tetrominoHistoryAddItem(tetristype);
-            tetromino.Add(new Tetromino(tetristype, blockTexture));
-            tetrominoGridPos.Add(new Vector2(13, 0));
-
-            //Rotation Tetromino Test Set Up
-            rotationTestTetromino = new Tetromino(tetristype, blockTexture);
-
-            //Next Teromino Set Up Reference 
-            tetristype = random.Next(1, 8);
-            if (tetristype == tetrominoHistory[0])
-            {
-                tetristype = random.Next(1, 8);
-            }
-            tetrominoHistoryAddItem(tetristype);
-            tetromino.Add(new Tetromino(tetristype, blockTexture));
-            tetrominoGridPos.Add(new Vector2(28.5f, 4));
-
-            //Temp levelSP
-            levelStartPoint = new Vector2(1, 23);
-
-            tetrominoBlockLastPositions = new Vector2[tetromino[activeTetromino].getPositions().Length];
-            tetrominoBlockPositions = new Vector2[tetromino[activeTetromino].getPositions().Length];
-
-            lastActiveTetromino = activeTetromino;
-
-            //Player Set Up
-            player1 = new Player(playerTexture);
-            player1GridPos = levelStartPoint;
-
-            //Platform Set Up
-            platform = new Platform(platformTexture, platformTexture);
-            endPlatformGridPos = new Vector2(23, 10);
-            startPlatformGridPos = new Vector2(0, 21);
-            for (int i = 0; i < 3; i++)
-            {
-                gameField[(int)endPlatformGridPos.X + i, (int)endPlatformGridPos.Y] = true;
-                //gameField[(int)startPlatformGridPos.X + i, (int)startPlatformGridPos.Y] = true;
-            }
+            resetGameVariables();
         }
 
         public void Update(GameTime gameTime)
