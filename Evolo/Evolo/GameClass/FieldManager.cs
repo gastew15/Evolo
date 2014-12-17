@@ -484,11 +484,16 @@ namespace Evolo.GameClass
                 }
             }
 
-            //Dalton Sux
-            //if(gameField[(int)player1GridPos.X, (int)player1GridPos.Y] == true)
-           // {
-               // GlobalVar.GameState = "GameOver";
-           // }
+
+            if (gameField[(int)player1GridPos.X, (int)player1GridPos.Y] == true)
+            {
+                GlobalVar.GameState = "GameOver";
+            }
+
+            if ((player1GridPos.Y == (endPlatformGridPos.Y - 1) && player1GridPos.X == endPlatformGridPos.X) || (player1GridPos.Y == (endPlatformGridPos.Y - 1) && player1GridPos.X == endPlatformGridPos.X + 1) || (player1GridPos.Y == (endPlatformGridPos.Y - 1) && player1GridPos.X == endPlatformGridPos.X + 2))
+            {
+                GlobalVar.GameState = "GameOver";
+            }
 
             #endregion
 
@@ -820,6 +825,7 @@ namespace Evolo.GameClass
 
                 spriteBatch.DrawString(font, "AbsLeft: " + absTetrominoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetrominoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetrominoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetrominoCanNotMoveLeft + "\nMove Right: " + !tetrominoCanNotMoveRight + "\nMove Down: " + !tetrominoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 spriteBatch.DrawString(font, "Player Pos: " + "X: " + player1GridPos.X + " Y: " + player1GridPos.Y + "\nMove Left: " + !playerCanNotMoveLeft + "\nMove Right: " + !playerCanNotMoveRight + "\nMove Down: " + !playerCanNotMoveDown + "\nMove Up: " + !playerCanNotMoveUp, new Vector2(10 * GlobalVar.ScaleSize.X, 225 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                
 
                 for (int p = 0; p < tetrominoHistory.Length; p++)
                 {
@@ -846,7 +852,6 @@ namespace Evolo.GameClass
             if (GlobalVar.GameState == "GameOver")
             {
                 spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), null, Color.White, 0f, new Vector2(gameOverScreen.Width / 2, gameOverScreen.Height / 2), 5f, SpriteEffects.None, 1f);
-                spriteBatch.DrawString(font, "Game Over", new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2 - 100), Color.Black, 0f, new Vector2((int)font.MeasureString("Game Over").X/2, (int)(font.MeasureString("Game Over").Y/2)), 4f * GlobalVar.ScaleSize, SpriteEffects.None, 1f);
             }
         }
 
@@ -899,7 +904,8 @@ namespace Evolo.GameClass
             tetrominoGridPos.Add(new Vector2(28.5f, 4));
 
             //Temp levelSP
-            levelStartPoint = new Vector2(1, 17);
+            levelStartPoint = new Vector2(1, 21);
+
 
             tetrominoBlockLastPositions = new Vector2[tetromino[activeTetromino].getPositions().Length];
             tetrominoBlockPositions = new Vector2[tetromino[activeTetromino].getPositions().Length];
