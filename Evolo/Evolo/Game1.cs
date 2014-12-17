@@ -58,7 +58,7 @@ namespace Evolo
 
         //Game
         String version = "Build V: 1.1.8.2"; // Major, Minor, Build, Revision #
-        Boolean tripped = false;
+        Boolean tripped = false; //Boolean to chekc to see if the menus are active
         const int defualtWidth = 1280, defualtHeight = 720;
 
         //Keys
@@ -237,6 +237,7 @@ namespace Evolo
                             //MediaPlayer.Resume(mainMenuMusic, 
                             songTripped = true;
                         }
+                       
                         menus.Update(gameTime, mouseStateCurrent, mouseStatePrevious, milliScecondsElapsedGameTime);
                         cloud.Update(gameTime, milliScecondsElapsedGameTime);
                         break;
@@ -263,6 +264,9 @@ namespace Evolo
                         break;
                     case "GameOver":
                         cloud.Update(gameTime, milliScecondsElapsedGameTime);
+                        menus.SetMenu("GameOverMenu");
+                        menus.Update(gameTime, mouseStateCurrent, mouseStatePrevious, milliScecondsElapsedGameTime);
+                        tripped = true;
                         break;
                 }
 
@@ -280,6 +284,11 @@ namespace Evolo
                         {
                             menuState = "MainMenu";
                             GlobalVar.GameState = "MenuScreen";
+                        }
+                        if (gameState == "MenuScreen" && menuState == "PauseMenu")
+                        {
+                            menuState = "MainMenu";
+                            GlobalVar.GameState = "Playing";
                         }
                     }
                 }
@@ -337,7 +346,7 @@ namespace Evolo
                     case "GameOver":
                         cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
                         fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
-                        
+                        menus.Draw(spriteBatch);
                         break;
                     case "MenuScreen":
                         cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
@@ -374,6 +383,8 @@ namespace Evolo
                     spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME STATE: " + GlobalVar.GameState.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 2 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
                     spriteBatch.DrawString(SeqoeUIMonoNormal, "MOUSE POS: " + "X-" + mouseStateCurrent.X.ToString() + " Y-" + mouseStateCurrent.X.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 1 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
                 }
+                
+                spriteBatch.DrawString(MenuFont, menus.getMenuState(), new Vector2(1, 23), Color.Black);
 
                 spriteBatch.End();
 
