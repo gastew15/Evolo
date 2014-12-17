@@ -912,11 +912,11 @@ namespace Evolo.GameClass
                 if (Boolean.Parse(GlobalVar.OptionsArray[11]) == true)
                 {
 
-<<<<<<< HEAD
-                spriteBatch.DrawString(font, "AbsLeft: " + absTetrominoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetrominoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetrominoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetrominoCanNotMoveLeft + "\nMove Right: " + !tetrominoCanNotMoveRight + "\nMove Down: " + !tetrominoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                spriteBatch.DrawString(font, "Player Pos: " + "X: " + player1GridPos.X + " Y: " + player1GridPos.Y + "\nMove Left: " + !playerCanNotMoveLeft + "\nMove Right: " + !playerCanNotMoveRight + "\nMove Down: " + !playerCanNotMoveDown + "\nMove Up: " + !playerCanNotMoveUp, new Vector2(10 * GlobalVar.ScaleSize.X, 225 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                
-=======
+
+                    spriteBatch.DrawString(font, "AbsLeft: " + absTetrominoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetrominoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetrominoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetrominoCanNotMoveLeft + "\nMove Right: " + !tetrominoCanNotMoveRight + "\nMove Down: " + !tetrominoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    spriteBatch.DrawString(font, "Player Pos: " + "X: " + player1GridPos.X + " Y: " + player1GridPos.Y + "\nMove Left: " + !playerCanNotMoveLeft + "\nMove Right: " + !playerCanNotMoveRight + "\nMove Down: " + !playerCanNotMoveDown + "\nMove Up: " + !playerCanNotMoveUp, new Vector2(10 * GlobalVar.ScaleSize.X, 225 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+
+
                     spriteBatch.DrawString(font, "AbsLeft: " + absTetrominoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetrominoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetrominoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetrominoCanNotMoveLeft + "\nMove Right: " + !tetrominoCanNotMoveRight + "\nMove Down: " + !tetrominoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                     spriteBatch.DrawString(font, "Player Pos: " + "X: " + player1GridPos.X + " Y: " + player1GridPos.Y + "\nMove Left: " + !playerCanNotMoveLeft + "\nMove Right: " + !playerCanNotMoveRight + "\nMove Down: " + !playerCanNotMoveDown + "\nMove Up: " + !playerCanNotMoveUp, new Vector2(10 * GlobalVar.ScaleSize.X, 225 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
 
@@ -924,7 +924,7 @@ namespace Evolo.GameClass
                     {
                         spriteBatch.DrawString(font, tetrominoHistory[p].ToString(), new Vector2((10 + (10 * p)) * GlobalVar.ScaleSize.X, 400 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                     }
->>>>>>> 0c8d5dff6aae0218305155e791f41736842cc876
+
 
                 }
 
@@ -944,17 +944,18 @@ namespace Evolo.GameClass
 
                 platform.Draw(spriteBatch, new Vector2(gridStartPos.X + (endPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (endPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), new Vector2(gridStartPos.X + (startPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (startPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))));
 
-<<<<<<< HEAD
-            if (GlobalVar.GameState == "GameOver")
-            {
-                spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), null, Color.White, 0f, new Vector2(gameOverScreen.Width / 2, gameOverScreen.Height / 2), 5f, SpriteEffects.None, 1f);
-=======
+
                 if (GlobalVar.GameState == "GameOver")
                 {
                     spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), null, Color.White, 0f, new Vector2(gameOverScreen.Width / 2, gameOverScreen.Height / 2), 5f, SpriteEffects.None, 1f);
-                    spriteBatch.DrawString(font, "Game Over", new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2 - 100), Color.Black, 0f, new Vector2((int)font.MeasureString("Game Over").X / 2, (int)(font.MeasureString("Game Over").Y / 2)), 4f * GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+
+                    if (GlobalVar.GameState == "GameOver")
+                    {
+                        spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), null, Color.White, 0f, new Vector2(gameOverScreen.Width / 2, gameOverScreen.Height / 2), 5f, SpriteEffects.None, 1f);
+                        spriteBatch.DrawString(font, "Game Over", new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2 - 100), Color.Black, 0f, new Vector2((int)font.MeasureString("Game Over").X / 2, (int)(font.MeasureString("Game Over").Y / 2)), 4f * GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    }
+
                 }
->>>>>>> 0c8d5dff6aae0218305155e791f41736842cc876
             }
         }
 
