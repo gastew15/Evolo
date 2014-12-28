@@ -625,7 +625,7 @@ namespace Evolo.GameClass
             if (absTetrominoBlockFarthestDown < gameField.GetLength(1) - 1 && tetrominoCanNotMoveDown == false)
             {
                 //Checks if the block can move down based off the elapsed time, and makes up for any lost movement since the last update
-                while (milisecondsElapsedTetrominoTime - milisecondsTetrominoFallTime >= 1)
+                if (milisecondsElapsedTetrominoTime - milisecondsTetrominoFallTime >= 1)
                 {
                     //Extra Check if it can move while moving through the while loop (Speed & Droped frames protection mostly)
                     if (absTetrominoBlockFarthestDown < gameField.GetLength(1) - 1 && tetrominoCanNotMoveDown == false)
@@ -818,10 +818,12 @@ namespace Evolo.GameClass
             {
                 if (player1GridPos.Y < gameField.GetLength(1) - 1 && playerCanNotMoveDown == false)
                 {
-                    while (milisecondsElapsedPlayerTime - milisecondsPlayerGravityTime >= 0)
+                    if (milisecondsElapsedPlayerTime - milisecondsPlayerGravityTime >= 0)
                     {
-                        player1GridPos.Y += 1;
-
+                        if (player1GridPos.Y < gameField.GetLength(1) - 1 && playerCanNotMoveDown == false)
+                        {
+                            player1GridPos.Y += 1;
+                        }
                         milisecondsElapsedPlayerTime -= milisecondsPlayerGravityTime;
                     }
                 }
@@ -977,7 +979,7 @@ namespace Evolo.GameClass
             tetrominoGridPos.Add(new Vector2(28.5f, 4));
 
             //Temp levelSP
-            levelStartPoint = new Vector2(1, 21);
+            levelStartPoint = new Vector2(1, 19);
 
 
             tetrominoBlockLastPositions = new Vector2[tetromino[activeTetromino].getPositions().Length];
@@ -993,10 +995,10 @@ namespace Evolo.GameClass
             platform = new Platform(platformTexture, platformTexture);
             endPlatformGridPos = new Vector2(23, 10);
             startPlatformGridPos = new Vector2(0, 20);
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 3; i++)
             {
                 gameField[(int)endPlatformGridPos.X + i, (int)endPlatformGridPos.Y] = true;
-                //gameField[(int)startPlatformGridPos.X + i, (int)startPlatformGridPos.Y] = true;
+                gameField[(int)startPlatformGridPos.X + i, (int)startPlatformGridPos.Y] = true;
             }
 
         }

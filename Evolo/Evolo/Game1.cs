@@ -350,6 +350,10 @@ namespace Evolo
                         break;
                     case "MenuScreen":
                         cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        if (menus.getMenuState() == "PauseMenu")
+                        {
+                            fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        }
                         menus.Draw(spriteBatch);
                         break;
                     case "Credits":
