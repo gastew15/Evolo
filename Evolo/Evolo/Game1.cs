@@ -345,7 +345,7 @@ namespace Evolo
                         break;
                     case "GameOver":
                         cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
-                        fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        //fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         menus.Draw(spriteBatch);
                         break;
                     case "MenuScreen":
@@ -384,7 +384,7 @@ namespace Evolo
                     spriteBatch.DrawString(SeqoeUIMonoNormal, "MOUSE POS: " + "X-" + mouseStateCurrent.X.ToString() + " Y-" + mouseStateCurrent.X.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 1 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
                 }
                 
-                spriteBatch.DrawString(MenuFont, menus.getMenuState(), new Vector2(1, 23), Color.Black);
+                //spriteBatch.DrawString(MenuFont, menus.getMenuState(), new Vector2(1, 23), Color.Black);
 
                 spriteBatch.End();
 

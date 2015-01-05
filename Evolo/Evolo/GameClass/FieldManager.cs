@@ -74,12 +74,11 @@ namespace Evolo.GameClass
         //Game Over Variables
         private Texture2D gameOverScreen;
 
-
         #endregion
 
         public FieldManager()
         {
-
+            
         }
 
         public void Intilize()
@@ -449,7 +448,7 @@ namespace Evolo.GameClass
             //Fail safe for player falling out of array
             if (player1GridPos.Y > gameField.GetLength(1) - 1)
             {
-                player1GridPos.Y = player1GridPosPrevious.Y;
+                player1GridPos.Y = player1GridPosPrevious.Y - 25;
             }
 
             //Check
