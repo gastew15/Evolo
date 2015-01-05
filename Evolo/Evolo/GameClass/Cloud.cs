@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
+using System.Text;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using StarByte.graphics;
 
 namespace Evolo.GameClass
@@ -10,11 +13,14 @@ namespace Evolo.GameClass
     class Cloud
     {
         Texture2D bBlockTexture;
-
+        int colorDistance = 500;
+        int colorStartHeight = 500;
         //Test Block Variables
-        ColorGradient[] colorTestBlock = new ColorGradient[40];
-        Rectangle[] bBlockRectangle = new Rectangle[40];
-
+        ColorGradient[] colorBlock = new ColorGradient[41];
+        ColorGradient[] colorBlock2 = new ColorGradient[41];
+        Rectangle[] bBlockRectangle = new Rectangle[41];
+        Color[] finalColor = new Color[41];
+        int sRed, sBlue, sGreen, eRed, eBlue, eGreen;
         /*
          private Texture2D cloudTexture;
          public Vector2[] cloudPosition;
@@ -30,15 +36,26 @@ namespace Evolo.GameClass
             //Obviously just the rectangle that the block uses
             for (int i = 0; i < bBlockRectangle.Length; i++)
             {
-                bBlockRectangle[i] = new Rectangle((int)((0 + (0 * i)) * GlobalVar.ScaleSize.X), (int)((0 + (20 * i)) * GlobalVar.ScaleSize.Y), (int)(GlobalVar.ScreenSize.X * GlobalVar.ScaleSize.X), (int)(32 * GlobalVar.ScaleSize.Y));
+                bBlockRectangle[i] = new Rectangle(
+                    (int)((0 + (0 * i)) * GlobalVar.ScaleSize.X),
+                    (int)((0 + (18 * i)) * GlobalVar.ScaleSize.Y),
+                    (int)(GlobalVar.ScreenSize.X * GlobalVar.ScaleSize.X),
+                    (int)(18 * GlobalVar.ScaleSize.Y));
             }
 
+            sRed = 0;
+            sGreen = 0;
+            sBlue =0;
+            eRed = 100;
+            eGreen = 100;
+            eBlue = 100;
             //The set up for the color - First is the RGB Value orginally, and Second is the RGB that it will end at
-            for (int j = 0; j < colorTestBlock.Length; j++)
+            for (int j = 0; j < colorBlock.Length; j++)
             {
-                colorTestBlock[j] = new ColorGradient(new Vector3(0, 0, 255), new Vector3(255, 0, 0));
+                colorBlock[j] = new ColorGradient(new Vector3(sRed, sGreen, sBlue), new Vector3(eRed, eGreen, eBlue));
+                colorBlock2[j] = new ColorGradient(new Vector3(0,0,0), new Vector3(0,0,0));
             }
-
+            
             /*
             cloudRandom = new Random();
             cloudPosition = new Vector2[cloudnum];
@@ -80,32 +97,52 @@ namespace Evolo.GameClass
         }
 
         public void Update(GameTime gameTime, float millisecondsElapsedGameTime)
-        {   
+        {
 
-            //Test Block Update
-            for (int i = 0; i < colorTestBlock.Length; i++)
+            if (Keyboard.GetState().IsKeyDown(Keys.H))
             {
-                //Does a size update to the rectangle
-                bBlockRectangle[i] = new Rectangle(bBlockRectangle[i].X, bBlockRectangle[i].Y, (int)(GlobalVar.ScreenSize.X * GlobalVar.ScaleSize.X), (int)(32 * GlobalVar.ScaleSize.Y));
-
-                colorTestBlock[i].Update(new Vector2(bBlockRectangle[i].X, bBlockRectangle[i].Y), (int)(GlobalVar.ScreenSize.Y * GlobalVar.ScaleSize.Y));
+                colorDistance++;
             }
-
+            if (Keyboard.GetState().IsKeyDown(Keys.Y))
+            {
+                colorDistance--;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.U))
+            {
+                colorStartHeight++;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.J))
+            {
+                colorStartHeight--;
+            }
             for (int j = 0; j < bBlockRectangle.Length; j++)
             {
                 //Just the movement for the test Block
                 if ((millisecondsElapsedGameTime % 2) == 0)
                 {
                     if (bBlockRectangle[j].Y < GlobalVar.ScreenSize.Y)
-                        bBlockRectangle[j].Y++;
+                        bBlockRectangle[j].Y = bBlockRectangle[j].Y + 1;
                     else
                     {
-                        bBlockRectangle[j].Y = -24;
-                        colorTestBlock[j].SetColor(new Vector3(0, 0, 0));
+                        bBlockRectangle[j].Y = -17;
                     }
                 }
-            }
 
+            }
+            //Test Block Update
+            for (int i = 0; i < colorBlock.Length; i++)
+            {
+                //Does a size update to the rectangle
+                bBlockRectangle[i] = new Rectangle(bBlockRectangle[i].X, bBlockRectangle[i].Y, (int)(GlobalVar.ScreenSize.X * GlobalVar.ScaleSize.X), (int)(18 * GlobalVar.ScaleSize.Y));
+                colorBlock[i].Update(new Vector2(GlobalVar.ScreenSize.X, colorStartHeight), new Vector2(bBlockRectangle[i].X, bBlockRectangle[i].Y), (int)((colorDistance) * GlobalVar.ScaleSize.Y));
+                colorBlock2[i].Update(new Vector2(GlobalVar.ScreenSize.X, colorStartHeight), new Vector2(bBlockRectangle[i].X, bBlockRectangle[i].Y), (int)((colorDistance) * GlobalVar.ScaleSize.Y));
+                if (bBlockRectangle[i].Y < colorStartHeight)
+                {
+                    finalColor[i] = colorBlock2[i].GetColor();
+                }
+                else
+                    finalColor[i] = colorBlock[i].GetColor();
+            }
             /*
             //Testing Clouds
             for (int x = 0; x < cloudnum; x++)
@@ -125,7 +162,7 @@ namespace Evolo.GameClass
             //Just the test Block Drawing
             for (int j = 0; j < bBlockRectangle.Length; j++)
             {
-                spriteBatch.Draw(bBlockTexture, new Rectangle((int)(bBlockRectangle[j].X * GlobalVar.ScaleSize.X), (int)(bBlockRectangle[j].Y * GlobalVar.ScaleSize.Y), bBlockRectangle[j].Width, bBlockRectangle[j].Height), null, colorTestBlock[j].GetColor(), 0f, new Vector2(), SpriteEffects.None, 1f);
+                spriteBatch.Draw(bBlockTexture, new Rectangle((int)(bBlockRectangle[j].X * GlobalVar.ScaleSize.X), (int)(bBlockRectangle[j].Y * GlobalVar.ScaleSize.Y), bBlockRectangle[j].Width, bBlockRectangle[j].Height), null, finalColor[j], 0f, new Vector2(), SpriteEffects.None, 1f);
             }
             /*
             for (int x = 0; x < cloudnum; x++)
@@ -135,6 +172,14 @@ namespace Evolo.GameClass
                 //spriteBatch.Draw(cloudTexture, new Rectangle(256, 0, 32, 128), null, Color.White, 0f, new Vector2(80, 32), SpriteEffects.None, 1f);
             }
             */
+        }
+        public int Getdistance()
+        {
+            return colorBlock[1].getDist();
+        }
+        public int getHeight()
+        {
+            return colorStartHeight;
         }
     }
 }
