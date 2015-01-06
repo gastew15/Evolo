@@ -90,7 +90,7 @@ namespace Evolo.GameClass
         {
             blockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
             fullBlockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
-            blankBlockTexture = Content.Load<Texture2D>("Sprites and pictures/blankBlock3");
+            blankBlockTexture = Content.Load<Texture2D>("Sprites and pictures/blankBlock4");
             playerTexture = Content.Load<Texture2D>("Sprites and pictures/CharacterTest");
             platformTexture = Content.Load<Texture2D>("Sprites and pictures/Platform");
             hudTexture = Content.Load<Texture2D>("Sprites and pictures/GameHud");

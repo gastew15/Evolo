@@ -16,7 +16,7 @@ namespace Evolo.GameClass
 {
     class Cloud
     {
-        static int blockAmount = 3600;
+        static int blockAmount = 3680;
         Texture2D bBlockTexture;
         int colorDistance = 500;
         double colorStartHeight = 500;
@@ -52,7 +52,7 @@ namespace Evolo.GameClass
             for (int i = 0; i < bBlockRectangle.Length; i++)
             {
                 bBlockRectangle[i] = new Rectangle(
-                    (int)((8 + (16 * p)) * GlobalVar.ScaleSize.X),
+                    (int)((7 + (16 * p)) * GlobalVar.ScaleSize.X),
                     (int)((0 + (16 * x)) * GlobalVar.ScaleSize.Y),
                     (int)(rand.Next(0,0) + 16 * GlobalVar.ScaleSize.X),
                     (int)(rand.Next(0,0) + 16 * GlobalVar.ScaleSize.Y));
@@ -84,44 +84,11 @@ namespace Evolo.GameClass
                 colorBlock[j] = new ColorGradient(new Vector3(mRed + rRed[j], mGreen + rGreen[j], mBlue + rBlue[j]), new Vector3(eRed + (rand.Next(0, 12) - 6), eGreen + (rand.Next(0, 12) - 6), eBlue + (rand.Next(0, 12) - 6)));
                 colorBlock2[j] = new ColorGradient(new Vector3(sRed + (rand.Next(0, 6) - 3), sGreen + (rand.Next(0, 6) - 3), sBlue + (rand.Next(0, 6) - 3)), new Vector3(mRed + rRed[j], mGreen + rGreen[j], mBlue + rBlue[j]));
             }
-            
-            /*
-            cloudRandom = new Random();
-            cloudPosition = new Vector2[cloudnum];
-            cloudScale = new Vector2[cloudnum];
-            cloudRectangle = new Rectangle[cloudnum];
-            cloudSpeed = new float[cloudnum];
-
-            for (int x = 0; x < cloudnum; x++)
-            {
-
-                int cloudType = cloudRandom.Next(1, 100);
-                if (cloudType < 26)
-                {
-                    cloudType = cloudRandom.Next(1, 4);
-                    switch (cloudType)
-                    {
-                        case 1: cloudRectangle[x] = new Rectangle(0, 0, 96, 64); break;
-                        case 2: cloudRectangle[x] = new Rectangle(96, 0, 64, 64); break;
-                        case 3: cloudRectangle[x] = new Rectangle(160, 0, 96, 64); break;
-                        case 4: cloudRectangle[x] = new Rectangle(256, 0, 32, 128); break;
-                    }
-                }
-                else
-                    cloudRectangle[x] = new Rectangle(288, 0, 160, 64);
-
-                double randomPasser = cloudRandom.NextDouble() * (3.0f - 0.5f) + 0.5f;
-                cloudPosition[x] = new Vector2(cloudRandom.Next(-32, 1312), cloudRandom.Next(-64, 784));
-                cloudScale[x] = new Vector2((float)randomPasser, (float)randomPasser);
-                
-            }
-             */
         }
 
 
         public void LoadContent(ContentManager Content)
         {
-            //cloudTexture = Content.Load<Texture2D>("Sprites and Pictures/CloudSheet1");
             bBlockTexture = Content.Load<Texture2D>("Sprites and Pictures/SkyBlock3");
         }
 
@@ -174,11 +141,11 @@ namespace Evolo.GameClass
                         colorStartUp = false;
 
 
-                    if (bBlockRectangle[j].Y < GlobalVar.ScreenSize.Y)
+                    if (bBlockRectangle[j].Y < GlobalVar.ScreenSize.Y + 8)
                         bBlockRectangle[j].Y = bBlockRectangle[j].Y + 1;
                     else
                     {
-                        bBlockRectangle[j].Y = 1;
+                        bBlockRectangle[j].Y = -7;
                     }
                 }
             }
