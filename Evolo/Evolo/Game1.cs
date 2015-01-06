@@ -266,6 +266,7 @@ namespace Evolo
                         cloud.Update(gameTime, milliScecondsElapsedGameTime);
                         menus.SetMenu("GameOverMenu");
                         menus.Update(gameTime, mouseStateCurrent, mouseStatePrevious, milliScecondsElapsedGameTime);
+                        fieldManager.resetGameVariables();
                         tripped = true;
                         break;
                 }

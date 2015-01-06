@@ -543,7 +543,6 @@ namespace Evolo.GameClass
                     if (gameOverMenu.menuNumberSelection() == 1)
                     {
                         GlobalVar.Score = 0;
-                        field.resetGameVariables();
                         GlobalVar.GameState = "Playing";
                     }
                     else if (gameOverMenu.menuNumberSelection() == 2)

@@ -67,7 +67,6 @@ namespace Evolo.GameClass
         private Texture2D hudTexture;
 
         //Platform Variables
-        private Platform platform;
         private Texture2D platformTexture;
         private Vector2 endPlatformGridPos, startPlatformGridPos;
 
@@ -898,7 +897,7 @@ namespace Evolo.GameClass
 
                 }
 
-
+                
                 //ghost rotationTestTetromino collsion Block Debug drawing
                 //rotationTestTetromino.setColorTemp(Color.Black);
                 //rotationTestTetromino.Draw(spriteBatch);
@@ -912,8 +911,9 @@ namespace Evolo.GameClass
 
                 player1.Draw(spriteBatch, player1SpriteEffects);
 
-                platform.Draw(spriteBatch, new Vector2(gridStartPos.X + (endPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (endPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), new Vector2(gridStartPos.X + (startPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (startPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))));
-
+                
+                spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (endPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (endPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), Color.White);
+                spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (startPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (startPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), Color.White);
 
                 if (GlobalVar.GameState == "GameOver")
                 {
@@ -991,7 +991,6 @@ namespace Evolo.GameClass
             player1GridPos = levelStartPoint;
 
             //Platform Set Up
-            platform = new Platform(platformTexture, platformTexture);
             endPlatformGridPos = new Vector2(23, 10);
             startPlatformGridPos = new Vector2(0, 20);
             for (int i = 0; i < 3; i++)
