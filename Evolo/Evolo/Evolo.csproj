@@ -75,7 +75,6 @@
   <ItemGroup>
     <Compile Include="GameClass\Cloud.cs" />
     <Compile Include="GameClass\Credits.cs" />
-    <Compile Include="GameClass\EndPlatform.cs" />
     <Compile Include="GameClass\FieldManager.cs" />
     <Compile Include="GameClass\Menus.cs" />
     <Compile Include="GameClass\OptionsHandler.cs" />
