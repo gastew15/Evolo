@@ -38,8 +38,11 @@ namespace StarByte.graphics
             pixelsRequiredToChange.X = (float)((endBlockColor.X - orginalBlockColor.X) / totalDistanceToTravel);
             pixelsRequiredToChange.Y = (float)((endBlockColor.Y - orginalBlockColor.Y) / totalDistanceToTravel);
             pixelsRequiredToChange.Z = (float)((endBlockColor.Z - orginalBlockColor.Z) / totalDistanceToTravel);
-
-            blockColor = orginalBlockColor + pixelsRequiredToChange * Math.Abs(startPosition.Y - currentPosition.Y);
+            if (Math.Abs(startPosition.Y - currentPosition.Y) > totalDistanceToTravel)
+                blockColor = orginalBlockColor + pixelsRequiredToChange * Math.Abs(startPosition.Y + totalDistanceToTravel);
+            else
+                blockColor = orginalBlockColor + pixelsRequiredToChange * Math.Abs(startPosition.Y - currentPosition.Y);
+            
             /**
             //Red Update Color Main Logic Block
             if ((int)pixelsRequiredToChange.X != 0 && pixelsRequiredToChange != null)
@@ -129,20 +132,37 @@ namespace StarByte.graphics
             }
             */
             //Sets the color to selected R.G.B. Values (Color ranges from 0.0 to 1.0, so it's divided by 255)
-            bBlockDrawColor = new Color(blockColor.X / 255, blockColor.Y / 255, blockColor.Z / 255);
+            // they are now devided by 1024 becasue I don't know but it works and 255 makes it 4.1023.... times brighter than the actual values should represent
+            bBlockDrawColor = new Color(blockColor.X / 255f, blockColor.Y / 255f, blockColor.Z / 255f);
         }
 
         public Color GetColor()
         {
             return bBlockDrawColor;
         }
+        public float GetRed()
+        {
+            return bBlockDrawColor.R;
+        }
+        public float GetGreen()
+        {
+            return bBlockDrawColor.G;
+        }
+        public float GetBlue()
+        {
+            return bBlockDrawColor.B;
+        }
         public int getDist()
         {
             return totalDistanceToTravel;
         }
-        public void SetColor(Vector3 blockColor)
+        public void SetColor()//Vector3 blockColor)
         {
-            this.blockColor = blockColor;
+            this.blockColor = new Vector3(255,255,255);
+        }
+        public void SetStar()
+        {
+            this.bBlockDrawColor = new Color(255 / 255f, 255 / 255f, 255 / 255f);
         }
     }
 }
