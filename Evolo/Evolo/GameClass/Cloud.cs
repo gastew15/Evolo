@@ -94,7 +94,7 @@ namespace Evolo.GameClass
 
         public void Update(GameTime gameTime, float millisecondsElapsedGameTime)
         {
-            
+
             if (Keyboard.GetState().IsKeyDown(Keys.Y))
             {
                 colorDistance = colorDistance + 2;
@@ -171,7 +171,7 @@ namespace Evolo.GameClass
             //Just the test Block Drawing
             for (int j = 0; j < bBlockRectangle.Length; j++)
             {
-                spriteBatch.Draw(bBlockTexture, new Rectangle((int)(bBlockRectangle[j].X * GlobalVar.ScaleSize.X), (int)(bBlockRectangle[j].Y * GlobalVar.ScaleSize.Y), bBlockRectangle[j].Width, bBlockRectangle[j].Height), null, finalColor[j], 0f, new Vector2(bBlockRectangle[j].Height / 2, bBlockRectangle[j].Width / 2), SpriteEffects.None, 0f);
+                spriteBatch.Draw(bBlockTexture, new Rectangle((int)(bBlockRectangle[j].X * GlobalVar.ScaleSize.X), (int)(bBlockRectangle[j].Y * GlobalVar.ScaleSize.Y), (int)(bBlockRectangle[j].Width * GlobalVar.ScaleSize.X), (int)(bBlockRectangle[j].Height * GlobalVar.ScaleSize.Y)), null, finalColor[j], 0f, new Vector2(bBlockRectangle[j].Height / 2, bBlockRectangle[j].Width / 2), SpriteEffects.None, 0f);
             }
 
             /*
