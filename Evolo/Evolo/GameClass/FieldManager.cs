@@ -32,6 +32,7 @@ namespace Evolo.GameClass
 
         //Keyboard Variables / Misc
         private bool keyLeftDown, keyRightDown, keyUpDown;
+        private bool keyEnterDown = false;
         private bool keyADown, keyDDown, keyWDown;
         private String debugStringData = "";
         private Random random = new Random();
@@ -482,15 +483,31 @@ namespace Evolo.GameClass
                 }
             }
 
-
+            //Block Falling on Player Check
             if (gameField[(int)player1GridPos.X, (int)player1GridPos.Y] == true)
             {
                 GlobalVar.GameState = "GameOver";
             }
 
-            if ((player1GridPos.Y == (endPlatformGridPos.Y - 1) && player1GridPos.X == endPlatformGridPos.X) || (player1GridPos.Y == (endPlatformGridPos.Y - 1) && player1GridPos.X == endPlatformGridPos.X + 1) || (player1GridPos.Y == (endPlatformGridPos.Y - 1) && player1GridPos.X == endPlatformGridPos.X + 2))
+            //Player Reaching End Platform Check
+            if (((player1GridPos.Y == (endPlatformGridPos.Y - 1) && player1GridPos.X == endPlatformGridPos.X) || (player1GridPos.Y == (endPlatformGridPos.Y - 1) && player1GridPos.X == endPlatformGridPos.X + 1) || (player1GridPos.Y == (endPlatformGridPos.Y - 1) && player1GridPos.X == endPlatformGridPos.X + 2)))
             {
-                GlobalVar.GameState = "GameOver";
+                if (keyEnterDown == true)
+                {
+                    if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                    {
+                        keyEnterDown = false;
+                        GlobalVar.GameState = "GameOver";
+                    }
+                }
+                else if (Keyboard.GetState().IsKeyUp(Keys.Enter))
+                {
+                    if (keyEnterDown == false)
+                    {
+                        keyEnterDown = true;
+                    }
+                }
+
             }
 
             #endregion
