@@ -684,7 +684,14 @@ namespace Evolo.GameClass
                             {
                                 for (int n = 0; n < isfilled.Length; n++)
                                 {
-                                    if (isfilled[n] == true && (int)tetromino[i].getPositions()[j].Y == absTetrominoBlockFarthestDown - (absTetrominoBlockFarthestDown - absTetrominoBlockFarthestUp) + (n + 1))
+                                    int modifer = 0;
+
+                                    if (tetromino[i].getPositions()[j].Y == 25)
+                                        modifer = 3;
+                                    else
+                                        modifer = 1;
+
+                                    if (isfilled[n] == true && (int)tetromino[i].getPositions()[j].Y == absTetrominoBlockFarthestDown - (absTetrominoBlockFarthestDown - absTetrominoBlockFarthestUp) + (n + modifer))
                                     {
                                         Boolean[] tempHolding = new Boolean[tetromino[i].getBlockPosActive().Length];
                                         for (int a = 0; a < tempHolding.Length; a++)
@@ -890,6 +897,7 @@ namespace Evolo.GameClass
                     {
                         //HitBox Debug
                         //backdropColor = Color.Blue;
+                        backdropColor = Color.Transparent;
                         blockTexture = fullBlockTexture;
                         backdropColor.A = 25;
                     }
@@ -927,10 +935,9 @@ namespace Evolo.GameClass
                 }
 
                 player1.Draw(spriteBatch, player1SpriteEffects);
-
-                
-                spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (endPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (endPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), Color.White);
-                spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (startPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (startPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), Color.White);
+       
+                spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (endPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (endPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), null, Color.White, 0f, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (startPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (startPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), null, Color.White, 0f, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
 
                 if (GlobalVar.GameState == "GameOver")
                 {
