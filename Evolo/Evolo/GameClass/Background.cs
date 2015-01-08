@@ -116,16 +116,16 @@ namespace Evolo.GameClass
                     if (colorStartHeight <= (GlobalVar.ScreenSize.Y / 3) * 2)
                     {
                         if (colorStartUp == true)
-                            colorStartHeight = colorStartHeight + (0.00001f * (double)Math.Abs(colorStartHeight - (GlobalVar.ScreenSize.Y / 3)));
+                            colorStartHeight = colorStartHeight + (0.0000001f * (double)Math.Abs(colorStartHeight - (GlobalVar.ScreenSize.Y / 3)));
                         else
-                            colorStartHeight = colorStartHeight - (0.00001f * (double)Math.Abs(colorStartHeight - (GlobalVar.ScreenSize.Y / 3)));
+                            colorStartHeight = colorStartHeight - (0.0000001f * (double)Math.Abs(colorStartHeight - (GlobalVar.ScreenSize.Y / 3)));
                     }
                     else
                     {
                         if (colorStartUp == true)
-                            colorStartHeight = colorStartHeight + (0.00001f * (double)Math.Abs(colorStartHeight - (GlobalVar.ScreenSize.Y * 1.5)));
+                            colorStartHeight = colorStartHeight + (0.0000001f * (double)Math.Abs(colorStartHeight - (GlobalVar.ScreenSize.Y * 1.5)));
                         else
-                            colorStartHeight = colorStartHeight - (0.00001f * (double)Math.Abs(colorStartHeight - (GlobalVar.ScreenSize.Y * 1.5)));
+                            colorStartHeight = colorStartHeight - (0.0000001f * (double)Math.Abs(colorStartHeight - (GlobalVar.ScreenSize.Y * 1.5)));
                     }
                 }
                 #region Block Scaling Switch
