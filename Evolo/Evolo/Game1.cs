@@ -33,7 +33,7 @@ namespace Evolo
 
         //TEMP CLASSES
         FieldManager fieldManager;
-        Cloud cloud;
+        Background cloud;
         SplashScreenManager splashScreen;
         //TEMP VARIABLES
         Texture2D[] splashScreenImages;
@@ -122,7 +122,7 @@ namespace Evolo
                 menus = new Menus(graphics);
 
                 //TEMP Initilize
-                cloud = new Cloud();
+                cloud = new Background();
                 fieldManager = new FieldManager();
                 //Change to real values later
                 splashScreenWaitTime = new float[3] { 2.0f, 2.0f, 4.0f };
