@@ -657,11 +657,6 @@ namespace Evolo.GameClass
                 if (milisecondsElapsedTetrominoTime - milisecondsTetrominoLockDelayTime >= 1)
                 {
                     
-                    //for(int l = 0; l < 4; l++)
-                    //{
-                        //position to check (absFarthestDown - 3) + l                     
-                    //}
-
                     //line clearning system to check to see that if the Y values in the gamefield class is filled up from the last X value from the active tetromino block + 4 X values to make sure that all tetrominos are accounted for
                     Boolean[] isfilled = new Boolean[4];
                     for (int o = 0; o < isfilled.Length; o++)
@@ -690,9 +685,10 @@ namespace Evolo.GameClass
                             {
                                 for (int n = 0; n < isfilled.Length; n++)
                                 {
-                                    if (isfilled[n] == true && (int)tetromino[i].getPositions()[j].Y == (absTetrominoBlockFarthestDown - 3) + j)
+                                    if (isfilled[n] == true && (int)tetromino[i].getPositions()[j].Y == (absTetrominoBlockFarthestDown - 3) + n)
                                     {
-                                        Boolean[] tempHolding = new Boolean[tetromino[i].getBlockPosActive().Length];
+                                        Boolean[] tempHolding = new Boolean[4];
+
                                         for (int a = 0; a < tempHolding.Length; a++)
                                         {
                                             if (a == j)
@@ -894,8 +890,8 @@ namespace Evolo.GameClass
                     else
                     {
                         //HitBox Debug
-                        backdropColor = Color.Blue;
-                        //backdropColor = Color.Transparent;
+                        //backdropColor = Color.Blue;
+                        backdropColor = Color.Transparent;
                         blockTexture = fullBlockTexture;
                         backdropColor.A = 25;
                     }
@@ -929,7 +925,7 @@ namespace Evolo.GameClass
                 blockTexture = fullBlockTexture;
                 for (int k = 0; k < tetromino.Count; k++)
                 {
-                    //tetromino[k].Draw(spriteBatch);
+                    tetromino[k].Draw(spriteBatch);
                 }
 
                 player1.Draw(spriteBatch, player1SpriteEffects);
