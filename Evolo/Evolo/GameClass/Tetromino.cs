@@ -199,8 +199,8 @@ namespace Evolo.GameClass
                     tempReturn[i] = currentBlockPos[i];
                 }
             }
-                return tempReturn;
-            
+
+            return tempReturn;            
         }
 
         public void setRotation(int rotation)
