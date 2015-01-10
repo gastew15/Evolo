@@ -105,7 +105,7 @@ namespace Evolo
                 GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
                 graphics.PreferredBackBufferWidth = (int)GlobalVar.ScreenSize.X;
                 graphics.PreferredBackBufferHeight = (int)GlobalVar.ScreenSize.Y;
-                graphics.IsFullScreen = false;
+                graphics.IsFullScreen = Convert.ToBoolean(GlobalVar.OptionsArray[14]);
                 graphics.ApplyChanges();
 
                 //Sets Keybinding Info from options Load

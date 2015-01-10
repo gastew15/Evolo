@@ -27,9 +27,12 @@ namespace Evolo.GameClass
             graphics.PreferredBackBufferHeight = (int)screenSizeUpdate.Y;
             if (toggleFullScreen == true)
             {
-                graphics.ToggleFullScreen();
+                graphics.IsFullScreen = true;
             }
-            //graphics.IsFullScreen = fullScreen;
+            else
+            {
+                graphics.IsFullScreen = false;
+            }
             graphics.ApplyChanges();
         }
 

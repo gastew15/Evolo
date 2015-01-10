@@ -24,7 +24,7 @@ namespace Evolo.GameClass
         private MenuHandler mainMenu, optionsMenu, optionsResolutionMenu, optionsKeybindingMenuPage1, optionsKeybindingMenuPage2, pauseMenu, debugMenu, saveSlotMenu, gameOverMenu;
         private WindowSizeManager windowSizeManager;
         private SpriteFont font;
-        private Boolean isFullScreen, pausedLast;
+        private Boolean pausedLast;
         private OptionsHandler optionsHandler;
         private SaveHandler saveHandler;
 
@@ -307,7 +307,7 @@ namespace Evolo.GameClass
                         //Exit & Save (Write options file to the Global Values)
                         optionsHandler.writeOptions(GlobalVar.OptionsArray);
                         GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
-                        windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), this.isFullScreen);
+                        windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), Convert.ToBoolean(GlobalVar.OptionsArray[14]));
                         if (pausedLast == true)
                             menuState = "PauseMenu";
                         else
@@ -318,7 +318,7 @@ namespace Evolo.GameClass
                         //Exit W/ Saving (Set Global Values to the options Files)
                         GlobalVar.OptionsArray = optionsHandler.loadOptions();
                         GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
-                        windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), this.isFullScreen);
+                        windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), Convert.ToBoolean(GlobalVar.OptionsArray[14]));
                         if (pausedLast == true)
                             menuState = "PauseMenu";
                         else
@@ -341,73 +341,50 @@ namespace Evolo.GameClass
                     //Example for menu to gamemode
                     if (optionsResolutionMenu.menuNumberSelection() == 1)
                     {
-                        /*
-                        if (graphics.IsFullScreen == false)
+                        if (Convert.ToBoolean(GlobalVar.OptionsArray[14]) == false)
                         {
-                            this.isFullScreen = true;
-                            GlobalVar.ScreenSize = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
-                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), true);
+                            GlobalVar.OptionsArray[14] = "true";
                         }
-                        else if (graphics.IsFullScreen == true)
+                        else if (Convert.ToBoolean(GlobalVar.OptionsArray[14]) == true)
                         {
-                            this.isFullScreen = false;
-                            //Read Options file for the last set resolution, for now it defualts to 800 x 600
-                            GlobalVar.ScreenSize = new Vector2(800, 600);
-                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), true);
-                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), false);
+                            GlobalVar.OptionsArray[14] = "false";
                         }
-                        */
+                        windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), Convert.ToBoolean(GlobalVar.OptionsArray[14]));
                     }
                     else if (optionsResolutionMenu.menuNumberSelection() == 2)
                     {
-
-                        if (!(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width < 800) && !(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height < 600))
-                        {
                             GlobalVar.OptionsArray[0] = "800";
                             GlobalVar.OptionsArray[1] = "600";
                             GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
-                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), this.isFullScreen);
-                        }
+                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), Convert.ToBoolean(GlobalVar.OptionsArray[14]));
                     }
                     else if (optionsResolutionMenu.menuNumberSelection() == 3)
                     {
-                        if (!(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width < 1080) && !(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height < 720))
-                        {
                             GlobalVar.OptionsArray[0] = "1280";
                             GlobalVar.OptionsArray[1] = "720";
                             GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
-                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), this.isFullScreen);
-                        }
+                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), Convert.ToBoolean(GlobalVar.OptionsArray[14]));
                     }
                     else if (optionsResolutionMenu.menuNumberSelection() == 4)
                     {
-                        if (!(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width < 1366) && !(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height < 768))
-                        {
                             GlobalVar.OptionsArray[0] = "1366";
                             GlobalVar.OptionsArray[1] = "768";
                             GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
-                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), this.isFullScreen);
-                        }
+                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), Convert.ToBoolean(GlobalVar.OptionsArray[14]));
                     }
                     else if (optionsResolutionMenu.menuNumberSelection() == 5)
                     {
-                        if (!(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width < 1600) && !(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height < 900))
-                        {
                             GlobalVar.OptionsArray[0] = "1600";
                             GlobalVar.OptionsArray[1] = "900";
                             GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
-                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), this.isFullScreen);
-                        }
+                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), Convert.ToBoolean(GlobalVar.OptionsArray[14]));
                     }
                     else if (optionsResolutionMenu.menuNumberSelection() == 6)
                     {
-                        if (!(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width < 1920) && !(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height < 1080))
-                        {
                             GlobalVar.OptionsArray[0] = "1920";
                             GlobalVar.OptionsArray[1] = "1080";
                             GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
-                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), this.isFullScreen);
-                        }
+                            windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), Convert.ToBoolean(GlobalVar.OptionsArray[14]));
                     }
                     else if (optionsResolutionMenu.menuNumberSelection() == 7)
                         menuState = "OptionsMenu";
@@ -580,6 +557,10 @@ namespace Evolo.GameClass
             else
                 debugMenuColors[2] = Color.DimGray;
             //Terrible, but still as effective as a switch case...
+            if (Convert.ToBoolean(GlobalVar.OptionsArray[14]) == true)
+                optionsResolutionMenuColors[0] = Color.LimeGreen;
+            else
+                optionsResolutionMenuColors[0] = Color.DimGray;
             if (GlobalVar.ScreenSize.Y == 600)
                 optionsResolutionMenuColors[1] = Color.LimeGreen;
             else
@@ -596,14 +577,10 @@ namespace Evolo.GameClass
                 optionsResolutionMenuColors[4] = Color.LimeGreen;
             else
                 optionsResolutionMenuColors[4] = Color.DimGray;
-            if (GlobalVar.ScreenSize.Y == 1200)
+            if (GlobalVar.ScreenSize.Y == 1080)
                 optionsResolutionMenuColors[5] = Color.LimeGreen;
             else
                 optionsResolutionMenuColors[5] = Color.DimGray;
-            if (GlobalVar.ScreenSize.Y == 1080)
-                optionsResolutionMenuColors[6] = Color.LimeGreen;
-            else
-                optionsResolutionMenuColors[6] = Color.DimGray;
 
             //Checks if the menuState changed and if so set the menu hover back to 1
             if (previousMenuState != menuState)
