@@ -33,7 +33,7 @@ namespace Evolo
 
         //TEMP CLASSES
         FieldManager fieldManager;
-        Cloud cloud;
+        Background cloud;
         SplashScreenManager splashScreen;
         //TEMP VARIABLES
         Texture2D[] splashScreenImages;
@@ -105,7 +105,7 @@ namespace Evolo
                 GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
                 graphics.PreferredBackBufferWidth = (int)GlobalVar.ScreenSize.X;
                 graphics.PreferredBackBufferHeight = (int)GlobalVar.ScreenSize.Y;
-                graphics.IsFullScreen = false;
+                graphics.IsFullScreen = Convert.ToBoolean(GlobalVar.OptionsArray[14]);
                 graphics.ApplyChanges();
 
                 //Sets Keybinding Info from options Load
@@ -122,7 +122,7 @@ namespace Evolo
                 menus = new Menus(graphics);
 
                 //TEMP Initilize
-                cloud = new Cloud();
+                cloud = new Background();
                 fieldManager = new FieldManager();
                 //Change to real values later
                 splashScreenWaitTime = new float[3] { 2.0f, 2.0f, 4.0f };
@@ -386,7 +386,7 @@ namespace Evolo
                 {
                     spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME1 TIME: " + (milliScecondsElapsedGameTime / 1000).ToString() + "s", new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 3 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
                     spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME STATE: " + GlobalVar.GameState.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 2 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
-                    spriteBatch.DrawString(SeqoeUIMonoNormal, "MOUSE POS: " + "X-" + mouseStateCurrent.X.ToString() + " Y-" + mouseStateCurrent.X.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 1 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
+                    spriteBatch.DrawString(SeqoeUIMonoNormal, "MOUSE POS: " + "X-" + mouseStateCurrent.X.ToString() + " Y-" + mouseStateCurrent.Y.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 1 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
                 }
                 
                 //spriteBatch.DrawString(MenuFont, menus.getMenuState(), new Vector2(1, 23), Color.Black);

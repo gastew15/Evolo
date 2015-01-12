@@ -73,7 +73,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameClass\Cloud.cs" />
+    <Compile Include="GameClass\Background.cs" />
     <Compile Include="GameClass\Credits.cs" />
     <Compile Include="GameClass\FieldManager.cs" />
     <Compile Include="GameClass\Menus.cs" />

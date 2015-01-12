@@ -10,7 +10,7 @@ namespace Evolo.GameClass
     class OptionsHandler
     {
         private string[] optionsArray;
-        private static string[] optionsDefinitionArray = new string[14] { "ScreenWidth:", "ScreenHeight:", "keyPlayerLeft:", "keyPlayerRight:", "keyPlayerUp:", "keyTetrominoLeft:", "keyTetrominoRight:", "keyTetrominoRotate:", "keyTetrominoDown:", "HardwareCursor:", "FPSOverlay:", "DebugInfo:", "SoundToggle:", "MusicToggle:" };
+        private static string[] optionsDefinitionArray = new string[15] { "ScreenWidth:", "ScreenHeight:", "keyPlayerLeft:", "keyPlayerRight:", "keyPlayerUp:", "keyTetrominoLeft:", "keyTetrominoRight:", "keyTetrominoRotate:", "keyTetrominoDown:", "HardwareCursor:", "FPSOverlay:", "DebugInfo:", "SoundToggle:", "MusicToggle:", "IsFullScreen:" };
         private string folderLocation;
         private ErrorHandler errorHandler = new ErrorHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Evolo");
 
@@ -18,7 +18,7 @@ namespace Evolo.GameClass
         {
             this.folderLocation = folderLocation;
             //TEMP / Defualt Values
-            optionsArray = new string[14] { "1280", "720", "A", "D", "W", "Left", "Right", "Up", "Down", "false", "false", "false", "true", "true"};
+            optionsArray = new string[15] { "1280", "720", "A", "D", "W", "Left", "Right", "Up", "Down", "false", "false", "false", "true", "true", "false"};
         }
 
         public void writeOptions(string[] optionsArray)
