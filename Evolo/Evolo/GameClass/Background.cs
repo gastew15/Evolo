@@ -147,7 +147,7 @@ namespace Evolo.GameClass
                             initBlockLocation[i].Y = initBlockLocation[i].Y + 1;
                         else
                         {
-                            initBlockLocation[i].Y = -(bBlockRectangle[i].Height) +1;
+                            initBlockLocation[i].Y = -(bBlockRectangle[i].Height) + 2;
                         }
                         break;
                     case "1366x768":
@@ -156,7 +156,7 @@ namespace Evolo.GameClass
                             initBlockLocation[i].Y = initBlockLocation[i].Y + 1;
                         else
                         {
-                            initBlockLocation[i].Y = -(bBlockRectangle[i].Height) + 2;
+                            initBlockLocation[i].Y = -(bBlockRectangle[i].Height) + 3;
                         }
                         break;
                     case "1600x900":

@@ -334,7 +334,7 @@ namespace Evolo
                 //Update logic for FPS
                 fpsManager.updateFrameCount();
                 
-                GraphicsDevice.Clear(Color.SkyBlue);
+                GraphicsDevice.Clear(Color.Black);
                 //GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null);
                 

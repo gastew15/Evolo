@@ -703,8 +703,35 @@ namespace Evolo.GameClass
 
                                         tetromino[i].setBlockPosActive(tempHolding);
                                     }
+                                }
+                            }
+                        }
+                    }
 
-                                    //Line down here?
+                    //Line Down For What?
+                    for (int a = 0; a < 4; a++)
+                    {
+                        for (int i = 0; i < tetromino.Count - 1; i++)
+                        {
+                            for (int j = 0; j < 4; j++)
+                            {
+                                if((int)tetromino[i].getPositions()[j].Y > (absTetrominoBlockFarthestDown - 3) + a)
+                                {
+                                    Vector2[] tempHolding = new Vector2[tetromino[i].getPositions().Length];
+
+                                    for (int p = 0; p < tempHolding.Length; p++)
+                                    {
+                                        if (p == j)
+                                        {
+                                            //tempHolding[a] = new Vector2((int)tetromino[i].getPositions()[j].X, (int)tetromino[i].getPositions()[j].Y + 1);
+                                        }
+                                        else
+                                        {
+                                            //tempHolding[a] = tetromino[i].getPositions()[j];
+                                        }
+                                    }
+
+                                    tetromino[i].setBlockPositions(tempHolding);
                                 }
                             }
                         }
