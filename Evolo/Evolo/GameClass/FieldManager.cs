@@ -724,12 +724,48 @@ namespace Evolo.GameClass
 
                                         tetromino[i].setBlockPosActive(tempHolding);
                                     }
+                                }
+                            }
+                        }
 
-                                    //Line down here?
+                        if (tetromino[i].getPositions().Length == 0)
+                        {
+                            tetromino.RemoveAt(i);
+                            tetrominoGridPos.RemoveAt(i);
+                        }
+                    }
+
+                    //Line Down For What?
+                    //A Damn Mess... I think it has something to do with the a & possibly j....
+                    /*
+                    for (int a = 0; a < 4; a++)
+                    {
+                        for (int i = 0; i < tetromino.Count - 1; i++)
+                        {
+                            for (int j = 0; j < 4; j++)
+                            {
+                                if((int)tetromino[i].getPositions()[j].Y < (absTetrominoBlockFarthestDown - 3) + a)
+                                {
+                                    Vector2[] tempHolding = new Vector2[tetromino[i].getPositions().Length];
+
+                                    for (int p = 0; p < tempHolding.Length; p++)
+                                    {
+                                        if (p == j)
+                                        {
+                                            tempHolding[a] = new Vector2((int)tetromino[i].getPositions()[j].X, (int)tetromino[i].getPositions()[j].Y + 1);
+                                        }
+                                        else
+                                        {
+                                            tempHolding[a] = tetromino[i].getPositions()[j];
+                                        }
+                                    }
+
+                                    tetromino[i].setBlockPositions(tempHolding);
                                 }
                             }
                         }
                     }
+                    */
 
                     //Hit box clearing
                     for (int n = 0; n < isfilled.Length; n++)
@@ -931,7 +967,6 @@ namespace Evolo.GameClass
                     {
                         //HitBox Debug
                         backdropColor = Color.Blue;
-                        //backdropColor = Color.Transparent;
                         blockTexture = fullBlockTexture;
                         backdropColor.A = 25;
                     }
@@ -942,9 +977,9 @@ namespace Evolo.GameClass
                     //spriteBatch.DrawString(SeqoeUIMonoNormal, "FPS: " + fpsManager.getFPS(), new Vector2((GlobalVar.ScreenSize.X - (SeqoeUIMonoNormal.MeasureString("FPS: " + fpsManager.getFPS()).X) * GlobalVar.ScaleSize.X) - 10, (5 * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 }
 
-                spriteBatch.DrawString(font, "Score: " + GlobalVar.Score, new Vector2(1100 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.Yellow);
-                spriteBatch.DrawString(font, "Lines left: " + linesToClear, new Vector2(1100 * GlobalVar.ScaleSize.X, 305 * GlobalVar.ScaleSize.Y), Color.Yellow);
-                spriteBatch.DrawString(font, "Time left: " + (timer - milisecondsElapsedTime) / 1000, new Vector2(1100 * GlobalVar.ScaleSize.X, 345 * GlobalVar.ScaleSize.Y), Color.Yellow);
+                spriteBatch.DrawString(font, "Score: " + GlobalVar.Score, new Vector2(1100 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.Yellow, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(font, "Lines left: " + linesToClear, new Vector2(1100 * GlobalVar.ScaleSize.X, 305 * GlobalVar.ScaleSize.Y), Color.Yellow, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(font, "Time left: " + (timer - milisecondsElapsedTime) / 1000, new Vector2(1100 * GlobalVar.ScaleSize.X, 345 * GlobalVar.ScaleSize.Y), Color.Yellow, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
 
                 //Prints out Debug Info About the Block
                 if (Boolean.Parse(GlobalVar.OptionsArray[11]) == true)
@@ -969,7 +1004,7 @@ namespace Evolo.GameClass
                 blockTexture = fullBlockTexture;
                 for (int k = 0; k < tetromino.Count; k++)
                 {
-                   //tetromino[k].Draw(spriteBatch);
+                  // tetromino[k].Draw(spriteBatch);
                 }
 
                 player1.Draw(spriteBatch, player1SpriteEffects);
