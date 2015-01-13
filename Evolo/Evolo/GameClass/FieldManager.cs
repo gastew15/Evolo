@@ -647,6 +647,8 @@ namespace Evolo.GameClass
 
             #region tetromino Movement Down
 
+            
+
             //Checks to see if the block is able to move down 1 gridPos or not
             if (absTetrominoBlockFarthestDown < gameField.GetLength(1) - 1 && tetrominoCanNotMoveDown == false)
             {
@@ -669,10 +671,13 @@ namespace Evolo.GameClass
             }
             else
             {
+                
                 //Checks for block lock delay before locking in place and spawning new block
                 if (milisecondsElapsedTetrominoTime - milisecondsTetrominoLockDelayTime >= 1)
                 {
+
                     
+
                     //line clearning system to check to see that if the Y values in the gamefield class is filled up from the last X value from the active tetromino block + 4 X values to make sure that all tetrominos are accounted for
                     Boolean[] isfilled = new Boolean[4];
                     for (int o = 0; o < isfilled.Length; o++)
@@ -972,17 +977,8 @@ namespace Evolo.GameClass
                 spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (endPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (endPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), null, Color.White, 0f, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (startPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (startPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), null, Color.White, 0f, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
 
-                if (GlobalVar.GameState == "GameOver")
-                {
-                    spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), null, Color.White, 0f, new Vector2(gameOverScreen.Width / 2, gameOverScreen.Height / 2), 5f, SpriteEffects.None, 1f);
-
-                    if (GlobalVar.GameState == "GameOver")
-                    {
-                        spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), null, Color.White, 0f, new Vector2(gameOverScreen.Width / 2, gameOverScreen.Height / 2), 5f, SpriteEffects.None, 1f);
-                        spriteBatch.DrawString(font, "Game Over", new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2 - 100), Color.Black, 0f, new Vector2((int)font.MeasureString("Game Over").X / 2, (int)(font.MeasureString("Game Over").Y / 2)), 4f * GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                    }
-
-                }
+                
+                
             }
         }
 
