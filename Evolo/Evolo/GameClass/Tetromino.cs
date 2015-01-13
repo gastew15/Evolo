@@ -42,7 +42,7 @@ namespace Evolo.GameClass
         //tetromino Type
         int tetrominoType;
 
-        int roation = 0;
+        int rotation = 0;
 
 
         Boolean[] blockPosActive = new Boolean[4] { true, true, true, true };
@@ -142,7 +142,7 @@ namespace Evolo.GameClass
 
             #region Rotation Math
             currentBlockPos[0] = drawPoint;
-            switch (roation)
+            switch (rotation)
             {
                 case 0:
                     for (int i = 1; i < 4; i++)
@@ -205,7 +205,7 @@ namespace Evolo.GameClass
 
         public void setRotation(int rotation)
         {
-            this.roation = rotation;
+            this.rotation = rotation;
         }
 
         public int getTetrisType()
@@ -220,7 +220,7 @@ namespace Evolo.GameClass
 
         public int getRotation()
         {
-            return roation;
+            return rotation;
         }
 
         public void setColorTemp(Color color)

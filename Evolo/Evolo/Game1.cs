@@ -126,7 +126,7 @@ namespace Evolo
                 fieldManager = new FieldManager();
                 //Change to real values later
                 splashScreenWaitTime = new float[3] { 2.0f, 2.0f, 4.0f };
-                fieldManager.Intilize();
+                fieldManager.Initialize();
                 cloud.Initialize();
 
                 menus.Initialize(keyBindingInfo);

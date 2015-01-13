@@ -81,7 +81,7 @@ namespace Evolo.GameClass
             
         }
 
-        public void Intilize()
+        public void Initialize()
         {
             player1SpriteEffects = SpriteEffects.None;
         }
@@ -612,13 +612,13 @@ namespace Evolo.GameClass
 
                         if (tetrominoCanRotate == true)
                         {
-                            //Sets current roation value based off 0 - 3
+                            //Sets current rotation value based off 0 - 3
                             if (tetrominoRotation < 3)
                                 tetrominoRotation++;
                             else
                                 tetrominoRotation = 0;
 
-                            //Sends roation value to the currently active tetromino
+                            //Sends rotation value to the currently active tetromino
                             tetromino[activeTetromino].setRotation(tetrominoRotation);
                         }
                     }

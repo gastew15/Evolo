@@ -118,7 +118,7 @@ namespace Evolo.GameClass
             pauseTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Pause");
             menuTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_MainMenu");
             optionsTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_options");
-            gameOverTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Pause");
+            gameOverTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_YouLose");
 
             menuHoverChangeSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuHoverChangeEffect");
             menuClickedSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuClickedEffect");

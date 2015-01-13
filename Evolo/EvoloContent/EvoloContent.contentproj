@@ -153,13 +153,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites and Pictures\Platform.png">
-      <Name>Platform</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Sprites and Pictures\GameOverScreen.png">
       <Name>GameOverScreen</Name>
       <Importer>TextureImporter</Importer>
@@ -190,13 +183,6 @@
   <ItemGroup>
     <Compile Include="Sprites and Pictures\Logo_KeybindPlayer.png">
       <Name>Logo_KeybindPlayer</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sprites and Pictures\GameHud.png">
-      <Name>GameHud</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -288,6 +274,34 @@
   <ItemGroup>
     <Compile Include="Sprites and Pictures\SkyBlock7.png">
       <Name>SkyBlock7</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites and Pictures\Logo_YouLose.png">
+      <Name>Logo_YouLose</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites and Pictures\Logo_YouWin.png">
+      <Name>Logo_YouWin</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites and Pictures\GameHud.png">
+      <Name>GameHud</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sprites and Pictures\Platform.png">
+      <Name>Platform</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
