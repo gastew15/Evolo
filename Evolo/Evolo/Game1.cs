@@ -64,6 +64,7 @@ namespace Evolo
         //Keys
         string[] keyBindingInfo = new string[7];
         Boolean isPressedEsc;
+        Boolean isPressedRightBtn;
         Texture2D gameMouseTexture;
         //Sounds
         //Song mainMenuMusic;
@@ -271,26 +272,13 @@ namespace Evolo
                         break;
                 }
 
+                Boolean backTrack = false;
                 //Up Key Down what to do (Sets Boolean)  Menu Up
                 if (keybState.IsKeyDown(Keys.Escape) && !isPressedEsc)
                 {
                     isPressedEsc = true;
                     {
-                        if (gameState == "Playing")
-                        {
-                            menuState = "PauseMenu";
-                            GlobalVar.GameState = "MenuScreen";
-                        }
-                        if (gameState == "Credits")
-                        {
-                            menuState = "MainMenu";
-                            GlobalVar.GameState = "MenuScreen";
-                        }
-                        if (gameState == "MenuScreen" && menuState == "PauseMenu")
-                        {
-                            menuState = "MainMenu";
-                            GlobalVar.GameState = "Playing";
-                        }
+                        backTrack = true;
                     }
                 }
                 //Up Key Up Logic (Resets Boolean)
@@ -298,6 +286,38 @@ namespace Evolo
                 {
                     if (isPressedEsc)
                         isPressedEsc = false;
+                }
+                //Left Mouse Button what to do (Sets Boolean)  Menu Up
+                if (mouseStateCurrent.RightButton == ButtonState.Pressed && !isPressedRightBtn)
+                {
+                    isPressedRightBtn = true;
+                    backTrack = true;
+                }
+                //Left Mouse Button release logic
+                if (mouseStateCurrent.RightButton == ButtonState.Released)
+                {
+                    if (isPressedRightBtn)
+                        isPressedRightBtn = false;
+                }
+
+                //sets menus back
+                if (backTrack == true)
+                {
+                    if (gameState == "Playing")
+                    {
+                        menuState = "PauseMenu";
+                        GlobalVar.GameState = "MenuScreen";
+                    }
+                    if (gameState == "Credits")
+                    {
+                        menuState = "MainMenu";
+                        GlobalVar.GameState = "MenuScreen";
+                    }
+                    if (gameState == "MenuScreen" && menuState == "PauseMenu")
+                    {
+                        menuState = "MainMenu";
+                        GlobalVar.GameState = "Playing";
+                    }
                 }
 
                 //Texture Scaling based on screenSize
@@ -334,7 +354,7 @@ namespace Evolo
                 //Update logic for FPS
                 fpsManager.updateFrameCount();
                 
-                GraphicsDevice.Clear(Color.SkyBlue);
+                GraphicsDevice.Clear(Color.Black);
                 //GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null);
                 
