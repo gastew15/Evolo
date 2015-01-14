@@ -88,7 +88,7 @@ namespace Evolo.GameClass
             
         }
 
-        public void Intilize()
+        public void Initialize()
         {
             player1SpriteEffects = SpriteEffects.None;
             linesToClear = 10;
@@ -627,13 +627,13 @@ namespace Evolo.GameClass
 
                         if (tetrominoCanRotate == true)
                         {
-                            //Sets current roation value based off 0 - 3
+                            //Sets current rotation value based off 0 - 3
                             if (tetrominoRotation < 3)
                                 tetrominoRotation++;
                             else
                                 tetrominoRotation = 0;
 
-                            //Sends roation value to the currently active tetromino
+                            //Sends rotation value to the currently active tetromino
                             tetromino[activeTetromino].setRotation(tetrominoRotation);
                         }
                     }
@@ -650,6 +650,8 @@ namespace Evolo.GameClass
             #endregion
 
             #region tetromino Movement Down
+
+            
 
             //Checks to see if the block is able to move down 1 gridPos or not
             if (absTetrominoBlockFarthestDown < gameField.GetLength(1) - 1 && tetrominoCanNotMoveDown == false)
@@ -674,10 +676,13 @@ namespace Evolo.GameClass
             }
             else
             {
+                
                 //Checks for block lock delay before locking in place and spawning new block
                 if (milisecondsElapsedTetrominoTime - milisecondsTetrominoLockDelayTime >= 1)
                 {
+
                     
+
                     //line clearning system to check to see that if the Y values in the gamefield class is filled up from the last X value from the active tetromino block + 4 X values to make sure that all tetrominos are accounted for
                     Boolean[] isfilled = new Boolean[4];
                     for (int o = 0; o < isfilled.Length; o++)
@@ -725,12 +730,48 @@ namespace Evolo.GameClass
                                         tetromino[i].setBlockPosActive(tempHolding);
 
                                     }
+                                }
+                            }
+                        }
 
-                                    //Line down here?
+                        if (tetromino[i].getPositions().Length == 0)
+                        {
+                            tetromino.RemoveAt(i);
+                            tetrominoGridPos.RemoveAt(i);
+                        }
+                    }
+
+                    //Line Down For What?
+                    //A Damn Mess... I think it has something to do with the a & possibly j....
+                    /*
+                    for (int a = 0; a < 4; a++)
+                    {
+                        for (int i = 0; i < tetromino.Count - 1; i++)
+                        {
+                            for (int j = 0; j < 4; j++)
+                            {
+                                if((int)tetromino[i].getPositions()[j].Y < (absTetrominoBlockFarthestDown - 3) + a)
+                                {
+                                    Vector2[] tempHolding = new Vector2[tetromino[i].getPositions().Length];
+
+                                    for (int p = 0; p < tempHolding.Length; p++)
+                                    {
+                                        if (p == j)
+                                        {
+                                            tempHolding[a] = new Vector2((int)tetromino[i].getPositions()[j].X, (int)tetromino[i].getPositions()[j].Y + 1);
+                                        }
+                                        else
+                                        {
+                                            tempHolding[a] = tetromino[i].getPositions()[j];
+                                        }
+                                    }
+
+                                    tetromino[i].setBlockPositions(tempHolding);
                                 }
                             }
                         }
                     }
+                    */
 
                     //Hit box clearing
                     int lineClearCount = 0;
@@ -940,7 +981,6 @@ namespace Evolo.GameClass
                     {
                         //HitBox Debug
                         backdropColor = Color.Blue;
-                        //backdropColor = Color.Transparent;
                         blockTexture = fullBlockTexture;
                         backdropColor.A = 25;
                     }
@@ -951,9 +991,9 @@ namespace Evolo.GameClass
                     //spriteBatch.DrawString(SeqoeUIMonoNormal, "FPS: " + fpsManager.getFPS(), new Vector2((GlobalVar.ScreenSize.X - (SeqoeUIMonoNormal.MeasureString("FPS: " + fpsManager.getFPS()).X) * GlobalVar.ScaleSize.X) - 10, (5 * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 }
 
-                spriteBatch.DrawString(font, "Score: " + GlobalVar.Score, new Vector2(1100 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.Yellow);
-                spriteBatch.DrawString(font, "Lines left: " + linesToClear, new Vector2(1100 * GlobalVar.ScaleSize.X, 305 * GlobalVar.ScaleSize.Y), Color.Yellow);
-                spriteBatch.DrawString(font, "Time left: " + (timer - milisecondsElapsedTime) / 1000, new Vector2(1100 * GlobalVar.ScaleSize.X, 345 * GlobalVar.ScaleSize.Y), Color.Yellow);
+                spriteBatch.DrawString(font, "Score: " + GlobalVar.Score, new Vector2(1100 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.Yellow, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(font, "Lines left: " + linesToClear, new Vector2(1100 * GlobalVar.ScaleSize.X, 305 * GlobalVar.ScaleSize.Y), Color.Yellow, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(font, "Time left: " + (timer - milisecondsElapsedTime) / 1000, new Vector2(1100 * GlobalVar.ScaleSize.X, 345 * GlobalVar.ScaleSize.Y), Color.Yellow, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
 
                 //Prints out Debug Info About the Block
                 if (Boolean.Parse(GlobalVar.OptionsArray[11]) == true)
@@ -978,7 +1018,7 @@ namespace Evolo.GameClass
                 blockTexture = fullBlockTexture;
                 for (int k = 0; k < tetromino.Count; k++)
                 {
-                   //tetromino[k].Draw(spriteBatch);
+                  // tetromino[k].Draw(spriteBatch);
                 }
 
                 player1.Draw(spriteBatch, player1SpriteEffects);
@@ -986,17 +1026,8 @@ namespace Evolo.GameClass
                 spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (endPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (endPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), null, Color.White, 0f, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (startPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (startPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), null, Color.White, 0f, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
 
-                if (GlobalVar.GameState == "GameOver")
-                {
-                    spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), null, Color.White, 0f, new Vector2(gameOverScreen.Width / 2, gameOverScreen.Height / 2), 5f, SpriteEffects.None, 1f);
-
-                    if (GlobalVar.GameState == "GameOver")
-                    {
-                        spriteBatch.Draw(gameOverScreen, new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2), null, Color.White, 0f, new Vector2(gameOverScreen.Width / 2, gameOverScreen.Height / 2), 5f, SpriteEffects.None, 1f);
-                        spriteBatch.DrawString(font, "Game Over", new Vector2(GlobalVar.ScreenSize.X / 2, GlobalVar.ScreenSize.Y / 2 - 100), Color.Black, 0f, new Vector2((int)font.MeasureString("Game Over").X / 2, (int)(font.MeasureString("Game Over").Y / 2)), 4f * GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                    }
-
-                }
+                
+                
             }
         }
 
