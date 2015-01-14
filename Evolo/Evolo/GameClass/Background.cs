@@ -143,7 +143,7 @@ namespace Evolo.GameClass
                         break;
                     case "1280x720":
                         bBlockRectangle[i] = new Rectangle((int)initBlockLocation[i].X, (int)initBlockLocation[i].Y, (int)(0 + 16), (int)(0 + 16));
-                        if (bBlockRectangle[i].Y < GlobalVar.ScreenSize.Y)
+                        if (bBlockRectangle[i].Y < GlobalVar.ScreenSize.Y + 1)
                             initBlockLocation[i].Y = initBlockLocation[i].Y + 1;
                         else
                         {

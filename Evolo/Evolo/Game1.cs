@@ -33,7 +33,7 @@ namespace Evolo
 
         //TEMP CLASSES
         FieldManager fieldManager;
-        Background cloud;
+        Background background;
         SplashScreenManager splashScreen;
         //TEMP VARIABLES
         Texture2D[] splashScreenImages;
@@ -123,12 +123,12 @@ namespace Evolo
                 menus = new Menus(graphics);
 
                 //TEMP Initilize
-                cloud = new Background();
+                background = new Background();
                 fieldManager = new FieldManager();
                 //Change to real values later
                 splashScreenWaitTime = new float[3] { 2.0f, 2.0f, 4.0f };
                 fieldManager.Initialize();
-                cloud.Initialize();
+                background.Initialize();
 
                 menus.Initialize(keyBindingInfo);
                 base.Initialize();
@@ -161,7 +161,7 @@ namespace Evolo
                 menus.SetMenu("MainMenu");
 
                 //TEMP LOAD CONTENT
-                cloud.LoadContent(this.Content);
+                background.LoadContent(this.Content);
                 fieldManager.LoadContent(this.Content);
                 splashScreenImages = new Texture2D[3];
                 splashScreenImages[0] = Content.Load<Texture2D>("Sprites and pictures/CognativeThought");
@@ -238,20 +238,19 @@ namespace Evolo
                             //MediaPlayer.Resume(mainMenuMusic, 
                             songTripped = true;
                         }
-                       
                         menus.Update(gameTime, mouseStateCurrent, mouseStatePrevious, milliScecondsElapsedGameTime);
-                        cloud.Update(gameTime, milliScecondsElapsedGameTime);
+                        background.Update(gameTime, milliScecondsElapsedGameTime);
                         break;
 
                     case "Playing":
                         //MediaPlayer.Pause(mainMenuMusic);
                         fieldManager.Update(gameTime);
-                        cloud.Update(gameTime, milliScecondsElapsedGameTime);
+                        background.Update(gameTime, milliScecondsElapsedGameTime);
                         tripped = false;
                         break;
 
                     case "Credits":
-                        cloud.Update(gameTime, milliScecondsElapsedGameTime);
+                        background.Update(gameTime, milliScecondsElapsedGameTime);
                         //MediaPlayer.Pause(mainMenuMusic);
                         tripped = false;
                         break;
@@ -259,16 +258,24 @@ namespace Evolo
                     case "SplashScreen":
                         //TEMP UPDATE
                         splashScreen.Update(milliScecondsElapsedGameTime, orginalSplashScreenStartTime);
-                        cloud.Update(gameTime, milliScecondsElapsedGameTime);
                         if (splashScreen.getSplashScreenOver() == true)
                             GlobalVar.GameState = "MenuScreen";
+                        background.Update(gameTime, milliScecondsElapsedGameTime);
                         break;
                     case "GameOver":
-                        cloud.Update(gameTime, milliScecondsElapsedGameTime);
-                        menus.SetMenu("GameOverMenu");
                         menus.Update(gameTime, mouseStateCurrent, mouseStatePrevious, milliScecondsElapsedGameTime);
                         fieldManager.resetGameVariables();
-                        tripped = true;
+                        
+                        if (fieldManager.getGameWin() == true)
+                        {
+                            menus.SetMenu("GameWinMenu");
+                        }
+                        else
+                        {
+                            menus.SetMenu("GameLoseMenu");
+                        }
+                        background.Update(gameTime, milliScecondsElapsedGameTime);
+                        //tripped = true;
                         break;
                 }
 
@@ -361,16 +368,16 @@ namespace Evolo
                 switch (gameState)
                 {
                     case "Playing":
-                        cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        background.Draw(spriteBatch, SeqoeUIMonoNormal);
                         fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         break;
                     case "GameOver":
-                        cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        background.Draw(spriteBatch, SeqoeUIMonoNormal);
                         //fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         menus.Draw(spriteBatch);
                         break;
                     case "MenuScreen":
-                        cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        background.Draw(spriteBatch, SeqoeUIMonoNormal);
                         if (menus.getMenuState() == "PauseMenu")
                         {
                             fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
@@ -378,7 +385,7 @@ namespace Evolo
                         menus.Draw(spriteBatch);
                         break;
                     case "Credits":
-                        cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        background.Draw(spriteBatch, SeqoeUIMonoNormal);
                         credits.DrawCredits(spriteBatch);
                         break;
                     case "SplashScreen":
