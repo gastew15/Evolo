@@ -33,7 +33,7 @@ namespace Evolo
 
         //TEMP CLASSES
         FieldManager fieldManager;
-        Background cloud;
+        Background background;
         SplashScreenManager splashScreen;
         //TEMP VARIABLES
         Texture2D[] splashScreenImages;
@@ -49,9 +49,8 @@ namespace Evolo
         KeyboardState keybState;
         GameTime gameTime;
 
-        String menuState;
-        //mainMenu, optionsMenu, optionsResolutionMenu, optionsKeybindingMenu, pauseMenu, debugMenu, saveSlotMenu
         String gameState;
+        String holdingPreviousGameState;
         //Playing, MenuScreen, GameOver, Credits
 
         //Variables
@@ -117,18 +116,17 @@ namespace Evolo
 
                 GlobalVar.ScaleSize = new Vector2(GlobalVar.ScreenSize.X / defualtWidth, GlobalVar.ScreenSize.Y / defualtHeight);
                 GlobalVar.GameState = "SplashScreen";
-                menuState = "MainMenu";
                 //Load up classes we need
                 fpsManager = new FPSManager();
                 menus = new Menus(graphics);
 
                 //TEMP Initilize
-                cloud = new Background();
+                background = new Background();
                 fieldManager = new FieldManager();
                 //Change to real values later
                 splashScreenWaitTime = new float[3] { 2.0f, 2.0f, 4.0f };
                 fieldManager.Initialize();
-                cloud.Initialize();
+                background.Initialize();
 
                 menus.Initialize(keyBindingInfo);
                 base.Initialize();
@@ -161,7 +159,7 @@ namespace Evolo
                 menus.SetMenu("MainMenu");
 
                 //TEMP LOAD CONTENT
-                cloud.LoadContent(this.Content);
+                background.LoadContent(this.Content);
                 fieldManager.LoadContent(this.Content);
                 splashScreenImages = new Texture2D[3];
                 splashScreenImages[0] = Content.Load<Texture2D>("Sprites and pictures/CognativeThought");
@@ -214,11 +212,6 @@ namespace Evolo
                 switch (gameState)
                 {
                     case "MenuScreen":
-                        if (tripped == false)
-                        {
-                            menus.SetMenu(menuState);
-                            tripped = true;
-                        }
                         if (menus.getMenuState() == "MainMenu")
                         {
                             //Reset Values
@@ -230,20 +223,19 @@ namespace Evolo
                             //MediaPlayer.Resume(mainMenuMusic, 
                             songTripped = true;
                         }
-                       
                         menus.Update(gameTime, mouseStateCurrent, mouseStatePrevious, milliScecondsElapsedGameTime);
-                        cloud.Update(gameTime, milliScecondsElapsedGameTime);
+                        background.Update(gameTime, milliScecondsElapsedGameTime);
                         break;
 
                     case "Playing":
                         //MediaPlayer.Pause(mainMenuMusic);
                         fieldManager.Update(gameTime);
-                        cloud.Update(gameTime, milliScecondsElapsedGameTime);
+                        background.Update(gameTime, milliScecondsElapsedGameTime);
                         tripped = false;
                         break;
 
                     case "Credits":
-                        cloud.Update(gameTime, milliScecondsElapsedGameTime);
+                        background.Update(gameTime, milliScecondsElapsedGameTime);
                         //MediaPlayer.Pause(mainMenuMusic);
                         tripped = false;
                         break;
@@ -251,16 +243,24 @@ namespace Evolo
                     case "SplashScreen":
                         //TEMP UPDATE
                         splashScreen.Update(milliScecondsElapsedGameTime, orginalSplashScreenStartTime);
-                        cloud.Update(gameTime, milliScecondsElapsedGameTime);
                         if (splashScreen.getSplashScreenOver() == true)
                             GlobalVar.GameState = "MenuScreen";
+                        background.Update(gameTime, milliScecondsElapsedGameTime);
                         break;
                     case "GameOver":
-                        cloud.Update(gameTime, milliScecondsElapsedGameTime);
-                        menus.SetMenu("GameOverMenu");
                         menus.Update(gameTime, mouseStateCurrent, mouseStatePrevious, milliScecondsElapsedGameTime);
                         fieldManager.resetGameVariables();
-                        tripped = true;
+                        
+                        if (fieldManager.getGameWin() == true)
+                        {
+                            menus.SetMenu("GameWinMenu");
+                        }
+                        else
+                        {
+                            menus.SetMenu("GameLoseMenu");
+                        }
+                        background.Update(gameTime, milliScecondsElapsedGameTime);
+                        //tripped = true;
                         break;
                 }
 
@@ -292,23 +292,40 @@ namespace Evolo
                         isPressedRightBtn = false;
                 }
 
-                //sets menus back
-                if (backTrack == true)
+                //sets back button logic (Menus & GameState)
+                if (backTrack == true)                    
                 {
                     if (gameState == "Playing")
                     {
-                        menuState = "PauseMenu";
+                        menus.SetMenu("PauseMenu");
                         GlobalVar.GameState = "MenuScreen";
                     }
-                    if (gameState == "Credits")
+                    else if (gameState == "Credits")
                     {
-                        menuState = "MainMenu";
+                        menus.SetMenu("MainMenu");
                         GlobalVar.GameState = "MenuScreen";
                     }
-                    if (gameState == "MenuScreen" && menuState == "PauseMenu")
+                    else if (gameState == "MenuScreen")
                     {
-                        menuState = "MainMenu";
-                        GlobalVar.GameState = "Playing";
+                        if (menus.getMenuState() == "PauseMenu")
+                        {
+                            GlobalVar.GameState = "Playing";
+                        }
+                        else if (menus.getMenuState() == "OptionsMenu" || menus.getMenuState() == "SaveSlotMenu")
+                        {
+                            if (GlobalVar.PreviousGameState == "Playing")
+                                menus.SetMenu("PauseMenu");
+                            else
+                                menus.SetMenu("MainMenu");
+                        }
+                        else if (menus.getMenuState() == "OptionsResolutionMenu" || menus.getMenuState() == "OptionsKeybindingMenuPage1" || menus.getMenuState() == "OptionsKeybindingMenuPage2" || menus.getMenuState() == "debugMenu")
+                        {
+                            menus.SetMenu("OptionsMenu");
+                        }
+                        else
+                        {
+                            menus.SetMenu(menus.getPreviousMenuState());
+                        }
                     }
                 }
 
@@ -325,7 +342,14 @@ namespace Evolo
 
                 fpsManager.Update(gameTime);
                 mouseStatePrevious = mouseStateCurrent;
-                GlobalVar.PreviousGameState = GlobalVar.GameState;
+
+                if (holdingPreviousGameState != GlobalVar.GameState)
+                {
+                    GlobalVar.PreviousGameState = holdingPreviousGameState;
+                }
+
+                holdingPreviousGameState = GlobalVar.GameState;
+
                 base.Update(gameTime);
             }
             catch (Exception e)
@@ -353,16 +377,16 @@ namespace Evolo
                 switch (gameState)
                 {
                     case "Playing":
-                        cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        background.Draw(spriteBatch, SeqoeUIMonoNormal);
                         fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         break;
                     case "GameOver":
-                        cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        background.Draw(spriteBatch, SeqoeUIMonoNormal);
                         //fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         menus.Draw(spriteBatch);
                         break;
                     case "MenuScreen":
-                        cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        background.Draw(spriteBatch, SeqoeUIMonoNormal);
                         if (menus.getMenuState() == "PauseMenu")
                         {
                             fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
@@ -370,7 +394,7 @@ namespace Evolo
                         menus.Draw(spriteBatch);
                         break;
                     case "Credits":
-                        cloud.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        background.Draw(spriteBatch, SeqoeUIMonoNormal);
                         credits.DrawCredits(spriteBatch);
                         break;
                     case "SplashScreen":
@@ -411,10 +435,9 @@ namespace Evolo
                 //DEBUG USE: 
                 if (Convert.ToBoolean(GlobalVar.OptionsArray[11]) == true)
                 {
-                    spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME1 TIME: " + (milliScecondsElapsedGameTime / 1000).ToString() + "s", new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 3 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
-                    spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME STATE: " + GlobalVar.GameState.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 2 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
-                    spriteBatch.DrawString(SeqoeUIMonoNormal, "MOUSE POS: " + "X-" + mouseStateCurrent.X.ToString() + " Y-" + mouseStateCurrent.Y.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 1 + 10) * GlobalVar.ScaleSize.Y)), Color.White);
-                    spriteBatch.DrawString(SeqoeUIMonoNormal, "Score: " + GlobalVar.Score, new Vector2(1100 * GlobalVar.ScaleSize.X, 565 * GlobalVar.ScaleSize.Y), Color.White);
+                    spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME1 TIME: " + (milliScecondsElapsedGameTime / 1000).ToString() + "s", new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 3 + 10) * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    spriteBatch.DrawString(SeqoeUIMonoNormal, "GAME STATE: " + GlobalVar.GameState.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 2 + 10) * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    spriteBatch.DrawString(SeqoeUIMonoNormal, "MOUSE POS: " + "X-" + mouseStateCurrent.X.ToString() + " Y-" + mouseStateCurrent.Y.ToString(), new Vector2(10 * GlobalVar.ScaleSize.X, GlobalVar.ScreenSize.Y - ((SeqoeUIMonoNormal.MeasureString("X").Y * 1 + 10) * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 }
                 
                 //spriteBatch.DrawString(MenuFont, menus.getMenuState(), new Vector2(1, 23), Color.Black);

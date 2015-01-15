@@ -18,7 +18,8 @@ namespace Evolo.GameClass
     class FieldManager
     {
         #region Variables
-        
+
+        private Boolean gameWin;
         //Gamefield Variables
         private Boolean[,] gameField = new Boolean[26, 22];
         private Vector2 gridStartPos, levelStartPoint;
@@ -103,9 +104,6 @@ namespace Evolo.GameClass
             platformTexture = Content.Load<Texture2D>("Sprites and pictures/Platform");
             hudTexture = Content.Load<Texture2D>("Sprites and pictures/GameHud");
             //Teromeno Set Up Reference
-
-            //Game Over Set Up
-            gameOverScreen = Content.Load<Texture2D>("Sprites and Pictures/GameOverScreen");
 
             resetGameVariables();
         }
@@ -464,7 +462,7 @@ namespace Evolo.GameClass
             }
 
             //Check
-            if (player1GridPos.X - 1 >= 0 && player1GridPos.X + 1 < gameField.GetLength(0) && (player1GridPos.Y >= 0 && player1GridPos.Y < gameField.GetLength(1)))
+            if (player1GridPos.X - 1 >= 0 && player1GridPos.X + 1 < gameField.GetLength(0))
             {
                 //Right
                 if (gameField[(int)player1GridPos.X + 1, (int)player1GridPos.Y] == true)
@@ -480,30 +478,43 @@ namespace Evolo.GameClass
             }
 
             //Y Check
-            if (player1GridPos.X >= 0 && player1GridPos.X + 1 < gameField.GetLength(0) && (player1GridPos.Y - 1 >= 0 && player1GridPos.Y + 1 < gameField.GetLength(1)))
+            //Down
+            if (player1GridPos.Y + 1 < gameField.GetLength(1) && gameField[(int)player1GridPos.X, (int)player1GridPos.Y + 1] == true)
             {
-                //Down
-                if (gameField[(int)player1GridPos.X, (int)player1GridPos.Y + 1] == true)
-                {
-                    playerCanNotMoveDown = true;
-                }
-
-                //Up
-                if (gameField[(int)player1GridPos.X, (int)player1GridPos.Y - 1] == true)
-                {
-                    playerCanNotMoveUp = true;
-                }
+                playerCanNotMoveDown = true;
+            }
+            //Up
+            if (player1GridPos.Y - 1 > 0 && gameField[(int)player1GridPos.X, (int)player1GridPos.Y - 1] == true)
+            {
+                playerCanNotMoveUp = true;
             }
 
             //Block Falling on Player Check
             if (gameField[(int)player1GridPos.X, (int)player1GridPos.Y] == true)
             {
+                gameWin = false;
                 GlobalVar.GameState = "GameOver";
             }
 
             //Player Reaching End Platform Check
             if ((player1GridPos.Y == (endPlatformGridPos.Y - 1) && (player1GridPos.X == endPlatformGridPos.X) || (player1GridPos.X == endPlatformGridPos.X + 1) || (player1GridPos.X == endPlatformGridPos.X + 2)) && linesToClear == 0)
             {
+                gameWin = true;
+                GlobalVar.GameState = "GameOver";
+                //if (keyEnterDown == true)
+                //{
+                //    if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                //    {
+                //        keyEnterDown = false;
+                //    }
+                //}
+                //else if (Keyboard.GetState().IsKeyUp(Keys.Enter))
+                //{
+                //    if (keyEnterDown == false)
+                //    {
+                //        keyEnterDown = true;
+                //    }
+                //}
                /* if (keyEnterDown == true)
                 {
                     if (Keyboard.GetState().IsKeyDown(Keys.Enter))
@@ -524,7 +535,6 @@ namespace Evolo.GameClass
                 }
                 */
             }
-
             #endregion
 
             #region tetromino Keyboard Input
@@ -1025,9 +1035,6 @@ namespace Evolo.GameClass
        
                 spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (endPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (endPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), null, Color.White, 0f, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (startPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (startPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), null, Color.White, 0f, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-
-                
-                
             }
         }
 
@@ -1035,7 +1042,10 @@ namespace Evolo.GameClass
         {
             return gameField;
         }
-
+        public Boolean getGameWin()
+        {
+            return gameWin;
+        }
         private void tetrominoHistoryAddItem(int tetrominoType)
         {
             for (int i = 3; i > 0; i--)
@@ -1082,6 +1092,7 @@ namespace Evolo.GameClass
             tetrominoGridPos.Add(new Vector2(28.5f, 4));
 
             //Temp levelSP
+            levelStartPoint = new Vector2(0, startPlatformGridPos.Y - 1);
             levelStartPoint = new Vector2(0, 14);
 
 
