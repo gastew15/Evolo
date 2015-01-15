@@ -217,6 +217,7 @@ namespace Evolo
                             //Reset Values
                             GlobalVar.Score = 0;
                             fieldManager.resetGameVariables();
+                            GlobalVar.PreviousGameState = "MainMenu";
                         }
                         if (songTripped == false)
                         {
@@ -324,7 +325,7 @@ namespace Evolo
                         }
                         else
                         {
-                            menus.SetMenu(menus.getPreviousMenuState());
+                            //menus.SetMenu(menus.getPreviousMenuState());
                         }
                     }
                 }
