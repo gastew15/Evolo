@@ -247,7 +247,6 @@ namespace Evolo.GameClass
                     pausedLast = true;
                     if (pauseMenu.menuNumberSelection() == 1)
                     {
-                        menuState = "MainMenu";
                         pauseMenu.setMenuHoverNumber(1);
                         GlobalVar.GameState = "Playing";
                     }
