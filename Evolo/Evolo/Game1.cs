@@ -210,14 +210,6 @@ namespace Evolo
 
                 milliScecondsElapsedGameTime += gameTime.ElapsedGameTime.Milliseconds; //(float)TimeSpan.FromMilliseconds(1.0).Milliseconds;//+=  
 
-                if (GlobalVar.OptionsArray[9] == "true")
-                    this.IsMouseVisible = true;
-                else
-                {
-                    this.IsMouseVisible = false;
-
-                }
-
                 //Handles Game States
                 switch (gameState)
                 {
@@ -390,8 +382,23 @@ namespace Evolo
               
 
                 //MOUSE DRAWING LOGIC
-                if ((gameState != "Credits" || gameState != "SplashScreen") && GlobalVar.OptionsArray[9].Equals("false"))
-                    spriteBatch.Draw(gameMouseTexture, new Vector2(mouseStateCurrent.X, mouseStateCurrent.Y), null, Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                if (!(gameState == "Credits" || gameState == "SplashScreen" || gameState == "Playing"))
+                {
+                    if (GlobalVar.OptionsArray[9].Equals("false"))
+                    {
+                        spriteBatch.Draw(gameMouseTexture, new Vector2(mouseStateCurrent.X, mouseStateCurrent.Y), null, Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                        this.IsMouseVisible = false;
+
+                    }
+                    else
+                    {
+                        this.IsMouseVisible = true;
+                    }
+                }
+                else
+                {
+                    this.IsMouseVisible = false;
+                }
 
                 //Draws Version Info and Current FPS
                 spriteBatch.DrawString(SeqoeUIMonoNormal, version, new Vector2((GlobalVar.ScreenSize.X / 2) - ((SeqoeUIMonoNormal.MeasureString(version).X / 2) * GlobalVar.ScaleSize.X), (10 * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
