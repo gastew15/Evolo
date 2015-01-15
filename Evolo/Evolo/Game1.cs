@@ -49,9 +49,8 @@ namespace Evolo
         KeyboardState keybState;
         GameTime gameTime;
 
-        String menuState;
-        //mainMenu, optionsMenu, optionsResolutionMenu, optionsKeybindingMenu, pauseMenu, debugMenu, saveSlotMenu
         String gameState;
+        String holdingPreviousGameState;
         //Playing, MenuScreen, GameOver, Credits
 
         //Variables
@@ -117,7 +116,6 @@ namespace Evolo
 
                 GlobalVar.ScaleSize = new Vector2(GlobalVar.ScreenSize.X / defualtWidth, GlobalVar.ScreenSize.Y / defualtHeight);
                 GlobalVar.GameState = "SplashScreen";
-                menuState = "MainMenu";
                 //Load up classes we need
                 fpsManager = new FPSManager();
                 menus = new Menus(graphics);
@@ -222,11 +220,6 @@ namespace Evolo
                 switch (gameState)
                 {
                     case "MenuScreen":
-                        if (tripped == false)
-                        {
-                            menus.SetMenu(menuState);
-                            tripped = true;
-                        }
                         if (menus.getMenuState() == "MainMenu")
                         {
                             //Reset Values
@@ -307,23 +300,40 @@ namespace Evolo
                         isPressedRightBtn = false;
                 }
 
-                //sets menus back
-                if (backTrack == true)
+                //sets back button logic (Menus & GameState)
+                if (backTrack == true)                    
                 {
                     if (gameState == "Playing")
                     {
-                        menuState = "PauseMenu";
+                        menus.SetMenu("PauseMenu");
                         GlobalVar.GameState = "MenuScreen";
                     }
-                    if (gameState == "Credits")
+                    else if (gameState == "Credits")
                     {
-                        menuState = "MainMenu";
+                        menus.SetMenu("MainMenu");
                         GlobalVar.GameState = "MenuScreen";
                     }
-                    if (gameState == "MenuScreen" && menuState == "PauseMenu")
+                    else if (gameState == "MenuScreen")
                     {
-                        menuState = "MainMenu";
-                        GlobalVar.GameState = "Playing";
+                        if (menus.getMenuState() == "PauseMenu")
+                        {
+                            GlobalVar.GameState = "Playing";
+                        }
+                        else if (menus.getMenuState() == "OptionsMenu" || menus.getMenuState() == "SaveSlotMenu")
+                        {
+                            if (GlobalVar.PreviousGameState == "Playing")
+                                menus.SetMenu("PauseMenu");
+                            else
+                                menus.SetMenu("MainMenu");
+                        }
+                        else if (menus.getMenuState() == "OptionsResolutionMenu" || menus.getMenuState() == "OptionsKeybindingMenuPage1" || menus.getMenuState() == "OptionsKeybindingMenuPage2" || menus.getMenuState() == "debugMenu")
+                        {
+                            menus.SetMenu("OptionsMenu");
+                        }
+                        else
+                        {
+                            menus.SetMenu(menus.getPreviousMenuState());
+                        }
                     }
                 }
 
@@ -340,7 +350,14 @@ namespace Evolo
 
                 fpsManager.Update(gameTime);
                 mouseStatePrevious = mouseStateCurrent;
-                GlobalVar.PreviousGameState = GlobalVar.GameState;
+
+                if (holdingPreviousGameState != GlobalVar.GameState)
+                {
+                    GlobalVar.PreviousGameState = holdingPreviousGameState;
+                }
+
+                holdingPreviousGameState = GlobalVar.GameState;
+
                 base.Update(gameTime);
             }
             catch (Exception e)

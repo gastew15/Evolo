@@ -30,6 +30,8 @@ namespace Evolo.GameClass
         private SaveHandler saveHandler;
 
         private String menuState;
+        private String previousMenuState;
+        private String storedRealPreviousMenuState;
         //Playing, MenuScreen, GameOver
 
         //Temp string
@@ -58,7 +60,6 @@ namespace Evolo.GameClass
         private Color[] debugMenuColors;
         private Color[] saveSlotMenuColors;
         private GraphicsDeviceManager graphics;
-        private String previousMenuState;
         private SoundEffect menuHoverChangeSoundEffect, menuClickedSoundEffect;
         private FieldManager field = new FieldManager();
         public Menus(GraphicsDeviceManager graphics)
@@ -621,7 +622,13 @@ namespace Evolo.GameClass
                 saveSlotMenu.setMenuHoverNumber(1);
             }
 
+            if (menuState != previousMenuState)
+            {
+                storedRealPreviousMenuState = previousMenuState;
+            }
+
             previousMenuState = menuState;
+
             #endregion
         }
 
@@ -692,6 +699,11 @@ namespace Evolo.GameClass
         public String getMenuState()
         {
             return menuState;
+        }
+
+        public String getPreviousMenuState()
+        {
+            return storedRealPreviousMenuState;
         }
     }
 }
