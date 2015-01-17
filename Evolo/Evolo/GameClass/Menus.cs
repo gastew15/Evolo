@@ -124,8 +124,8 @@ namespace Evolo.GameClass
             optionsTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_options");
             gameLoseTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_YouLose");
             gameWinTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_YouWin");
-            menuHoverChangeSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuHoverChangeEffect");
-            menuClickedSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuClickedEffect");
+            //menuHoverChangeSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuHoverChangeEffect");
+            //menuClickedSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuClickedEffect");
             #endregion
             #region Menu Starting Positions
             //SP = Starting Position

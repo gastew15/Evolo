@@ -761,17 +761,45 @@ namespace Evolo.GameClass
                             {
                                 tetrominoGridPos[i] = new Vector2(tetrominoGridPos[i].X, tetrominoGridPos[i].Y + 1);
 
-                                for (int j = 0; j < tetromino[i].getPositions().Length; j++)
+                                tetromino[i].Update(tetrominoGridPos[i], gridStartPos, GlobalVar.ScaleSize);
+
+                                for (int j = 0; j < 4; j++)
                                 {
                                     if (tetromino[i].getPositions()[j].Y > (absTetrominoBlockFarthestDown - 3) + a)
                                     {
-                                        Vector2[] tempHolding = new Vector2[tetromino[i].getPositions().Length];
+                                        Vector2[] tempHolding = new Vector2[4];
 
                                         for (int k = 0; k < tempHolding.Length; k++)
                                         {
                                             if (k == j)
                                             {
                                                 tempHolding[k] = new Vector2(tetromino[i].getPositions()[k].X, tetromino[i].getPositions()[k].Y - 1);
+                                            }
+                                            else
+                                            {
+                                                tempHolding[k] = tetromino[i].getPositions()[k];
+                                            }
+                                        }
+
+                                        tetromino[i].setBlockPositions(tempHolding);
+                                    }
+                                }
+                            }
+                            else if (isfilled[a] == true)
+                            {
+                                tetromino[i].Update(tetrominoGridPos[i], gridStartPos, GlobalVar.ScaleSize);
+
+                                for (int j = 0; j < 4; j++)
+                                {
+                                    if (tetromino[i].getPositions()[j].Y <= (absTetrominoBlockFarthestDown - 3) + a)
+                                    {
+                                        Vector2[] tempHolding = new Vector2[4];
+
+                                        for (int k = 0; k < tempHolding.Length; k++)
+                                        {
+                                            if (k == j)
+                                            {
+                                                tempHolding[k] = new Vector2(tetromino[i].getPositions()[k].X, tetromino[i].getPositions()[k].Y + 1);
                                             }
                                             else
                                             {

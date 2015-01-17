@@ -240,14 +240,12 @@ namespace Evolo.GameClass
 
         public void setBlockPositions(Vector2[] blockPositions)
         {
-            int runNum = 0;
 
             for (int i = 0; i < blockPosActive.Length; i++)
             {
                 if (blockPosActive[i] == true)
                 {
-                    currentBlockPos[i] = blockPos[runNum];
-                    runNum++;
+                    currentBlockPos[i] = blockPos[i];
                 }
             }
 
