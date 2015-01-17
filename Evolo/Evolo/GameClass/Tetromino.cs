@@ -247,8 +247,11 @@ namespace Evolo.GameClass
                 if (blockPosActive[i] == true)
                 {
                     currentBlockPos[i] = blockPos[runNum];
+                    runNum++;
                 }
             }
+
+            blockPos = blockPos;
         }
     }
 }

@@ -753,36 +753,38 @@ namespace Evolo.GameClass
                     }
 
                     //Line Down For What?
-                    //A Damn Mess... I think it has something to do with the a & possibly j....
-                    /*
                     for (int a = 0; a < 4; a++)
                     {
-                        for (int i = 0; i < tetromino.Count - 1; i++)
+                        for (int i = 0; i < tetrominoGridPos.Count; i++)
                         {
-                            for (int j = 0; j < 4; j++)
+                            if (tetrominoGridPos[i].Y <= (absTetrominoBlockFarthestDown - 3) + a && isfilled[a] == true)
                             {
-                                if((int)tetromino[i].getPositions()[j].Y < (absTetrominoBlockFarthestDown - 3) + a)
+                                tetrominoGridPos[i] = new Vector2(tetrominoGridPos[i].X, tetrominoGridPos[i].Y + 1);
+
+                                for (int j = 0; j < tetromino[i].getPositions().Length; j++)
                                 {
-                                    Vector2[] tempHolding = new Vector2[tetromino[i].getPositions().Length];
-
-                                    for (int p = 0; p < tempHolding.Length; p++)
+                                    if (tetromino[i].getPositions()[j].Y > (absTetrominoBlockFarthestDown - 3) + a)
                                     {
-                                        if (p == j)
-                                        {
-                                            tempHolding[a] = new Vector2((int)tetromino[i].getPositions()[j].X, (int)tetromino[i].getPositions()[j].Y + 1);
-                                        }
-                                        else
-                                        {
-                                            tempHolding[a] = tetromino[i].getPositions()[j];
-                                        }
-                                    }
+                                        Vector2[] tempHolding = new Vector2[tetromino[i].getPositions().Length];
 
-                                    tetromino[i].setBlockPositions(tempHolding);
+                                        for (int k = 0; k < tempHolding.Length; k++)
+                                        {
+                                            if (k == j)
+                                            {
+                                                tempHolding[k] = new Vector2(tetromino[i].getPositions()[k].X, tetromino[i].getPositions()[k].Y - 1);
+                                            }
+                                            else
+                                            {
+                                                tempHolding[k] = tetromino[i].getPositions()[k];
+                                            }
+                                        }
+
+                                        tetromino[i].setBlockPositions(tempHolding);
+                                    }
                                 }
                             }
                         }
                     }
-                    */
 
                     //Hit box clearing
                     int lineClearCount = 0;
@@ -992,7 +994,7 @@ namespace Evolo.GameClass
                     else
                     {
                         //HitBox Debug
-                        backdropColor = Color.Blue;
+                        backdropColor = Color.LightGreen;
                         blockTexture = fullBlockTexture;
                         backdropColor.A = 25;
                     }
@@ -1028,7 +1030,7 @@ namespace Evolo.GameClass
                 blockTexture = fullBlockTexture;
                 for (int k = 0; k < tetromino.Count; k++)
                 {
-                  // tetromino[k].Draw(spriteBatch);
+                   tetromino[k].Draw(spriteBatch);
                 }
 
                 player1.Draw(spriteBatch, player1SpriteEffects);
