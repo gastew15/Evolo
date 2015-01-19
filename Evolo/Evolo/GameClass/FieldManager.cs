@@ -22,7 +22,7 @@ namespace Evolo.GameClass
         private Boolean gameWin;
         //Gamefield Variables
         private Boolean[,] gameField = new Boolean[26, 22];
-        private Vector2 gridStartPos, levelStartPoint;
+        private Vector2 gridStartPos;
         private int linesToClear;
 
 
@@ -32,7 +32,7 @@ namespace Evolo.GameClass
         private int milisecondsTetrominoLockDelayTime = 400;
         private int milisecondsElapsedPlayerTime = 0;
         private int milisecondsPlayerGravityTime = 200;
-        private int timer = 390 * 1000;
+        private int timer;
         private int milisecondsElapsedTime = 0;
 
         //Keyboard Variables / Misc
@@ -75,12 +75,12 @@ namespace Evolo.GameClass
         //Platform Variables
         private Texture2D platformTexture;
         private Vector2 endPlatformGridPos, startPlatformGridPos;
-
-        //Game Over Variables
-        private Texture2D gameOverScreen;
         
         //temp level variables
-        private double levelModifier = 1;
+        private double levelModifier;
+
+        //Level System variables
+        private LevelSystem levels = new LevelSystem();
 
         #endregion
 
@@ -92,7 +92,6 @@ namespace Evolo.GameClass
         public void Initialize()
         {
             player1SpriteEffects = SpriteEffects.None;
-            linesToClear = 10;
         }
 
         public void LoadContent(ContentManager Content)
@@ -1057,6 +1056,10 @@ namespace Evolo.GameClass
 
         public void resetGameVariables()
         {
+            levels.Update();
+            levelModifier = levels.getLevelMod();
+            timer = levels.getTimer() * 1000;
+
             gameField = new Boolean[26, 22];
             milisecondsElapsedTetrominoTime = 0;
             milisecondsElapsedPlayerTime = 0;
@@ -1076,7 +1079,8 @@ namespace Evolo.GameClass
             tetrominoHistoryAddItem(tetristype);
             tetromino.Add(new Tetromino(tetristype, blockTexture));
             tetrominoGridPos.Add(new Vector2(13, 0));
-            linesToClear = 10;
+
+            linesToClear = levels.getLinesToClear();
 
             //Rotation Tetromino Test Set Up
             rotationTestTetromino = new Tetromino(tetristype, blockTexture);
@@ -1092,8 +1096,8 @@ namespace Evolo.GameClass
             tetrominoGridPos.Add(new Vector2(28.5f, 4));
 
             //Temp levelSP
-            levelStartPoint = new Vector2(0, startPlatformGridPos.Y - 1);
-            levelStartPoint = new Vector2(0, 14);
+            //levelStartPoint = new Vector2(0, startPlatformGridPos.Y - 1);
+            
 
 
             tetrominoBlockLastPositions = new Vector2[tetromino[activeTetromino].getPositions().Length];
@@ -1103,11 +1107,11 @@ namespace Evolo.GameClass
 
             //Player Set Up
             player1 = new Player(playerTexture);
-            player1GridPos = levelStartPoint;
+            player1GridPos = levels.getPlayerPos();
 
             //Platform Set Up
-            endPlatformGridPos = new Vector2(23, 10);
-            startPlatformGridPos = new Vector2(0, 15);
+            endPlatformGridPos = levels.getEndPlatPos();
+            startPlatformGridPos = levels.getStartPlatPos();
             for (int i = 0; i < 3; i++)
             {
                 gameField[(int)endPlatformGridPos.X + i, (int)endPlatformGridPos.Y] = true;
