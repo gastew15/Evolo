@@ -1,0 +1,7 @@
+Player Start Position;Start Platform Position;End Platform Position;Level Modifier;Timer(Seconds);Lines to Clear
+
+Make sure there are no spaces in the cordinates, 
+
+0, 14;0, 15;23,10;1;390;10 NO
+
+0,14;0,15;23,10;1;390;10 YES
