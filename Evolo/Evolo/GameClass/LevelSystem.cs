@@ -28,7 +28,7 @@ namespace Evolo.GameClass
 
         public void Update()
         {
-            StreamReader sr = new StreamReader("Levels/Level" + levelNum + ".txt");
+            StreamReader sr = new StreamReader("Levels/Level" + levelNum + ".dat");
             string[] paramaters = sr.ReadToEnd().Split(';');
             sr.Close();
 
