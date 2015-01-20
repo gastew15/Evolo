@@ -22,7 +22,7 @@ namespace Evolo.GameClass
         private Boolean gameWin = false;
         private Texture2D menuBackground;
 
-        private MenuHandler mainMenu, optionsMenu, optionsResolutionMenu, optionsKeybindingMenuPage1, optionsKeybindingMenuPage2, pauseMenu, debugMenu, saveSlotMenu, gameLoseMenu, gameWinMenu;
+        private MenuHandler mainMenu, optionsMenu, optionsResolutionMenu, optionsKeybindingMenuPage1, optionsKeybindingMenuPage2, pauseMenu, debugMenu, saveSlotMenu, gameLoseMenu, gameWinMenu, levelSelectMenu;
         private WindowSizeManager windowSizeManager;
         private SpriteFont font;
         private Boolean pausedLast;
@@ -38,9 +38,9 @@ namespace Evolo.GameClass
         private String[] loadData = new string[]{""};
 
         //Variables
-        private Texture2D optionsTitle, menuTitle, pauseTitle, debugTitle, keybindBlockTitle, keybindPlayerTitle, gameLoseTitle, gameWinTitle, menuButtonBackground, menuButtonBorder7, menuButtonBorder6, menuButtonBorder4, menuButtonBorder2; 
+        private Texture2D optionsTitle, menuTitle, pauseTitle, debugTitle, keybindBlockTitle, keybindPlayerTitle, gameLoseTitle, gameWinTitle, levelSelectMenuTitle, menuButtonBackground, menuButtonBorder7, menuButtonBorder6, menuButtonBorder4, menuButtonBorder2; 
         private int mainMenuVerticalSpacing = 24;
-        private Vector2 optionsCenterMenuSP, mainMenuSP, keybindingCenterMenuSP, pauseMenuSP, debugSP, saveSlotMenuSP, gameOverMenuSP;
+        private Vector2 optionsCenterMenuSP, mainMenuSP, keybindingCenterMenuSP, pauseMenuSP, debugSP, saveSlotMenuSP, gameOverMenuSP, levelSelectMenuSp;
         private String[] mainMenuButtonText;
         private String[] optionsMenuButtonText;
         private String[] optionsResolutionMenuButtonText;
@@ -52,6 +52,7 @@ namespace Evolo.GameClass
         private String[] saveSlotMenuButtonText;
         private String[] gameLoseMenuText;
         private String[] gameWinMenuText;
+        private String[] levelSelectMenuText;
         private Color[] mainMenuColors;
         private Color[] optionsMenuColors;
         private Color[] optionsResolutionMenuColors;
@@ -59,9 +60,11 @@ namespace Evolo.GameClass
         private Color[] pauseMenuColors;
         private Color[] debugMenuColors;
         private Color[] saveSlotMenuColors;
+        private Color[] levelSelectMenuColors;
         private GraphicsDeviceManager graphics;
         private SoundEffect menuHoverChangeSoundEffect, menuClickedSoundEffect;
         private FieldManager field = new FieldManager();
+        private LevelSystem levels = new LevelSystem();
         public Menus(GraphicsDeviceManager graphics)
         {
             this.graphics = graphics;
@@ -87,6 +90,7 @@ namespace Evolo.GameClass
             saveSlotMenuButtonText = new String[8] { "Slot 1", "Slot 2", "Slot 3", "Slot 4", "Slot 5", "Slot 6", "Slot 7", "Back"};
             gameLoseMenuText = new String[2] { "Restart", "Main Menu" };
             gameWinMenuText = new String[2] { "Restart", "Main Menu" };
+            levelSelectMenuText = new String[6] { "Level 1", "Level 2", "Level 3", "Level 4", "Level 5" ,"Custom Level" };
             #region Menu Text Colours
             mainMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
             optionsMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray};
@@ -95,6 +99,7 @@ namespace Evolo.GameClass
             pauseMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
             debugMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
             saveSlotMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
+            levelSelectMenuColors = new Color[] {Color.DarkGray, Color.DarkGray,Color.DarkGray,Color.DarkGray,Color.DarkGray,Color.DarkGray};
             #endregion
             var mouseState = Mouse.GetState();
             var mousePosition = new Point(mouseState.X, mouseState.Y);
@@ -124,6 +129,7 @@ namespace Evolo.GameClass
             optionsTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_options");
             gameLoseTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_YouLose");
             gameWinTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_YouWin");
+            levelSelectMenuTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_LevelSelect");
             //menuHoverChangeSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuHoverChangeEffect");
             //menuClickedSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuClickedEffect");
             #endregion
@@ -141,6 +147,7 @@ namespace Evolo.GameClass
             pauseMenu = new MenuHandler(pauseTitle, menuButtonBorder4, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder4.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((pauseTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, pauseMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
             gameLoseMenu = new MenuHandler(gameLoseTitle, menuButtonBorder2, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder2.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((gameLoseTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, gameLoseMenuText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
             gameWinMenu = new MenuHandler(gameWinTitle, menuButtonBorder2, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder2.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((gameWinTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, gameWinMenuText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
+            levelSelectMenu = new MenuHandler(levelSelectMenuTitle, menuButtonBorder6, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder6.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((levelSelectMenuTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, levelSelectMenuText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
 
             optionsMenu = new MenuHandler(optionsTitle, menuButtonBorder7, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder7.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((optionsTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, optionsMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
             optionsResolutionMenu = new MenuHandler(optionsTitle, menuButtonBorder7, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder7.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((optionsTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, optionsResolutionMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);       
@@ -211,7 +218,7 @@ namespace Evolo.GameClass
                     pausedLast = false;
                     if (mainMenu.menuNumberSelection() == 1)
                     {
-                        GlobalVar.GameState = "Playing";
+                        menuState = "LevelSelect";
                     }
                     else if (mainMenu.menuNumberSelection() == 2)
                     {
@@ -557,6 +564,37 @@ namespace Evolo.GameClass
                     }
                     break;
                 #endregion
+                #region Level Select Menu Update
+                case "LevelSelect":
+                    levelSelectMenu.Update(gameTime,
+                        mouseStateCurrent,
+                        mouseStatePrevious,
+                        GlobalVar.ScreenSize,
+                        new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((levelSelectMenuTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + levelSelectMenuTitle.Height * GlobalVar.ScaleSize.Y),
+                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder6.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((levelSelectMenuTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + levelSelectMenuTitle.Height * GlobalVar.ScaleSize.Y),
+                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((levelSelectMenuTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((levelSelectMenuTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2)),
+                        GlobalVar.ScaleSize,
+                        levelSelectMenuColors,
+                        Convert.ToBoolean(GlobalVar.OptionsArray[12]));
+                    switch (levelSelectMenu.menuNumberSelection())
+                    {
+                        case 1:
+                            levels.setLevel(1);
+                            GlobalVar.GameState = "Playing";
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case 4:
+                            break;
+                        case 5:
+                            break;
+
+                    }
+
+                    break;
+                #endregion
             }
             #region Toggle Button Color Changer
             //Checks for color updates from toggles for menus
@@ -675,6 +713,9 @@ namespace Evolo.GameClass
                     break;
                 case "GameWinMenu":
                     gameWinMenu.Draw(spriteBatch);
+                    break;
+                case "LevelSelect":
+                    levelSelectMenu.Draw(spriteBatch);
                     break;
             }
 
