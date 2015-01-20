@@ -694,19 +694,20 @@ namespace Evolo.GameClass
 
                     
 
-                    //line clearning system to check to see that if the Y values in the gamefield class is filled up from the last X value from the active tetromino block + 4 X values to make sure that all tetrominos are accounted for
+                    //New Boolean Array to tell the game which lines are filled
                     Boolean[] isfilled = new Boolean[4];
                     for (int o = 0; o < isfilled.Length; o++)
                     {
                         isfilled[o] = true;
                     }
-
+                    //Checking the lines from the Lowest block that just feel to 4 lines above to make sure all lines that could be filled are accounted for
                     for (int l = 0; l < 4; l++)
                     {
                         for (int i = 0; i < gameField.GetLength(0); i++)
                         {
                             if ((i > 2 && i < gameField.GetLength(0) - 3) && (absTetrominoBlockFarthestDown - 3 > 0 && (absTetrominoBlockFarthestDown - 3) + l < gameField.GetLength(1)))
                             {
+                                //Where the loop checks to see if the line is not filled
                                 if (gameField[i, (absTetrominoBlockFarthestDown - 3) + l] == false)
                                     isfilled[l] = false;
                             }
@@ -714,30 +715,37 @@ namespace Evolo.GameClass
                     }
 
                     //Tetromino Line Clearing
+                    //Acessing all the tetromino Y values that are within the lines needed to be clear
                     for (int i = 0; i < tetromino.Count - 1; i++)
                     {
                         for (int j = 0; j < 4; j++)
                         {
+                            //Checks which tetromino's are within the playing field
                             if ((int)tetromino[i].getPositions()[j].Y >= 3 && (int)tetromino[i].getPositions()[j].Y < gameField.GetLength(1))
                             {
                                 for (int n = 0; n < isfilled.Length; n++)
                                 {
+                                    //Checking to see if the Y positons of the tetromino is within 4 blocks from the tetromino that just landed and to see if they are within a line that is needed to be cleared
                                     if (isfilled[n] == true && (int)tetromino[i].getPositions()[j].Y == (absTetrominoBlockFarthestDown - 3) + n)
                                     {
+                                        // temp boolean to later set the Active Pos to false or true.
                                         Boolean[] tempHolding = new Boolean[4];
 
                                         for (int a = 0; a < tempHolding.Length; a++)
                                         {
+                                            //Seeing which Y pos of the blocks are apart of the temp boolean array
                                             if (a == j)
                                             {
+                                                //Sets the boolean to false to then later set the whether the block is Active or not to false
                                                 tempHolding[a] = false;
                                             }
                                             else
                                             {
+                                                //Leaves the Active Pos as is.
                                                 tempHolding[a] = tetromino[i].getBlockPosActive()[a];
                                             }
                                         }
-
+                                        //Sets the tetromino PosActive to the temp Holding array
                                         tetromino[i].setBlockPosActive(tempHolding);
 
                                     }
@@ -745,6 +753,7 @@ namespace Evolo.GameClass
                             }
                         }
 
+                        //If Tetromino Positions array is empty it's removed from the list
                         if (tetromino[i].getPositions().Length == 0)
                         {
                             tetromino.RemoveAt(i);
@@ -788,6 +797,7 @@ namespace Evolo.GameClass
                     int lineClearCount = 0;
                     for (int n = 0; n < isfilled.Length; n++)
                     {
+                        //Much simple virsion of the line clearing above
                         if (isfilled[n] == true)
                         {
                             lineClearCount++;
@@ -994,7 +1004,7 @@ namespace Evolo.GameClass
                         //HitBox Debug
                         backdropColor = Color.Blue;
                         blockTexture = fullBlockTexture;
-                        backdropColor.A = 25;
+                        //backdropColor.A = 25;
                     }
 
                     //Draws the block to the screen at the specified point based on the for loop
