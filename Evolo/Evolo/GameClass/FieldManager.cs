@@ -22,7 +22,7 @@ namespace Evolo.GameClass
         private Boolean gameWin;
         //Gamefield Variables
         private Boolean[,] gameField = new Boolean[26, 22];
-        private Vector2 gridStartPos, levelStartPoint;
+        private Vector2 gridStartPos;
         private int linesToClear;
 
 
@@ -32,7 +32,7 @@ namespace Evolo.GameClass
         private int milisecondsTetrominoLockDelayTime = 400;
         private int milisecondsElapsedPlayerTime = 0;
         private int milisecondsPlayerGravityTime = 200;
-        private int timer = 390 * 1000;
+        private int timer;
         private int milisecondsElapsedTime = 0;
 
         //Keyboard Variables / Misc
@@ -75,12 +75,12 @@ namespace Evolo.GameClass
         //Platform Variables
         private Texture2D platformTexture;
         private Vector2 endPlatformGridPos, startPlatformGridPos;
-
-        //Game Over Variables
-        private Texture2D gameOverScreen;
         
         //temp level variables
-        private double levelModifier = 1;
+        private double levelModifier;
+
+        //Level System variables
+        private LevelSystem levels = new LevelSystem();
 
         #endregion
 
@@ -92,7 +92,6 @@ namespace Evolo.GameClass
         public void Initialize()
         {
             player1SpriteEffects = SpriteEffects.None;
-            linesToClear = 10;
         }
 
         public void LoadContent(ContentManager Content)
@@ -762,36 +761,66 @@ namespace Evolo.GameClass
                     }
 
                     //Line Down For What?
-                    //A Damn Mess... I think it has something to do with the a & possibly j....
-                    /*
                     for (int a = 0; a < 4; a++)
                     {
-                        for (int i = 0; i < tetromino.Count - 1; i++)
+                        for (int i = 0; i < tetrominoGridPos.Count; i++)
                         {
-                            for (int j = 0; j < 4; j++)
+                            if (tetrominoGridPos[i].Y <= (absTetrominoBlockFarthestDown - 3) + a && isfilled[a] == true)
                             {
-                                if((int)tetromino[i].getPositions()[j].Y < (absTetrominoBlockFarthestDown - 3) + a)
+                                tetrominoGridPos[i] = new Vector2(tetrominoGridPos[i].X, tetrominoGridPos[i].Y + 1);
+
+                                tetromino[i].Update(tetrominoGridPos[i], gridStartPos, GlobalVar.ScaleSize);
+
+                                for (int j = 0; j < 4; j++)
                                 {
-                                    Vector2[] tempHolding = new Vector2[tetromino[i].getPositions().Length];
-
-                                    for (int p = 0; p < tempHolding.Length; p++)
+                                    if (tetromino[i].getPositions()[j].Y > (absTetrominoBlockFarthestDown - 3) + a)
                                     {
-                                        if (p == j)
-                                        {
-                                            tempHolding[a] = new Vector2((int)tetromino[i].getPositions()[j].X, (int)tetromino[i].getPositions()[j].Y + 1);
-                                        }
-                                        else
-                                        {
-                                            tempHolding[a] = tetromino[i].getPositions()[j];
-                                        }
-                                    }
+                                        Vector2[] tempHolding = new Vector2[4];
 
-                                    tetromino[i].setBlockPositions(tempHolding);
+                                        for (int k = 0; k < tempHolding.Length; k++)
+                                        {
+                                            if (k == j)
+                                            {
+                                                tempHolding[k] = new Vector2(tetromino[i].getPositions()[k].X, tetromino[i].getPositions()[k].Y - 1);
+                                            }
+                                            else
+                                            {
+                                                tempHolding[k] = tetromino[i].getPositions()[k];
+                                            }
+                                        }
+
+                                        tetromino[i].setBlockPositions(tempHolding);
+                                    }
+                                }
+                            }
+                            else if (isfilled[a] == true)
+                            {
+                                tetromino[i].Update(tetrominoGridPos[i], gridStartPos, GlobalVar.ScaleSize);
+
+                                for (int j = 0; j < 4; j++)
+                                {
+                                    if (tetromino[i].getPositions()[j].Y <= (absTetrominoBlockFarthestDown - 3) + a)
+                                    {
+                                        Vector2[] tempHolding = new Vector2[4];
+
+                                        for (int k = 0; k < tempHolding.Length; k++)
+                                        {
+                                            if (k == j)
+                                            {
+                                                tempHolding[k] = new Vector2(tetromino[i].getPositions()[k].X, tetromino[i].getPositions()[k].Y + 1);
+                                            }
+                                            else
+                                            {
+                                                tempHolding[k] = tetromino[i].getPositions()[k];
+                                            }
+                                        }
+
+                                        tetromino[i].setBlockPositions(tempHolding);
+                                    }
                                 }
                             }
                         }
                     }
-                    */
 
                     //Hit box clearing
                     int lineClearCount = 0;
@@ -1002,7 +1031,7 @@ namespace Evolo.GameClass
                     else
                     {
                         //HitBox Debug
-                        backdropColor = Color.Blue;
+                        backdropColor = Color.LightGreen;
                         blockTexture = fullBlockTexture;
                         //backdropColor.A = 25;
                     }
@@ -1013,9 +1042,9 @@ namespace Evolo.GameClass
                     //spriteBatch.DrawString(SeqoeUIMonoNormal, "FPS: " + fpsManager.getFPS(), new Vector2((GlobalVar.ScreenSize.X - (SeqoeUIMonoNormal.MeasureString("FPS: " + fpsManager.getFPS()).X) * GlobalVar.ScaleSize.X) - 10, (5 * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 }
 
-                spriteBatch.DrawString(font, "Score: " + GlobalVar.Score, new Vector2(1130 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.Yellow, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                spriteBatch.DrawString(font, "Lines left: " + linesToClear, new Vector2(1130 * GlobalVar.ScaleSize.X, 305 * GlobalVar.ScaleSize.Y), Color.Yellow, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                spriteBatch.DrawString(font, "Time left: " + (timer - milisecondsElapsedTime) / 1000, new Vector2(1130 * GlobalVar.ScaleSize.X, 345 * GlobalVar.ScaleSize.Y), Color.Yellow, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(font, "Score: " + GlobalVar.Score, new Vector2(1130 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(font, "Lines left: " + linesToClear, new Vector2(1130 * GlobalVar.ScaleSize.X, 305 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(font, "Time left: " + (timer - milisecondsElapsedTime) / 1000, new Vector2(1130 * GlobalVar.ScaleSize.X, 345 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
 
                 //Prints out Debug Info About the Block
                 if (Boolean.Parse(GlobalVar.OptionsArray[11]) == true)
@@ -1038,7 +1067,7 @@ namespace Evolo.GameClass
                 blockTexture = fullBlockTexture;
                 for (int k = 0; k < tetromino.Count; k++)
                 {
-                  // tetromino[k].Draw(spriteBatch);
+                   tetromino[k].Draw(spriteBatch);
                 }
 
                 player1.Draw(spriteBatch, player1SpriteEffects);
@@ -1067,6 +1096,10 @@ namespace Evolo.GameClass
 
         public void resetGameVariables()
         {
+            levels.Update();
+            levelModifier = levels.getLevelMod();
+            timer = levels.getTimer() * 1000;
+
             gameField = new Boolean[26, 22];
             milisecondsElapsedTetrominoTime = 0;
             milisecondsElapsedPlayerTime = 0;
@@ -1086,7 +1119,8 @@ namespace Evolo.GameClass
             tetrominoHistoryAddItem(tetristype);
             tetromino.Add(new Tetromino(tetristype, blockTexture));
             tetrominoGridPos.Add(new Vector2(13, 0));
-            linesToClear = 10;
+
+            linesToClear = levels.getLinesToClear();
 
             //Rotation Tetromino Test Set Up
             rotationTestTetromino = new Tetromino(tetristype, blockTexture);
@@ -1102,8 +1136,8 @@ namespace Evolo.GameClass
             tetrominoGridPos.Add(new Vector2(28.5f, 4));
 
             //Temp levelSP
-            levelStartPoint = new Vector2(0, startPlatformGridPos.Y - 1);
-            levelStartPoint = new Vector2(0, 14);
+            //levelStartPoint = new Vector2(0, startPlatformGridPos.Y - 1);
+            
 
 
             tetrominoBlockLastPositions = new Vector2[tetromino[activeTetromino].getPositions().Length];
@@ -1113,11 +1147,11 @@ namespace Evolo.GameClass
 
             //Player Set Up
             player1 = new Player(playerTexture);
-            player1GridPos = levelStartPoint;
+            player1GridPos = levels.getPlayerPos();
 
             //Platform Set Up
-            endPlatformGridPos = new Vector2(23, 10);
-            startPlatformGridPos = new Vector2(0, 15);
+            endPlatformGridPos = levels.getEndPlatPos();
+            startPlatformGridPos = levels.getStartPlatPos();
             for (int i = 0; i < 3; i++)
             {
                 gameField[(int)endPlatformGridPos.X + i, (int)endPlatformGridPos.Y] = true;
