@@ -40,7 +40,7 @@ namespace Evolo.GameClass
         private bool keyADown, keyDDown, keyWDown;
         private bool keyEnterDown = false;
         private int milisecondExpirationKeyA = 200, milisecondExpirationKeyD = 200;
-        private int milisecondExpirationKeyLeft = 200, milisecondExpirationKeyRight = 200, milisecondExpirationKeyUp = 500;
+        private int milisecondExpirationKeyLeft = 250, milisecondExpirationKeyRight = 250;
         private int milisecondsElapsedKeyA = 0, milisecondsElapsedKeyD = 0, milisecondsElapsedKeyLeft = 0, milisecondsElapsedKeyRight = 0, milisecondsElapsedKeyUp = 0;
         private String debugStringData = "";
         private Random random = new Random();
@@ -674,15 +674,7 @@ namespace Evolo.GameClass
                         }
                     }
                 }
-                if ((milisecondsElapsedKeyUp - milisecondExpirationKeyUp) >= 0)
-                {
-                    if (keyUpDown == false)
-                    {
-                        keyUpDown = true;
-                    }
 
-                    milisecondsElapsedKeyUp -= milisecondExpirationKeyUp;
-                }
                 else if (Keyboard.GetState().IsKeyUp(Keys.Up))
                 {
                     if (keyUpDown == false)
