@@ -383,7 +383,7 @@ namespace Evolo
                         break;
                     case "GameOver":
                         background.Draw(spriteBatch, SeqoeUIMonoNormal);
-                        //fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         menus.Draw(spriteBatch);
                         break;
                     case "MenuScreen":
