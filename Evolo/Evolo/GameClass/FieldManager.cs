@@ -37,8 +37,11 @@ namespace Evolo.GameClass
 
         //Keyboard Variables / Misc
         private bool keyLeftDown, keyRightDown, keyUpDown;
-        private bool keyEnterDown = false;
         private bool keyADown, keyDDown, keyWDown;
+        private bool keyEnterDown = false;
+        private int milisecondExpirationKeyA = 200, milisecondExpirationKeyD = 200;
+        private int milisecondExpirationKeyLeft = 250, milisecondExpirationKeyRight = 250, milisecondExpirationKeyUp = 500;
+        private int milisecondsElapsedKeyA = 0, milisecondsElapsedKeyD = 0, milisecondsElapsedKeyLeft = 0, milisecondsElapsedKeyRight = 0, milisecondsElapsedKeyUp = 0;
         private String debugStringData = "";
         private Random random = new Random();
 
@@ -118,6 +121,11 @@ namespace Evolo.GameClass
             milisecondsElapsedTetrominoTime += gameTime.ElapsedGameTime.Milliseconds;
             milisecondsElapsedPlayerTime += gameTime.ElapsedGameTime.Milliseconds;
             milisecondsElapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+            milisecondsElapsedKeyA += gameTime.ElapsedGameTime.Milliseconds;
+            milisecondsElapsedKeyD += gameTime.ElapsedGameTime.Milliseconds;
+            milisecondsElapsedKeyLeft += gameTime.ElapsedGameTime.Milliseconds;
+            milisecondsElapsedKeyRight += gameTime.ElapsedGameTime.Milliseconds;
+            milisecondsElapsedKeyUp += gameTime.ElapsedGameTime.Milliseconds;
 
             //Adjusts the grid Starting Postion for resolution changes & such
             gridStartPos = new Vector2((GlobalVar.ScreenSize.X / 2) - (((blockTexture.Width * GlobalVar.ScaleSize.X) * gameField.GetLength(0)) / 2), -1 * (blockTexture.Height * GlobalVar.ScaleSize.Y));
@@ -550,6 +558,15 @@ namespace Evolo.GameClass
                         tetrominoGridPos[activeTetromino] = new Vector2(tetrominoGridPos[activeTetromino].X - 1, tetrominoGridPos[activeTetromino].Y);
                     }
                 }
+                if ((milisecondsElapsedKeyLeft - milisecondExpirationKeyLeft) >= 0)
+                {
+                    if (keyLeftDown == false)
+                    {
+                        keyLeftDown = true;
+                    }
+
+                    milisecondsElapsedKeyLeft -= milisecondExpirationKeyLeft;
+                }
                 else if (Keyboard.GetState().IsKeyUp(Keys.Left))
                 {
                     if (keyLeftDown == false)
@@ -569,6 +586,15 @@ namespace Evolo.GameClass
                         keyRightDown = false;
                         tetrominoGridPos[activeTetromino] = new Vector2(tetrominoGridPos[activeTetromino].X + 1, tetrominoGridPos[activeTetromino].Y);
                     }
+                }
+                if ((milisecondsElapsedKeyRight - milisecondExpirationKeyRight) >= 0)
+                {
+                    if (keyRightDown == false)
+                    {
+                        keyRightDown = true;
+                    }
+
+                    milisecondsElapsedKeyRight -= milisecondExpirationKeyRight;
                 }
                 else if (Keyboard.GetState().IsKeyUp(Keys.Right))
                 {
@@ -648,6 +674,15 @@ namespace Evolo.GameClass
                             tetromino[activeTetromino].setRotation(tetrominoRotation);
                         }
                     }
+                }
+                if ((milisecondsElapsedKeyUp - milisecondExpirationKeyUp) >= 0)
+                {
+                    if (keyUpDown == false)
+                    {
+                        keyUpDown = true;
+                    }
+
+                    milisecondsElapsedKeyUp -= milisecondExpirationKeyUp;
                 }
                 else if (Keyboard.GetState().IsKeyUp(Keys.Up))
                 {
@@ -854,7 +889,7 @@ namespace Evolo.GameClass
             #region Player Movement / Key Input
 
             //Left
-            if (keyADown == true && playerCanNotMoveLeft == false && player1GridPos.X > 0)
+            if (keyADown == true && playerCanNotMoveLeft == false && player1GridPos.X > 0 )
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.A))
                 {
@@ -862,6 +897,15 @@ namespace Evolo.GameClass
                     player1SpriteEffects = SpriteEffects.FlipHorizontally;
                     player1GridPos.X -= 1;
                 }
+            }
+            if ((milisecondsElapsedKeyA - milisecondExpirationKeyA) >= 0)
+            {
+                if (keyADown == false)
+                {
+                    keyADown = true;
+                }
+
+                milisecondsElapsedKeyA -= milisecondExpirationKeyA;
             }
             else if (Keyboard.GetState().IsKeyUp(Keys.A))
             {
@@ -880,6 +924,15 @@ namespace Evolo.GameClass
                     player1SpriteEffects = SpriteEffects.None;
                     player1GridPos.X += 1;
                 }
+            }
+            if ((milisecondsElapsedKeyD - milisecondExpirationKeyD) >= 0)
+            {
+                if (keyDDown == false)
+                {
+                    keyDDown = true;
+                }
+
+                milisecondsElapsedKeyD -= milisecondExpirationKeyD;
             }
             else if (Keyboard.GetState().IsKeyUp(Keys.D))
             {
