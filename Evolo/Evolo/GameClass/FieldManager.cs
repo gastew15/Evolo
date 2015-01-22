@@ -688,8 +688,6 @@ namespace Evolo.GameClass
 
             #region tetromino Movement Down
 
-            
-
             //Checks to see if the block is able to move down 1 gridPos or not
             if (absTetrominoBlockFarthestDown < gameField.GetLength(1) - 1 && tetrominoCanNotMoveDown == false)
             {
@@ -707,19 +705,14 @@ namespace Evolo.GameClass
                         {
                         GlobalVar.Score += 2;
                         }
- 
                     }
                 }
             }
             else
             {
-                
                 //Checks for block lock delay before locking in place and spawning new block
                 if (milisecondsElapsedTetrominoTime - milisecondsTetrominoLockDelayTime >= 1)
                 {
-
-                    
-
                     //New Boolean Array to tell the game which lines are filled
                     Boolean[] isfilled = new Boolean[4];
                     for (int o = 0; o < isfilled.Length; o++)
@@ -790,7 +783,7 @@ namespace Evolo.GameClass
                     //Line Down For What?
                     for (int a = 0; a < 4; a++)
                     {
-                        for (int i = 0; i < tetrominoGridPos.Count; i++)
+                        for (int i = 0; i < tetrominoGridPos.Count - 1; i++)
                         {
                             if (tetrominoGridPos[i].Y <= (absTetrominoBlockFarthestDown - 3) + a && isfilled[a] == true)
                             {
@@ -800,7 +793,7 @@ namespace Evolo.GameClass
 
                                 for (int j = 0; j < 4; j++)
                                 {
-                                    if (tetromino[i].getPositions()[j].Y > (absTetrominoBlockFarthestDown - 3) + a)
+                                    if (tetromino[i].getRawBlockPositions()[j].Y > (absTetrominoBlockFarthestDown - 3) + a)
                                     {
                                         Vector2[] tempHolding = new Vector2[4];
 
@@ -808,25 +801,50 @@ namespace Evolo.GameClass
                                         {
                                             if (k == j)
                                             {
-                                                tempHolding[k] = new Vector2(tetromino[i].getPositions()[k].X, tetromino[i].getPositions()[k].Y - 1);
+                                                tempHolding[k] = new Vector2(tetromino[i].getRawBlockPositions()[k].X, tetromino[i].getRawBlockPositions()[k].Y - 1);
                                             }
                                             else
                                             {
-                                                tempHolding[k] = tetromino[i].getPositions()[k];
+                                                tempHolding[k] = tetromino[i].getRawBlockPositions()[k];
                                             }
                                         }
 
                                         tetromino[i].setBlockPositions(tempHolding);
                                     }
                                 }
+
+                                /*
+                                for (int j = 0; j < 4; j++)
+                                {
+                                    if (tetromino[i].getRawBlockPositions()[j].Y >= (absTetrominoBlockFarthestDown - 3) + a)
+                                    {
+                                        Vector2[] tempHolding = new Vector2[4];
+
+                                        for (int k = 0; k < tempHolding.Length; k++)
+                                        {
+                                            if (k == j)
+                                            {
+                                                tempHolding[k] = new Vector2(tetromino[i].getRawBlockPositions()[k].X, tetromino[i].getRawBlockPositions()[k].Y - 1);
+                                            }
+                                            else
+                                            {
+                                                tempHolding[k] = tetromino[i].getRawBlockPositions()[k];
+                                            }
+                                        }
+
+                                        tetromino[i].setBlockPositions(tempHolding);
+                                    }
+                                }
+                                 */
                             }
+                                /*
                             else if (isfilled[a] == true)
                             {
                                 tetromino[i].Update(tetrominoGridPos[i], gridStartPos, GlobalVar.ScaleSize);
 
                                 for (int j = 0; j < 4; j++)
                                 {
-                                    if (tetromino[i].getPositions()[j].Y <= (absTetrominoBlockFarthestDown - 3) + a)
+                                    if (tetromino[i].getRawBlockPositions()[j].Y <= (absTetrominoBlockFarthestDown - 3) + a)
                                     {
                                         Vector2[] tempHolding = new Vector2[4];
 
@@ -834,11 +852,11 @@ namespace Evolo.GameClass
                                         {
                                             if (k == j)
                                             {
-                                                tempHolding[k] = new Vector2(tetromino[i].getPositions()[k].X, tetromino[i].getPositions()[k].Y + 1);
+                                                tempHolding[k] = new Vector2(tetromino[i].getRawBlockPositions()[k].X, tetromino[i].getRawBlockPositions()[k].Y + 1);
                                             }
                                             else
                                             {
-                                                tempHolding[k] = tetromino[i].getPositions()[k];
+                                                tempHolding[k] = tetromino[i].getRawBlockPositions()[k];
                                             }
                                         }
 
@@ -846,6 +864,7 @@ namespace Evolo.GameClass
                                     }
                                 }
                             }
+                            */
                         }
                     }
 
@@ -1076,7 +1095,7 @@ namespace Evolo.GameClass
                     else
                     {
                         //HitBox Debug
-                        backdropColor = Color.LightGreen;
+                        backdropColor = Color.Transparent;
                         blockTexture = fullBlockTexture;
                         //backdropColor.A = 25;
                     }
