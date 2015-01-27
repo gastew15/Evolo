@@ -20,35 +20,34 @@ namespace Evolo.GameClass
     {
 
         //Small Block Texture
-        Texture2D blockTexture;
+        private Texture2D blockTexture;
 
         //Small Block Postions
-        Vector2[] blockPos = new Vector2[4];
+        private Vector2[] blockPos = new Vector2[4];
 
-        Vector2[] currentBlockPos = new Vector2[4];
+        private Vector2[] currentBlockPos = new Vector2[4];
 
         //Block Position Modifers
-        Vector2[] blockPosModifers = new Vector2[] { new Vector2(), new Vector2(), new Vector2(), new Vector2() };
+        private Vector2[] blockPosModifers = new Vector2[] { new Vector2(), new Vector2(), new Vector2(), new Vector2() };
 
         //ScaleSize
-        Vector2 scaleSize;
+        private Vector2 scaleSize;
 
         //Start Position
-        Vector2 gridStartPosition;
+        private Vector2 gridStartPosition;
 
         //tetromino Color
-        Color drawColor;
+        private Color drawColor;
 
         //Spawn point for dominant block
-        Vector2 drawPoint; // X, Y
+        private Vector2 drawPoint; // X, Y
 
         //tetromino Type
-        int tetrominoType;
+        private int tetrominoType;
 
-        int rotation = 0;
+        private int rotation = 0;
 
-
-        Boolean[] blockPosActive = new Boolean[4] { true, true, true, true };
+        private Boolean[] blockPosActive = new Boolean[4] { true, true, true, true };
 
         public Tetromino(int tetrominoType, Texture2D blockTexture)
         {
@@ -248,7 +247,7 @@ namespace Evolo.GameClass
                 blockPosModifers[i] = new Vector2(blockPositions[i].X - currentBlockPos[i].X, blockPositions[i].Y - currentBlockPos[i].Y);
             }
 
-            blockPosModifers = blockPosModifers;
+            //blockPosModifers = blockPosModifers;
         }
 
         public Vector2[] getRawBlockPositions()
