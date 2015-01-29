@@ -1012,7 +1012,7 @@ namespace Evolo.GameClass
                     farthestRight = tetromino[tetromino.Count - 1].getPositions()[p].X;
                 }
             }
-            tetrominoGridPos[tetromino.Count - 1] = new Vector2((GlobalVar.ScreenSize.X - (    ((224 * GlobalVar.ScaleSize.X) / 2) + ((((farthestRight - farthestLeft) + 1) * blockTexture.Width) / 2)  )  ) / blockTexture.Width , 4);
+            tetrominoGridPos[tetromino.Count - 1] = new Vector2((GlobalVar.ScreenSize.X - (    ((224 * GlobalVar.ScaleSize.X) / 2) + ((((farthestRight - farthestLeft) + 1) * (blockTexture.Width * GlobalVar.ScaleSize.X)) / 2)  )  ) / (blockTexture.Width * GlobalVar.ScaleSize.X), 4);
             tetromino[tetromino.Count - 1].Update(tetrominoGridPos[tetromino.Count - 1], new Vector2(0, gridStartPos.Y), GlobalVar.ScaleSize);
 
             rotationTestTetromino.Update(tetrominoGridPos[activeTetromino], gridStartPos, GlobalVar.ScaleSize);
