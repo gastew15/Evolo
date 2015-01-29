@@ -490,6 +490,11 @@ namespace Evolo.GameClass
                 #endregion
                 #region Load Profile Menu Update
                 case "LoadProfileMenu":
+                    if (loadProfileFirstTimeStartUp)
+                        loadProfileMenuButtonText[6] = "Quit";
+                    else
+                        loadProfileMenuButtonText[6] = "Back";
+
                     loadProfileMenu.Update(gameTime,
                          mouseStateCurrent,
                          mouseStatePrevious,
@@ -500,6 +505,7 @@ namespace Evolo.GameClass
                          GlobalVar.ScaleSize,
                          loadProfileMenuColors,
                          Convert.ToBoolean(GlobalVar.OptionsArray[12]));
+
                     if (loadProfileMenu.menuNumberSelection() == 1)
                     {
                         //saveHandler.SaveData(new String[] { "Test 1", "Test 2", "Test 3" }, 3);
@@ -544,6 +550,8 @@ namespace Evolo.GameClass
                     {
                         if(!loadProfileFirstTimeStartUp)
                             menuState = "MainMenu";
+                        else
+                            GlobalVar.ExitGame = true;
                     }
                     break;
                 #endregion
@@ -844,6 +852,11 @@ namespace Evolo.GameClass
         public void setLoadProfileFirstStartUp(Boolean state)
         {
             this.loadProfileFirstTimeStartUp = state;
+        }
+
+        public Boolean getLoadProfileFirstStartUp()
+        {
+            return loadProfileFirstTimeStartUp;
         }
     }
 }

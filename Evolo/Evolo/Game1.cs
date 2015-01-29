@@ -316,7 +316,7 @@ namespace Evolo
                         {
                             GlobalVar.GameState = "Playing";
                         }
-                        else if (menus.getMenuState() == "OptionsMenu" || menus.getMenuState() == "SaveSlotMenu")
+                        else if (menus.getMenuState() == "OptionsMenu" || menus.getMenuState() == "LoadProfileMenu" || menus.getMenuState() == "LevelSelect")
                         {
                             if (GlobalVar.PreviousGameState == "Playing")
                                 menus.SetMenu("PauseMenu");
@@ -327,9 +327,9 @@ namespace Evolo
                         {
                             menus.SetMenu("OptionsMenu");
                         }
-                        else
+                        else if (menus.getMenuState() == "CustomLevelSelect")
                         {
-                            //menus.SetMenu(menus.getPreviousMenuState());
+                            menus.SetMenu("LevelSelect");
                         }
                     }
                 }
