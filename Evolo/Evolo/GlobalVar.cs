@@ -15,6 +15,7 @@ namespace Evolo
         static Vector2 _screenSize;
         static Vector2 _scaleSize;
         static int _score;
+        static int _playerProfile;
 
         public static String GameState
         {
@@ -38,6 +39,18 @@ namespace Evolo
             {
                 _optionsArray = value;
              }
+        }
+
+        public static int PlayerProfile
+        {
+            get
+            {
+                return _playerProfile;
+            }
+            set
+            {
+                _playerProfile = value;
+            }
         }
 
         public static String PreviousGameState

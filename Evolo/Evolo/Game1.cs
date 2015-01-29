@@ -156,7 +156,8 @@ namespace Evolo
                 //mainMenuMusic = Content.Load<Song>("Sounds/Music/spacesong2-8");
 
                 menus.LoadContent(this.Content, MenuFont);
-                menus.SetMenu("MainMenu");
+                menus.setLoadProfileFirstStartUp(true);
+                menus.SetMenu("LoadProfileMenu");
 
                 //TEMP LOAD CONTENT
                 background.LoadContent(this.Content);
@@ -220,6 +221,7 @@ namespace Evolo
                                 GlobalVar.Score = 0;
                                 fieldManager.resetGameVariables();
                                 mainMenuTripped = true;
+                                menus.setLoadProfileFirstStartUp(false);
                             }
                             GlobalVar.PreviousGameState = "MainMenu";
                             credits.resetCreditRoll();
