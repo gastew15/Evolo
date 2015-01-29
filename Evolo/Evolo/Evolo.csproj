@@ -93,8 +93,6 @@
     <Compile Include="StarByte\io\ScriptFileReader.cs" />
     <Compile Include="StarByte\io\SpriteSheetReader.cs" />
     <Compile Include="StarByte\misc\FPSManager.cs" />
-    <Compile Include="StarByte\part\Particle.cs" />
-    <Compile Include="StarByte\part\ParticleEffectsHandler.cs" />
     <Compile Include="StarByte\ui\MenuHandler.cs" />
     <Compile Include="StarByte\ui\PopUpHandler.cs" />
   </ItemGroup>

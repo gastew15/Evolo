@@ -57,7 +57,7 @@ namespace Evolo
 
         //Game
         String version = "Build V: 1.1.8.2"; // Major, Minor, Build, Revision #
-        Boolean tripped = false; //Boolean to chekc to see if the menus are active
+        Boolean mainMenuTripped = false; //Boolean to chekc to see if the menus are active
         const int defualtWidth = 1280, defualtHeight = 720;
 
         //Keys
@@ -70,7 +70,7 @@ namespace Evolo
         Boolean songTripped;
 
         //Credits
-        String[] creditsStringArray = new String[10] { "CREDITS", "Team", "Gavin Stewart - StarByte Designer & Lead Programer", "Kurtis Jones - Main Artist & Generation Programer", "Dalton Jones - Supporting Programer & Artist", "Josh Estrada - Programer & Tester", "A Special Thanks To", "Rb Witaker for helpful guides when we needed them", "AND", "To You The Player!" };
+        String[] creditsStringArray = new String[10] { "CREDITS", "Team", "G. Stewart - StarByte Designer & Lead Programer", "K. Jones - Main Artist & Generation Programer", "D. Jones - Supporting Programer & Artist", "J. Estrada - Programer & Tester", "A Special Thanks To", "D. Ely & The CACC", "AND", "To You The Player!" };
 
         public Game1()
         {
@@ -215,13 +215,14 @@ namespace Evolo
                         if (menus.getMenuState() == "MainMenu")
                         {
                             //Reset Values
-                            if (!tripped)
+                            if (!mainMenuTripped)
                             {
                                 GlobalVar.Score = 0;
                                 fieldManager.resetGameVariables();
-                                tripped = true;
+                                mainMenuTripped = true;
                             }
                             GlobalVar.PreviousGameState = "MainMenu";
+                            credits.resetCreditRoll();
                         }
                         if (songTripped == false)
                         {
@@ -236,7 +237,7 @@ namespace Evolo
                         //MediaPlayer.Pause(mainMenuMusic);
                         fieldManager.Update(gameTime);
                         background.Update(gameTime, milliScecondsElapsedGameTime);
-                        tripped = false;
+                        mainMenuTripped = false;
                         break;
 
                     case "Credits":
