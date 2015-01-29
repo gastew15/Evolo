@@ -62,7 +62,6 @@ namespace Evolo.GameClass
         private Color[] loadProfileMenuColors;
         private GraphicsDeviceManager graphics;
         private SoundEffect menuHoverChangeSoundEffect, menuClickedSoundEffect;
-        private FieldManager field = new FieldManager();
         private SingletonLevelSystem levels = SingletonLevelSystem.getInstance();
         private Boolean loadProfileFirstTimeStartUp;
 
@@ -545,6 +544,7 @@ namespace Evolo.GameClass
                     if (gameLoseMenu.menuNumberSelection() == 1)
                     {
                         GlobalVar.Score = 0;
+                        GlobalVar.ResetGameField = true;
                         GlobalVar.GameState = "Playing";
                     }
                     else if (gameLoseMenu.menuNumberSelection() == 2)
@@ -586,6 +586,7 @@ namespace Evolo.GameClass
                     if (gameWinMenu.menuNumberSelection() == 1)
                     {
                         GlobalVar.Score = 0;
+                        GlobalVar.ResetGameField = true;
                         GlobalVar.GameState = "Playing";
                     }
                     else if (gameWinMenu.menuNumberSelection() == 2)
@@ -621,9 +622,9 @@ namespace Evolo.GameClass
                     else if (levelSelectMenu.menuNumberSelection() != 0 && GlobalVar.HighestLevel >= levelSelectMenu.menuNumberSelection())
                     {
                         GlobalVar.CustomLevel = false;
+                        GlobalVar.ResetGameField = true;
                         levels.setLevel(levelSelectMenu.menuNumberSelection().ToString());
                         levels.Update();
-                        field.resetGameVariables();
                         GlobalVar.GameState = "Playing";
                     }
                     break;

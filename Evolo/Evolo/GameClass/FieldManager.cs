@@ -94,6 +94,7 @@ namespace Evolo.GameClass
         public void Initialize()
         {
             player1SpriteEffects = SpriteEffects.None;
+            levels.setLevel("1");
         }
 
         public void LoadContent(ContentManager Content)
@@ -1137,6 +1138,7 @@ namespace Evolo.GameClass
         public void resetGameVariables()
         {
             //Level System Values
+            levels.Update();
             levelModifier = levels.getLevelMod();
             timer = levels.getTimer() * 1000;
             linesToClear = levels.getLinesToClear();

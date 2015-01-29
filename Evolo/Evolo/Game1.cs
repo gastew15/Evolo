@@ -96,7 +96,6 @@ namespace Evolo
                 var mouseState = Mouse.GetState();
                 var mousePosition = new Point(mouseState.X, mouseState.Y);
                 optionsHandler = new OptionsHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo");
-
                 gameTime = new GameTime();
                 //Loads and sets option values
                 GlobalVar.OptionsArray = optionsHandler.loadOptions();
@@ -204,6 +203,11 @@ namespace Evolo
                 mouseStateCurrent = Mouse.GetState();
                 keybState = Keyboard.GetState();
 
+                if (GlobalVar.ResetGameField == true)
+                {
+                    fieldManager.resetGameVariables();
+                    GlobalVar.ResetGameField = false;
+                }
                 //GameState checking
                 gameState = GlobalVar.GameState;
 

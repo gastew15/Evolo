@@ -13,6 +13,7 @@ namespace Evolo
         static string[] _optionsArray;
         static Boolean _exitGame;
         static Boolean _customLevel;
+        static Boolean _resetGameField;
         static Vector2 _screenSize;
         static Vector2 _scaleSize;
         static String _currentLevel;
@@ -30,6 +31,18 @@ namespace Evolo
             set
             {
                 _gameState = value;
+            }
+        }
+
+        public static Boolean ResetGameField
+        {
+            get
+            {
+                return _resetGameField;
+            }
+            set
+            {
+                _resetGameField = value;
             }
         }
 
