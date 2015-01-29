@@ -120,7 +120,10 @@ namespace StarByte.io
             String[] writeLineData = new String[numberOfSaveSlots * numberOfLinesPerSlot];
             int runThroughs = 0;
 
-            writeLineData = previousLineData;
+            for (int j = 0; j < previousLineData.Length; j++)
+            {
+                writeLineData[j] = DecryptData(previousLineData[j], passPhrase);
+            }
 
             for (int i = (saveSlot - 1) * numberOfLinesPerSlot; i < (saveSlot - 1) * numberOfLinesPerSlot + numberOfLinesPerSlot; i++)
             {
