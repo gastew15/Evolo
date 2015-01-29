@@ -718,13 +718,19 @@ namespace Evolo.GameClass
                     //Checking the lines from the Lowest block that just feel to 4 lines above to make sure all lines that could be filled are accounted for
                     for (int l = 0; l < 4; l++)
                     {
-                        for (int i = 0; i < gameField.GetLength(0); i++)
+                        for (int i = 3; i < gameField.GetLength(0) - 3; i++)
                         {
-                            if ((i > 2 && i < gameField.GetLength(0) - 3) && (absTetrominoBlockFarthestDown - 3 > 0 && (absTetrominoBlockFarthestDown - 3) + l < gameField.GetLength(1)))
+                            if ((i >= 0 && i < gameField.GetLength(0)) && ((absTetrominoBlockFarthestDown - 3) + l >= 0 && (absTetrominoBlockFarthestDown - 3) + l < gameField.GetLength(1)))
                             {
                                 //Where the loop checks to see if the line is not filled
                                 if (gameField[i, (absTetrominoBlockFarthestDown - 3) + l] == false)
+                                {
                                     isfilled[l] = false;
+                                }
+                            }
+                            else
+                            {
+                                isfilled[l] = false;
                             }
                         }
                     }
@@ -862,7 +868,7 @@ namespace Evolo.GameClass
                     activeTetromino += 1;
                     tetromino.Add(new Tetromino(tetristype, blockTexture));
                     tetrominoGridPos.Add(new Vector2(28.5f, 4));
-                    tetrominoGridPos[activeTetromino] = new Vector2(13, 0);
+                    tetrominoGridPos[activeTetromino] = new Vector2(12, 0);
                     tetrominoRotation = 0;
                     tetrominoLastRotation = 0;
 
@@ -993,6 +999,7 @@ namespace Evolo.GameClass
             {
                 tetromino[k].Update(tetrominoGridPos[k], gridStartPos, GlobalVar.ScaleSize);
             }
+
             //Block Preview Position
             float farthestLeft = float.MaxValue, farthestRight = float.MinValue;
 
@@ -1007,10 +1014,7 @@ namespace Evolo.GameClass
                     farthestRight = tetromino[tetromino.Count - 1].getPositions()[p].X;
                 }
             }
-            tetrominoGridPos[tetromino.Count - 1] = new Vector2(
-                                                        //112                                       (3 * 32) / 2 = 48     112 + 48 = 160     1280 - 160 = 1130      1130 / 32 = 35.3125
-                (GlobalVar.ScreenSize.X - (    ((224 * GlobalVar.ScaleSize.X) / 2) + ((((farthestRight - farthestLeft) + 1) * blockTexture.Width) / 2)  )  ) / blockTexture.Width
-                , 4);
+            tetrominoGridPos[tetromino.Count - 1] = new Vector2((GlobalVar.ScreenSize.X - (    ((224 * GlobalVar.ScaleSize.X) / 2) + ((((farthestRight - farthestLeft) + 1) * blockTexture.Width) / 2)  )  ) / blockTexture.Width , 4);
             tetromino[tetromino.Count - 1].Update(tetrominoGridPos[tetromino.Count - 1], new Vector2(0, gridStartPos.Y), GlobalVar.ScaleSize);
 
             rotationTestTetromino.Update(tetrominoGridPos[activeTetromino], gridStartPos, GlobalVar.ScaleSize);
@@ -1149,7 +1153,7 @@ namespace Evolo.GameClass
             tetristype = random.Next(1, 8);
             tetrominoHistoryAddItem(tetristype);
             tetromino.Add(new Tetromino(tetristype, blockTexture));
-            tetrominoGridPos.Add(new Vector2(13, 0));
+            tetrominoGridPos.Add(new Vector2(12, 0));
 
             linesToClear = levels.getLinesToClear();
 
