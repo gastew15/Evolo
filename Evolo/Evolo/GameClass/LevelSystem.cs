@@ -13,7 +13,7 @@ namespace Evolo.GameClass
     /// </summary>
     class LevelSystem
     {
-        private int levelNum = 1;
+        private String levelName = "1";
         private Vector2 playerStartPos;
         private Vector2 startPlatPos;
         private Vector2 endPlatPos;
@@ -21,14 +21,9 @@ namespace Evolo.GameClass
         private int timer;
         private int lineToClear;
 
-        public LevelSystem()
-        {
-
-        }
-
         public void Update()
         {
-            StreamReader sr = new StreamReader("Levels/Level" + levelNum + ".dat");
+            StreamReader sr = new StreamReader("Levels/Level" + levelName + ".dat");
             string[] paramaters = sr.ReadToEnd().Split(';');
             sr.Close();
 
@@ -41,9 +36,9 @@ namespace Evolo.GameClass
 
         }
 
-        public void setLevel(int levelNum)
+        public void setLevel(String levelName)
         {
-            this.levelNum = levelNum;
+            this.levelName = levelName;
         }
 
         public Vector2 getPlayerPos()

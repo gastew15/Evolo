@@ -215,8 +215,12 @@ namespace Evolo
                         if (menus.getMenuState() == "MainMenu")
                         {
                             //Reset Values
-                            GlobalVar.Score = 0;
-                            fieldManager.resetGameVariables();
+                            if (!tripped)
+                            {
+                                GlobalVar.Score = 0;
+                                fieldManager.resetGameVariables();
+                                tripped = true;
+                            }
                             GlobalVar.PreviousGameState = "MainMenu";
                         }
                         if (songTripped == false)
@@ -238,11 +242,9 @@ namespace Evolo
                     case "Credits":
                         background.Update(gameTime, milliScecondsElapsedGameTime);
                         //MediaPlayer.Pause(mainMenuMusic);
-                        tripped = false;
                         break;
 
                     case "SplashScreen":
-                        //TEMP UPDATE
                         splashScreen.Update(milliScecondsElapsedGameTime, orginalSplashScreenStartTime);
                         if (splashScreen.getSplashScreenOver() == true)
                             GlobalVar.GameState = "MenuScreen";
@@ -261,7 +263,6 @@ namespace Evolo
                             menus.SetMenu("GameLoseMenu");
                         }
                         background.Update(gameTime, milliScecondsElapsedGameTime);
-                        //tripped = true;
                         break;
                 }
 

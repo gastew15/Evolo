@@ -570,7 +570,7 @@ namespace Evolo.GameClass
                     switch (levelSelectMenu.menuNumberSelection())
                     {
                         case 1:
-                            levels.setLevel(1);
+                            levels.setLevel("1");
                             GlobalVar.GameState = "Playing";
                             break;
                         case 2:
@@ -626,7 +626,7 @@ namespace Evolo.GameClass
                     switch (customLevelMenu.menuNumberSelection())
                     {
                         case 1:
-                            levels.setLevel(1);
+                            levels.setLevel("1");
                             GlobalVar.GameState = "Playing";
                             break;
                         case 2:

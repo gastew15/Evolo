@@ -106,8 +106,6 @@ namespace Evolo.GameClass
             platformTexture = Content.Load<Texture2D>("Sprites and pictures/Platform");
             hudTexture = Content.Load<Texture2D>("Sprites and pictures/GameHud");
             //Teromeno Set Up Reference
-
-            resetGameVariables();
         }
 
         public void Update(GameTime gameTime)
