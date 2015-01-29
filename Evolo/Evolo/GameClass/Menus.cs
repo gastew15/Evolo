@@ -15,13 +15,10 @@ namespace Evolo.GameClass
 {
     class Menus
     {
-
         private DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
         private int customMenuPageMod, fileAmount, customLevelFileCount; //for changing pages and displaying more levels
         private String[] customLevelList;
-
         private Boolean gameWin = false;
-
         private MenuHandler mainMenu, optionsMenu, optionsResolutionMenu, optionsKeybindingMenuPage1, optionsKeybindingMenuPage2, pauseMenu, debugMenu, loadProfileMenu, gameLoseMenu, gameWinMenu, levelSelectMenu, customLevelMenu;
         private WindowSizeManager windowSizeManager;
         private SpriteFont font;
@@ -534,7 +531,7 @@ namespace Evolo.GameClass
                         GlobalVar.ScaleSize,
                         mainMenuColors,
                         Convert.ToBoolean(GlobalVar.OptionsArray[12]));
-                    if (gameWinMenu.menuNumberSelection() != 0)
+                    if (gameLoseMenu.menuNumberSelection() != 0)
                     {
                         if (!GlobalVar.CustomLevel)
                         {
@@ -542,7 +539,7 @@ namespace Evolo.GameClass
                             {
                                 GlobalVar.HighScore = GlobalVar.Score;
                             }
-                            saveHandler.saveData(new String[] { GlobalVar.HighScore.ToString(), GlobalVar.HighestLevel.ToString() }, GlobalVar.PlayerProfile);
+                            saveHandler.saveData(new String[] { GlobalVar.HighestLevel.ToString(), GlobalVar.HighScore.ToString() }, GlobalVar.PlayerProfile);
                         }
                     }
                     if (gameLoseMenu.menuNumberSelection() == 1)
@@ -624,7 +621,8 @@ namespace Evolo.GameClass
                     else if (levelSelectMenu.menuNumberSelection() != 0 && GlobalVar.HighestLevel >= levelSelectMenu.menuNumberSelection())
                     {
                         GlobalVar.CustomLevel = false;
-                        levels.setLevel(levelSelectMenu.menuNumberSelection().ToString());
+                        GlobalVar.CurrentLevel = levelSelectMenu.menuNumberSelection().ToString();
+                        levels.setLevel(GlobalVar.CurrentLevel);
                         GlobalVar.GameState = "Playing";
                     }
                     break;
@@ -676,7 +674,8 @@ namespace Evolo.GameClass
                     else if (customLevelMenu.menuNumberSelection() != 0 && !(customLevelMenuText[customLevelMenu.menuNumberSelection() - 1].Equals("Blank")))
                     {
                         GlobalVar.CustomLevel = true;
-                        levels.setLevel(customLevelMenuText[customLevelMenu.menuNumberSelection() - 1]);
+                        GlobalVar.CurrentLevel = customLevelMenuText[customLevelMenu.menuNumberSelection() - 1];
+                        levels.setLevel(GlobalVar.CurrentLevel);
                         GlobalVar.GameState = "Playing";
                     }
                     break;
