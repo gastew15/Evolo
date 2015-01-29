@@ -622,8 +622,9 @@ namespace Evolo.GameClass
                     else if (levelSelectMenu.menuNumberSelection() != 0 && GlobalVar.HighestLevel >= levelSelectMenu.menuNumberSelection())
                     {
                         GlobalVar.CustomLevel = false;
+                        GlobalVar.CurrentLevel = levelSelectMenu.menuNumberSelection().ToString();
                         GlobalVar.ResetGameField = true;
-                        levels.setLevel(levelSelectMenu.menuNumberSelection().ToString());
+                        levels.setLevel(GlobalVar.CurrentLevel);
                         levels.Update();
                         GlobalVar.GameState = "Playing";
                     }
