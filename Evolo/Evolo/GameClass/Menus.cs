@@ -66,7 +66,7 @@ namespace Evolo.GameClass
         private GraphicsDeviceManager graphics;
         private SoundEffect menuHoverChangeSoundEffect, menuClickedSoundEffect;
         private FieldManager field = new FieldManager();
-        private LevelSystem levels = new LevelSystem();
+        private SingletonLevelSystem levels = SingletonLevelSystem.getInstance();
         private Boolean loadProfileFirstTimeStartUp;
 
         public Menus(GraphicsDeviceManager graphics)
@@ -625,6 +625,8 @@ namespace Evolo.GameClass
                     {
                         GlobalVar.CustomLevel = false;
                         levels.setLevel(levelSelectMenu.menuNumberSelection().ToString());
+                        levels.Update();
+                        field.resetGameVariables();
                         GlobalVar.GameState = "Playing";
                     }
                     break;

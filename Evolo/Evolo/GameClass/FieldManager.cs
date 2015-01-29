@@ -77,18 +77,18 @@ namespace Evolo.GameClass
         //Platform Variables
         private Texture2D platformTexture;
         private Vector2 endPlatformGridPos, startPlatformGridPos;
-        
+
         //temp level variables
         private double levelModifier;
 
         //Level System variables
-        private LevelSystem levels = new LevelSystem();
+        private SingletonLevelSystem levels = SingletonLevelSystem.getInstance();
 
         #endregion
 
         public FieldManager()
         {
-            
+
         }
 
         public void Initialize()
@@ -108,7 +108,7 @@ namespace Evolo.GameClass
         }
 
         public void Update(GameTime gameTime)
-        {      
+        {
             #region Local Variable Reseting
 
             //Adds time since last update to the elapsed time for the tetromino
@@ -515,14 +515,14 @@ namespace Evolo.GameClass
                 //        keyEnterDown = true;
                 //    }
                 //}
-               /* if (keyEnterDown == true)
-                {
-                    if (Keyboard.GetState().IsKeyDown(Keys.Enter))
-                    {
-                        keyEnterDown = false;
-                */
-                        GlobalVar.GameState = "GameOver";
-                        GlobalVar.Score = (int)(((timer - milisecondsElapsedTime) * .75 * levelModifier)); 
+                /* if (keyEnterDown == true)
+                 {
+                     if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                     {
+                         keyEnterDown = false;
+                 */
+                GlobalVar.GameState = "GameOver";
+                GlobalVar.Score = (int)(((timer - milisecondsElapsedTime) * .75 * levelModifier));
                 /*
                     }
                 }
@@ -696,7 +696,7 @@ namespace Evolo.GameClass
 
                         if (Keyboard.GetState().IsKeyDown(Keys.Down))
                         {
-                        GlobalVar.Score += 2;
+                            GlobalVar.Score += 2;
                         }
                     }
                 }
@@ -834,7 +834,7 @@ namespace Evolo.GameClass
                             }
 
                             //Moves all the blocks down
-                            for(int j = (absTetrominoBlockFarthestDown - 3) + n; j > 2; j--)
+                            for (int j = (absTetrominoBlockFarthestDown - 3) + n; j > 2; j--)
                             {
                                 for (int e = 3; e < gameField.GetLength(0) - 3; e++)
                                 {
@@ -886,7 +886,7 @@ namespace Evolo.GameClass
             #region Player Movement / Key Input
 
             //Left
-            if (keyADown == true && playerCanNotMoveLeft == false && player1GridPos.X > 0 )
+            if (keyADown == true && playerCanNotMoveLeft == false && player1GridPos.X > 0)
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.A))
                 {
@@ -1011,7 +1011,7 @@ namespace Evolo.GameClass
                     farthestRight = tetromino[tetromino.Count - 1].getPositions()[p].X;
                 }
             }
-            tetrominoGridPos[tetromino.Count - 1] = new Vector2((GlobalVar.ScreenSize.X - (    ((224 * GlobalVar.ScaleSize.X) / 2) + ((((farthestRight - farthestLeft) + 1) * (blockTexture.Width * GlobalVar.ScaleSize.X)) / 2)  )  ) / (blockTexture.Width * GlobalVar.ScaleSize.X), 4);
+            tetrominoGridPos[tetromino.Count - 1] = new Vector2((GlobalVar.ScreenSize.X - (((224 * GlobalVar.ScaleSize.X) / 2) + ((((farthestRight - farthestLeft) + 1) * (blockTexture.Width * GlobalVar.ScaleSize.X)) / 2))) / (blockTexture.Width * GlobalVar.ScaleSize.X), 4);
             tetromino[tetromino.Count - 1].Update(tetrominoGridPos[tetromino.Count - 1], new Vector2(0, gridStartPos.Y), GlobalVar.ScaleSize);
 
             rotationTestTetromino.Update(tetrominoGridPos[activeTetromino], gridStartPos, GlobalVar.ScaleSize);
@@ -1085,14 +1085,14 @@ namespace Evolo.GameClass
                 {
                     spriteBatch.DrawString(font, "AbsLeft: " + absTetrominoBlockFarthestLeft.ToString() + "\n" + "AbsRight: " + absTetrominoBlockFarthestRight.ToString() + "\n" + "AbsDown: " + absTetrominoBlockFarthestDown.ToString() + debugStringData + "\nMove Left: " + !tetrominoCanNotMoveLeft + "\nMove Right: " + !tetrominoCanNotMoveRight + "\nMove Down: " + !tetrominoCanNotMoveDown, new Vector2(10 * GlobalVar.ScaleSize.X, 10 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                     spriteBatch.DrawString(font, "Player Pos: " + "X: " + player1GridPos.X + " Y: " + player1GridPos.Y + "\nMove Left: " + !playerCanNotMoveLeft + "\nMove Right: " + !playerCanNotMoveRight + "\nMove Down: " + !playerCanNotMoveDown + "\nMove Up: " + !playerCanNotMoveUp, new Vector2(10 * GlobalVar.ScaleSize.X, 225 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-              
+
                     for (int p = 0; p < tetrominoHistory.Length; p++)
                     {
                         spriteBatch.DrawString(font, tetrominoHistory[p].ToString(), new Vector2((10 + (10 * p)) * GlobalVar.ScaleSize.X, 400 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                     }
                 }
 
-                
+
                 //ghost rotationTestTetromino collsion Block Debug drawing
                 //rotationTestTetromino.setColorTemp(Color.Black);
                 //rotationTestTetromino.Draw(spriteBatch);
@@ -1111,7 +1111,7 @@ namespace Evolo.GameClass
                  */
 
                 player1.Draw(spriteBatch, player1SpriteEffects);
-       
+
                 spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (endPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (endPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), null, Color.White, 0f, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (startPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (startPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), null, Color.White, 0f, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
             }
@@ -1136,9 +1136,13 @@ namespace Evolo.GameClass
 
         public void resetGameVariables()
         {
-            levels.Update();
+            //Level System Values
             levelModifier = levels.getLevelMod();
             timer = levels.getTimer() * 1000;
+            linesToClear = levels.getLinesToClear();
+            player1GridPos = levels.getPlayerPos();
+            endPlatformGridPos = levels.getEndPlatPos();
+            startPlatformGridPos = levels.getStartPlatPos();
 
             gameField = new Boolean[26, 22];
             milisecondsElapsedTetrominoTime = 0;
@@ -1160,8 +1164,6 @@ namespace Evolo.GameClass
             tetromino.Add(new Tetromino(tetristype, blockTexture));
             tetrominoGridPos.Add(new Vector2(12, 0));
 
-            linesToClear = levels.getLinesToClear();
-
             //Rotation Tetromino Test Set Up
             rotationTestTetromino = new Tetromino(tetristype, blockTexture);
 
@@ -1177,7 +1179,7 @@ namespace Evolo.GameClass
 
             //Temp levelSP
             //levelStartPoint = new Vector2(0, startPlatformGridPos.Y - 1);
-            
+
 
 
             tetrominoBlockLastPositions = new Vector2[tetromino[activeTetromino].getPositions().Length];
@@ -1187,11 +1189,7 @@ namespace Evolo.GameClass
 
             //Player Set Up
             player1 = new Player(playerTexture);
-            player1GridPos = levels.getPlayerPos();
 
-            //Platform Set Up
-            endPlatformGridPos = levels.getEndPlatPos();
-            startPlatformGridPos = levels.getStartPlatPos();
             for (int i = 0; i < 3; i++)
             {
                 gameField[(int)endPlatformGridPos.X + i, (int)endPlatformGridPos.Y] = true;
