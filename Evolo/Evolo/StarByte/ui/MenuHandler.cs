@@ -149,7 +149,7 @@ namespace StarByte.ui
                     menuNumberHoverPrevious = menuNumberHover;
                     if (soundNotMuted == true)
                     {
-                        //menuClickedSoundEffect.Play();
+                        menuClickedSoundEffect.Play();
                     }
                 }
             }
@@ -182,7 +182,7 @@ namespace StarByte.ui
                     //testButtonDrawColor = Color.Red;
                     if (soundNotMuted == true)
                     {
-                        //menuClickedSoundEffect.Play();
+                        menuClickedSoundEffect.Play();
                     }
 
                     menuNumberSelected = j + 1;
@@ -212,7 +212,7 @@ namespace StarByte.ui
             {
                 if (soundNotMuted == true)
                 {
-                    //menuHoverChangeSoundEffect.Play();
+                    menuHoverChangeSoundEffect.Play();
                 }
             }
 
@@ -289,7 +289,7 @@ namespace StarByte.ui
                     menuNumberHoverPrevious = menuNumberHover;
                     if (soundNotMuted == true)
                     {
-                        //menuClickedSoundEffect.Play();
+                        menuClickedSoundEffect.Play();
                     }
                 }
             }
@@ -322,7 +322,7 @@ namespace StarByte.ui
                     //testButtonDrawColor = Color.Red;
                     if (soundNotMuted == true)
                     {
-                        //menuClickedSoundEffect.Play();
+                        menuClickedSoundEffect.Play();
                     }
 
                     menuNumberSelected = j + 1;
@@ -352,7 +352,7 @@ namespace StarByte.ui
             {
                 if (soundNotMuted == true)
                 {
-                    //menuHoverChangeSoundEffect.Play();
+                    menuHoverChangeSoundEffect.Play();
                 }
             }
 
