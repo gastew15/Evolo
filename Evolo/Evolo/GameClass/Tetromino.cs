@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-
 /**
  * Evolo tetromino handler to handle the artibutes and movement of indivudal blocks with-in the tetromino
  * Author: Dalton, Josh, Gavin, Kurtis

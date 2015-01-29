@@ -12,9 +12,13 @@ namespace Evolo
         static String _previousGameState;
         static string[] _optionsArray;
         static Boolean _exitGame;
+        static Boolean _customLevel;
         static Vector2 _screenSize;
         static Vector2 _scaleSize;
+        static String _currentLevel;
         static int _score;
+        static int _highScore;
+        static int _highestLevel;
         static int _playerProfile;
 
         public static String GameState
@@ -26,6 +30,54 @@ namespace Evolo
             set
             {
                 _gameState = value;
+            }
+        }
+
+        public static Boolean CustomLevel
+        {
+            get
+            {
+                return _customLevel;
+            }
+            set
+            {
+                _customLevel = value;
+            }
+        }
+
+        public static String CurrentLevel
+        {
+            get
+            {
+                return _currentLevel;
+            }
+            set
+            {
+                _currentLevel = value;
+            }
+        }
+
+        public static int HighScore
+        {
+            get
+            {
+                return _highScore;
+            }
+            set
+            {
+                _highScore = value;
+            }
+        }
+
+        public static int HighestLevel
+        {
+            get
+            {
+                return _highestLevel;
+            }
+            set
+            {
+                _highestLevel = value;
             }
         }
 

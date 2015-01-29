@@ -19,6 +19,7 @@ namespace StarByte.io
         private String writeLocation;
         private static readonly byte[] initVectorBytes = Encoding.ASCII.GetBytes("j8hek4rl93hjtq9b");
         private static readonly string passPhrase = "Hg564jkDhyt3";
+        private String[] defualtData;
 
         // This constant is used to determine the keysize of the encryption algorithm.
         private const int keysize = 256;
@@ -27,10 +28,10 @@ namespace StarByte.io
          * Main Constructor for the SaveHandler class
          * Handles all of the first time start up information
          */
-        public SaveHandler(int numberOfSaveSlots, int numberOfLinesPerSlot, String fileLocation, String fileName)
+        public SaveHandler(int numberOfSaveSlots, String[] defualtData, String fileLocation, String fileName)
         {
             this.numberOfSaveSlots = numberOfSaveSlots;
-            this.numberOfLinesPerSlot = numberOfLinesPerSlot;
+            this.numberOfLinesPerSlot = defualtData.Length;
             this.writeLocation = fileLocation + "\\" + fileName;
 
             Boolean fileOk;
@@ -68,9 +69,12 @@ namespace StarByte.io
                 {
                     StreamWriter sw = new StreamWriter(writeLocation, false, Encoding.ASCII);
 
-                    for (int j = 0; j < numberOfSaveSlots * numberOfLinesPerSlot; j++)
+                    for (int j = 0; j < numberOfSaveSlots; j++)
                     {
-                        sw.WriteLine(" ");
+                        for (int i = 0; i < numberOfLinesPerSlot; i++)
+                        {
+                            sw.WriteLine(EncryptData(defualtData[i], passPhrase));
+                        }
                     }
 
                     sw.Close();
