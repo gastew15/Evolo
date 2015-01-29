@@ -25,7 +25,6 @@ namespace Evolo.GameClass
         private Boolean pausedLast;
         private OptionsHandler optionsHandler;
         private SaveHandler saveHandler;
-
         private String menuState;
         private String previousMenuState;
         private String storedRealPreviousMenuState;
@@ -549,7 +548,6 @@ namespace Evolo.GameClass
                     }
                     else if (gameLoseMenu.menuNumberSelection() == 2)
                     {
-                        GlobalVar.GameState = "MenuScreen";
                         menuState = "MainMenu";
                     }
                     break;
@@ -592,7 +590,6 @@ namespace Evolo.GameClass
                     else if (gameWinMenu.menuNumberSelection() == 2)
                     {
                         menuState = "MainMenu";
-                        GlobalVar.GameState = "MenuScreen";
                     }
                     break;
                 #endregion

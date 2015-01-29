@@ -20,6 +20,7 @@ namespace Evolo.GameClass
         #region Variables
 
         private Boolean gameWin;
+        private Boolean gameOver;
         //Gamefield Variables
         private Boolean[,] gameField = new Boolean[26, 22];
         private Vector2 gridStartPos;
@@ -82,7 +83,7 @@ namespace Evolo.GameClass
         private double levelModifier;
 
         //Level System variables
-        private SingletonLevelSystem levels = SingletonLevelSystem.getInstance();
+        private LevelSystem levels = new LevelSystem();
 
         #endregion
 
@@ -494,14 +495,14 @@ namespace Evolo.GameClass
             if (gameField[(int)player1GridPos.X, (int)player1GridPos.Y] == true)
             {
                 gameWin = false;
-                GlobalVar.GameState = "GameOver";
+                gameOver = true;
             }
 
             //Player Reaching End Platform Check
             if ((player1GridPos.Y == (endPlatformGridPos.Y - 1) && (player1GridPos.X == endPlatformGridPos.X) || (player1GridPos.X == endPlatformGridPos.X + 1) || (player1GridPos.X == endPlatformGridPos.X + 2)) && linesToClear == 0)
             {
                 gameWin = true;
-                GlobalVar.GameState = "GameOver";
+                gameOver = true;
                 //if (keyEnterDown == true)
                 //{
                 //    if (Keyboard.GetState().IsKeyDown(Keys.Enter))
@@ -522,7 +523,6 @@ namespace Evolo.GameClass
                      {
                          keyEnterDown = false;
                  */
-                GlobalVar.GameState = "GameOver";
                 GlobalVar.Score = (int)(((timer - milisecondsElapsedTime) * .75 * levelModifier));
                 /*
                     }
@@ -872,7 +872,8 @@ namespace Evolo.GameClass
 
                     if (tetrominoGridPos[activeTetromino - 1].Y == 0)
                     {
-                        GlobalVar.GameState = "GameOver";
+                        gameOver = true;
+                        gameWin = false;
                     }
 
                     rotationTestTetromino.setTetrisType(tetromino[activeTetromino].getTetrisType());
@@ -1026,7 +1027,8 @@ namespace Evolo.GameClass
             //checking to see if timer is 0
             if ((timer - milisecondsElapsedTime) / 1000 <= 0)
             {
-                GlobalVar.GameState = "GameOver";
+                gameOver = true;
+                gameWin = false;
             }
         }
 
@@ -1122,10 +1124,17 @@ namespace Evolo.GameClass
         {
             return gameField;
         }
+
         public Boolean getGameWin()
         {
             return gameWin;
         }
+
+        public Boolean getGameOver()
+        {
+            return gameOver;
+        }
+
         private void tetrominoHistoryAddItem(int tetrominoType)
         {
             for (int i = 3; i > 0; i--)
@@ -1146,6 +1155,8 @@ namespace Evolo.GameClass
             endPlatformGridPos = levels.getEndPlatPos();
             startPlatformGridPos = levels.getStartPlatPos();
 
+            gameWin = false;
+            gameOver = false;
             gameField = new Boolean[26, 22];
             milisecondsElapsedTetrominoTime = 0;
             milisecondsElapsedPlayerTime = 0;

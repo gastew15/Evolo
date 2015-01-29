@@ -199,7 +199,6 @@ namespace Evolo
         {
             try
             {
-
                 mouseStateCurrent = Mouse.GetState();
                 keybState = Keyboard.GetState();
 
@@ -208,6 +207,7 @@ namespace Evolo
                     fieldManager.resetGameVariables();
                     GlobalVar.ResetGameField = false;
                 }
+
                 //GameState checking
                 gameState = GlobalVar.GameState;
 
@@ -223,7 +223,6 @@ namespace Evolo
                             if (!mainMenuTripped)
                             {
                                 GlobalVar.Score = 0;
-                                fieldManager.resetGameVariables();
                                 mainMenuTripped = true;
                                 menus.setLoadProfileFirstStartUp(false);
                             }
@@ -243,6 +242,20 @@ namespace Evolo
                         //MediaPlayer.Pause(mainMenuMusic);
                         fieldManager.Update(gameTime);
                         background.Update(gameTime, milliScecondsElapsedGameTime);
+
+                        if (fieldManager.getGameOver())
+                        {
+                            GlobalVar.GameState = "MenuScreen";
+                            if (fieldManager.getGameWin())
+                            {
+                                menus.SetMenu("GameWinMenu");
+                            }
+                            else
+                            {
+                                menus.SetMenu("GameLoseMenu");
+                            }
+                        }
+
                         mainMenuTripped = false;
                         break;
 
@@ -255,20 +268,6 @@ namespace Evolo
                         splashScreen.Update(milliScecondsElapsedGameTime, orginalSplashScreenStartTime);
                         if (splashScreen.getSplashScreenOver() == true)
                             GlobalVar.GameState = "MenuScreen";
-                        background.Update(gameTime, milliScecondsElapsedGameTime);
-                        break;
-                    case "GameOver":
-                        menus.Update(gameTime, mouseStateCurrent, mouseStatePrevious, milliScecondsElapsedGameTime);
-                        fieldManager.resetGameVariables();
-                        
-                        if (fieldManager.getGameWin() == true)
-                        {
-                            menus.SetMenu("GameWinMenu");
-                        }
-                        else
-                        {
-                            menus.SetMenu("GameLoseMenu");
-                        }
                         background.Update(gameTime, milliScecondsElapsedGameTime);
                         break;
                 }
@@ -389,14 +388,9 @@ namespace Evolo
                         background.Draw(spriteBatch, SeqoeUIMonoNormal);
                         fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         break;
-                    case "GameOver":
-                        background.Draw(spriteBatch, SeqoeUIMonoNormal);
-                        fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
-                        menus.Draw(spriteBatch);
-                        break;
                     case "MenuScreen":
                         background.Draw(spriteBatch, SeqoeUIMonoNormal);
-                        if (menus.getMenuState() == "PauseMenu")
+                        if (menus.getMenuState() == "PauseMenu" || menus.getMenuState() == "GameWinMenu" || menus.getMenuState() == "GameLoseMenu")
                         {
                             fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         }
