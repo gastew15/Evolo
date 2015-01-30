@@ -22,7 +22,7 @@ namespace Evolo.GameClass
         private Vector2 playerStartPos;
         private Vector2 startPlatPos;
         private Vector2 endPlatPos;
-        private int levelMod;
+        private double levelMod;
         private int timer;
         private int lineToClear;
         
@@ -52,7 +52,7 @@ namespace Evolo.GameClass
                 playerStartPos = new Vector2(Convert.ToInt32(paramaters[0].Split(',')[0]), Convert.ToInt32(paramaters[0].Split(',')[1]));
                 startPlatPos = new Vector2(Convert.ToInt32(paramaters[1].Split(',')[0]), Convert.ToInt32(paramaters[1].Split(',')[1]));
                 endPlatPos = new Vector2(Convert.ToInt32(paramaters[2].Split(',')[0]), Convert.ToInt32(paramaters[2].Split(',')[1]));
-                levelMod = Convert.ToInt32(paramaters[3]);
+                levelMod = Convert.ToDouble(paramaters[3]);
                 timer = Convert.ToInt32(paramaters[4]);
                 lineToClear = Convert.ToInt32(paramaters[5]);
             }
@@ -65,19 +65,19 @@ namespace Evolo.GameClass
                     switch (levelName)
                     {
                         case "Level1":
-                            stream.Write("0,14;0,15;23,10;1;390;10");
+                            stream.Write("0,16;0,17;23,15;1;330;10");
                             break;
                         case "Level2":
-                            stream.Write("0,19;0,20;23,10;2;450;15");
+                            stream.Write("0,13;0,14;23,18;1.25;420;15");
                             break;
                         case "Level3":
-                            stream.Write("0,14;0,15;23,10;1;390;10");
+                            stream.Write("0,14;0,15;23,10;1.5;590;20");
                             break;
                         case "Level4":
-                            stream.Write("0,19;0,20;23,10;2;450;15");
+                            stream.Write("0,9;0,10;23,15;1.75;600;25");
                             break;
                         case "Level5":
-                            stream.Write("0,14;0,15;23,10;1;390;10");
+                            stream.Write("0,14;0,15;23,8;2.5;800;40");
                             break;
                     }
 
@@ -111,7 +111,7 @@ namespace Evolo.GameClass
             return timer;
         }
 
-        public int getLevelMod()
+        public double getLevelMod()
         {
             return levelMod;
         }
