@@ -30,8 +30,10 @@ namespace Evolo.GameClass
         private int milisecondsElapsedTetrominoTime = 0;
         private int milisecondsTetrominoFallTime = 150;
         private int milisecondsTetrominoLockDelayTime = 400;
-        private int milisecondsElapsedPlayerTime = 0;
-        private int milisecondsPlayerGravityTime = 200;
+        private int milisecondsElapsedPlayerTime1 = 0;
+        private int milisecondsElapsedPlayerTime2 = 0;
+        private int milisecondsPlayerGravityTime1 = 200;
+        private int milisecondsPlayerGravityTime2 = 450;
         private int timer;
         private int milisecondsElapsedTime = 0;
 
@@ -116,7 +118,7 @@ namespace Evolo.GameClass
 
             //Adds time since last update to the elapsed time for the tetromino
             milisecondsElapsedTetrominoTime += gameTime.ElapsedGameTime.Milliseconds;
-            milisecondsElapsedPlayerTime += gameTime.ElapsedGameTime.Milliseconds;
+            milisecondsElapsedPlayerTime1 += gameTime.ElapsedGameTime.Milliseconds;
             milisecondsElapsedTime += gameTime.ElapsedGameTime.Milliseconds;
             milisecondsElapsedKeyA += gameTime.ElapsedGameTime.Milliseconds;
             milisecondsElapsedKeyD += gameTime.ElapsedGameTime.Milliseconds;
@@ -949,28 +951,28 @@ namespace Evolo.GameClass
             //Player Jump Logic
             if (player1Jump == true && !playerCanNotMoveUp)
             {
-                if (gameTime.TotalGameTime.Milliseconds % 220 == 0)
+               if (milisecondsElapsedPlayerTime2 - milisecondsPlayerGravityTime2 >= 0)
                 {
                     if (!playerCanNotMoveDown && player1GridPos.Y < gameField.GetLength(1) - 1)
                     {
                         player1GridPos.Y += 1;
                     }
+                    milisecondsElapsedPlayerTime2 = 0;
                     player1Jump = false;
-
-
                 }
+               milisecondsElapsedPlayerTime2 += gameTime.ElapsedGameTime.Milliseconds;
             }
             else
             {
                 if (player1GridPos.Y < gameField.GetLength(1) && !playerCanNotMoveDown)
                 {
-                    if (milisecondsElapsedPlayerTime - milisecondsPlayerGravityTime >= 0)
+                    if (milisecondsElapsedPlayerTime1 - milisecondsPlayerGravityTime1 >= 0)
                     {
                         if (player1GridPos.Y < gameField.GetLength(1) - 1 && !playerCanNotMoveDown)
                         {
                             player1GridPos.Y += 1;
                         }
-                        milisecondsElapsedPlayerTime -= milisecondsPlayerGravityTime;
+                        milisecondsElapsedPlayerTime1 -= milisecondsPlayerGravityTime1;
                     }
                 }
             }
@@ -1152,7 +1154,7 @@ namespace Evolo.GameClass
 
             //Resets Timers
             milisecondsElapsedTetrominoTime = 0;
-            milisecondsElapsedPlayerTime = 0;
+            milisecondsElapsedPlayerTime1 = 0;
             milisecondsElapsedTime = 0;
 
             //Level System Values
