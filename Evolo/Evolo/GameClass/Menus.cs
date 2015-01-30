@@ -172,8 +172,11 @@ namespace Evolo.GameClass
 
                 foreach (FileInfo file in dInfo.GetFiles())
                 {
-                    customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
-                    fileAmount++;
+                    if (file.ToString() != "Level Template.txt")
+                    {
+                        customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
+                        fileAmount++;
+                    }
                 }
 
             }

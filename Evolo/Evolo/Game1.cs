@@ -78,8 +78,6 @@ namespace Evolo
             Content.RootDirectory = "Content";
 
             IsFixedTimeStep = true;
-
-            errorHandler.WriteError(1, 7, "Application Launch! ");
         }
 
         /// <summary>
