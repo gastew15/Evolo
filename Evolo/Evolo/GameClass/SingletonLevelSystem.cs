@@ -6,8 +6,15 @@ using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
+    /**
+    * Evolo Level System: uses a Singleton pattern to create a level system that will read dat files that contain data on the layout of each level
+    * Author: Dalton
+    * Version: 1/30/15
+    */
+
 namespace Evolo.GameClass
 {
+
     public class SingletonLevelSystem
     {
         private static SingletonLevelSystem SinLevelSys = null;

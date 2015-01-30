@@ -76,7 +76,6 @@
     <Compile Include="GameClass\Background.cs" />
     <Compile Include="GameClass\Credits.cs" />
     <Compile Include="GameClass\FieldManager.cs" />
-    <Compile Include="GameClass\LevelSystem.cs" />
     <Compile Include="GameClass\Menus.cs" />
     <Compile Include="GameClass\OptionsHandler.cs" />
     <Compile Include="GameClass\Player.cs" />

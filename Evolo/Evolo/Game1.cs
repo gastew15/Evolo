@@ -56,7 +56,7 @@ namespace Evolo
         //Variables
 
         //Game
-        String version = "Build V: 1.1.8.2"; // Major, Minor, Build, Revision #
+        String version = "Build V: 1.9.8.5"; // Major, Minor, Build, Revision #
         Boolean mainMenuTripped = false; //Boolean to chekc to see if the menus are active
         const int defualtWidth = 1280, defualtHeight = 720;
 
@@ -70,7 +70,7 @@ namespace Evolo
         Boolean songTripped;
 
         //Credits
-        String[] creditsStringArray = new String[10] { "CREDITS", "Team", "G. Stewart - StarByte Designer & Lead Programer", "K. Jones - Main Artist & Generation Programer", "D. Jones - Supporting Programer & Artist", "J. Estrada - Programer & Tester", "A Special Thanks To", "D. Ely, The CACC and Lake Powell", "AND", "To You The Player!" };
+        String[] creditsStringArray = new String[13] { "CREDITS", "Team", "G. Stewart - StarByte Designer & Lead Programer", "K. Jones - Main Artist & Generation Programer", "D. Jones - Supporting Programer & Artist", "J. Estrada - Programer & Tester", "A Special Thanks To", "D. Ely" , "L. Powell" , "The Beta Testers", "AND", "To You The Player!", "Thank You For Playing!!!" };
 
         public Game1()
         {
