@@ -11,6 +11,12 @@ using System.IO;
 using StarByte.ui;
 using StarByte.io;
 
+/**
+ * Evolo Menu class: Creates every menu that is featured in Evolo to be sent to the Menu Handler
+ * Author: Kurtis, Gavin 
+ * Version: 1/30/15
+ */
+
 namespace Evolo.GameClass
 {
     class Menus
@@ -36,7 +42,7 @@ namespace Evolo.GameClass
         private String[] levelInfo = { "0,14;0,15;23,10;1;390;10", "0,19;0,20;23,10;2;450;15", "0,14;0,15;23,10;1;390;10", "0,19;0,20;23,10;2;450;15", "0,14;0,15;23,10;1;390;10" };
 
         //Variables
-        private Texture2D optionsTitle, menuTitle, pauseTitle, debugTitle, keybindBlockTitle, keybindPlayerTitle, gameLoseTitle, gameWinTitle, levelSelectMenuTitle, customLevelMenuTitle, menuButtonBackground, menuButtonBorder7, menuButtonBorder6, menuButtonBorder4, menuButtonBorder2, menuButtonBorder3;
+        private Texture2D optionsTitle, menuTitle, pauseTitle, debugTitle, keybindBlockTitle, keybindPlayerTitle, gameLoseTitle, gameWinTitle, loadProfileTitle, levelSelectMenuTitle, customLevelMenuTitle, menuButtonBackground, menuButtonBorder7, menuButtonBorder6, menuButtonBorder4, menuButtonBorder2, menuButtonBorder3;
         private int mainMenuVerticalSpacing = 24;
         private Vector2 optionsCenterMenuSP, mainMenuSP, keybindingCenterMenuSP, pauseMenuSP, debugSP, loadProfileMenuSP, gameOverMenuSP, levelSelectMenuSp, customLevelMenuSp;
         private String[] mainMenuButtonText;
@@ -84,7 +90,7 @@ namespace Evolo.GameClass
             optionsKeybindingMenuPage2ButtonText = new String[6] { "BlockLeft: " + keyBindingInfo[3], "BlockRight: " + keyBindingInfo[4], "BlockRotate: " + keyBindingInfo[5], "BlockDown: " + keyBindingInfo[6], "<- Previous Page", "Back" };
             optionsMenuButtonText = new String[7] { "Resolution", "Key Bindings", "Debug Options", "Sound: OFF", "Music: OFF", "Exit & Save", "Exit W/O Saving" };
             optionsResolutionMenuButtonText = new String[7] { "Full Screen", "800 x 600", "1280 x 720", "1366 x 768", "1600 x 900", "1920 x 1080", "Back" };
-            mainMenuButtonText = new String[6] { "Level Select", "Load Profile", "Options", "Credits", "Help", "Quit" };
+            mainMenuButtonText = new String[6] { "Level Select", "Load Profile", "Options", "Credits", "Tutorial", "Quit" };
             pauseMenuButtonText = new String[3] { "Resume", "Options", "Exit" };
             debugMenuButtonText = new String[4] { "Cursor: Game", "FPS: Off", "Debug Info: Off", "Back" };
             loadProfileMenuButtonText = new String[7] { "Profile 1", "Profile 2", "Profile 3", "Profile 4", "Profile 5", "Profile 6", "Back" };
@@ -202,6 +208,7 @@ namespace Evolo.GameClass
             gameWinTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_YouWin");
             levelSelectMenuTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_LevelSelect");
             customLevelMenuTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_CustomLevel");
+            loadProfileTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Profile");
             menuHoverChangeSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuHoverChangeEffect");
             menuClickedSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuClickedEffect");
             #endregion
@@ -230,7 +237,7 @@ namespace Evolo.GameClass
             debugMenu = new MenuHandler(debugTitle, menuButtonBorder4, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder4.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((debugTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, debugMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
 
             //debugMenu = new MenuHandler(optionsTitle, debugSP, new Vector2(), mainMenuVerticalSpacing, menuButtonBackground, debugMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
-            loadProfileMenu = new MenuHandler(menuTitle, menuButtonBorder7, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder7.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, loadProfileMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
+            loadProfileMenu = new MenuHandler(loadProfileTitle, menuButtonBorder7, GlobalVar.ScaleSize, new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder7.Width * GlobalVar.ScaleSize.X) / 2), 0), new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuTitle.Width * GlobalVar.ScaleSize.X) / 2), 0), mainMenuVerticalSpacing, menuButtonBackground, loadProfileMenuButtonText, font, menuHoverChangeSoundEffect, menuClickedSoundEffect, GlobalVar.ScreenSize);
 
             if (Boolean.Parse(GlobalVar.OptionsArray[12]) == true)
                 optionsMenuButtonText[3] = "Sound: ON";
@@ -361,25 +368,25 @@ namespace Evolo.GameClass
                     }
                     else if (optionsMenu.menuNumberSelection() == 6)
                     {
+                        if (pausedLast == true)
+                            menuState = "PauseMenu";
+                        else
+                            menuState = "MainMenu";
                         //Exit & Save (Write options file to the Global Values)
                         optionsHandler.writeOptions(GlobalVar.OptionsArray);
                         GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
                         windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), Convert.ToBoolean(GlobalVar.OptionsArray[14]));
+                    }
+                    else if (optionsMenu.menuNumberSelection() == 7)
+                    {
                         if (pausedLast == true)
                             menuState = "PauseMenu";
                         else
                             menuState = "MainMenu";
-                    }
-                    else if (optionsMenu.menuNumberSelection() == 7)
-                    {
                         //Exit W/ Saving (Set Global Values to the options Files)
                         GlobalVar.OptionsArray = optionsHandler.loadOptions();
                         GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
                         windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), Convert.ToBoolean(GlobalVar.OptionsArray[14]));
-                        if (pausedLast == true)
-                            menuState = "PauseMenu";
-                        else
-                            menuState = "MainMenu";
                     }
                     break;
                 #endregion
@@ -554,9 +561,9 @@ namespace Evolo.GameClass
                          mouseStateCurrent,
                          mouseStatePrevious,
                          GlobalVar.ScreenSize,
-                         new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((menuTitle.Height + menuButtonBorder7.Height) * GlobalVar.ScaleSize.Y)) / 2) + menuTitle.Height * GlobalVar.ScaleSize.Y),
-                         new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder7.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((menuTitle.Height + menuButtonBorder7.Height) * GlobalVar.ScaleSize.Y)) / 2) + menuTitle.Height * GlobalVar.ScaleSize.Y),
-                         new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((menuTitle.Height + menuButtonBorder7.Height) * GlobalVar.ScaleSize.Y)) / 2)),
+                         new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((loadProfileTitle.Height + menuButtonBorder7.Height) * GlobalVar.ScaleSize.Y)) / 2) + loadProfileTitle.Height * GlobalVar.ScaleSize.Y),
+                         new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder7.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((loadProfileTitle.Height + menuButtonBorder7.Height) * GlobalVar.ScaleSize.Y)) / 2) + loadProfileTitle.Height * GlobalVar.ScaleSize.Y),
+                         new Vector2((GlobalVar.ScreenSize.X / 2) - ((loadProfileTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((loadProfileTitle.Height + menuButtonBorder7.Height) * GlobalVar.ScaleSize.Y)) / 2)),
                          GlobalVar.ScaleSize,
                          loadProfileMenuColors,
                          Convert.ToBoolean(GlobalVar.OptionsArray[12]));
@@ -570,18 +577,21 @@ namespace Evolo.GameClass
                     }
                     else if (loadProfileMenu.menuNumberSelection() != 0)
                     {
-                        GlobalVar.PlayerProfile = loadProfileMenu.menuNumberSelection();
-                        if (saveHandler.loadData(GlobalVar.PlayerProfile) != null)
+                        if(GlobalVar.PlayerProfile != loadProfileMenu.menuNumberSelection())
                         {
-                            GlobalVar.HighestLevel = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[0]);
-                            GlobalVar.HighScore[0] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[1]);
-                            GlobalVar.HighScore[1] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[2]);
-                            GlobalVar.HighScore[2] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[3]);
-                            GlobalVar.HighScore[3] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[4]);
-                            GlobalVar.HighScore[4] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[5]);
-                        }
+                            GlobalVar.PlayerProfile = loadProfileMenu.menuNumberSelection();
+                            if (saveHandler.loadData(GlobalVar.PlayerProfile) != null)
+                            {
+                                GlobalVar.HighestLevel = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[0]);
+                                GlobalVar.HighScore[0] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[1]);
+                                GlobalVar.HighScore[1] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[2]);
+                                GlobalVar.HighScore[2] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[3]);
+                                GlobalVar.HighScore[3] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[4]);
+                                GlobalVar.HighScore[4] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[5]);
+                            }
                         if (loadProfileFirstTimeStartUp)
                             menuState = "MainMenu";
+                        }
                     }
 
                     break;

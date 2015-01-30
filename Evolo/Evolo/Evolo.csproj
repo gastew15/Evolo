@@ -88,6 +88,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="StarByte\graphics\ColorGradient.cs" />
     <Compile Include="StarByte\graphics\SplashScreenManager.cs" />
+    <Compile Include="StarByte\io\EncoderSystem.cs" />
     <Compile Include="StarByte\io\ErrorHandler.cs" />
     <Compile Include="StarByte\io\SaveHandler.cs" />
     <Compile Include="StarByte\io\ScriptFileReader.cs" />

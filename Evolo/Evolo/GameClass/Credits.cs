@@ -4,7 +4,11 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+/**
+ * Evolo Credits: Displays the Credits and the a scroll speed
+ * Author: Gavin
+ * Version: 10/30/14
+ */
 namespace Evolo.GameClass
 {
     class Credits

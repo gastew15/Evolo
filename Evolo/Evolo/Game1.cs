@@ -56,7 +56,7 @@ namespace Evolo
         //Variables
 
         //Game
-        String version = "Build V: 1.1.8.2"; // Major, Minor, Build, Revision #
+        String version = "Build V: 1.9.8.5"; // Major, Minor, Build, Revision #
         Boolean mainMenuTripped = false; //Boolean to chekc to see if the menus are active
         const int defualtWidth = 1280, defualtHeight = 720;
 
@@ -70,7 +70,7 @@ namespace Evolo
         Boolean songTripped;
 
         //Credits
-        String[] creditsStringArray = new String[10] { "CREDITS", "Team", "G. Stewart - StarByte Designer & Lead Programer", "K. Jones - Main Artist & Generation Programer", "D. Jones - Supporting Programer & Artist", "J. Estrada - Programer & Tester", "A Special Thanks To", "D. Ely, The CACC and Lake Powell", "AND", "To You The Player!" };
+        String[] creditsStringArray = new String[13] { "CREDITS", "Team", "G. Stewart - StarByte Designer & Lead Programer", "K. Jones - Main Artist & Generation Programer", "D. Jones - Supporting Programer & Artist", "J. Estrada - Programer & Tester", "A Special Thanks To", "D. Ely" , "L. Powell" , "The Beta Testers", "AND", "To You The Player!", "Thank You For Playing!!!" };
 
         public Game1()
         {
@@ -319,12 +319,16 @@ namespace Evolo
                         {
                             GlobalVar.GameState = "Playing";
                         }
-                        else if (menus.getMenuState() == "OptionsMenu" || menus.getMenuState() == "LoadProfileMenu" || menus.getMenuState() == "LevelSelect")
+                        else if (menus.getMenuState() == "OptionsMenu" || menus.getMenuState() == "LevelSelect")
                         {
                             if (GlobalVar.PreviousGameState == "Playing")
                                 menus.SetMenu("PauseMenu");
                             else
                                 menus.SetMenu("MainMenu");
+                        }
+                        else if(menus.getMenuState() == "LoadProfileMenu" && !menus.getLoadProfileFirstStartUp())
+                        {
+                            menus.SetMenu("MainMenu");
                         }
                         else if (menus.getMenuState() == "OptionsResolutionMenu" || menus.getMenuState() == "OptionsKeybindingMenuPage1" || menus.getMenuState() == "OptionsKeybindingMenuPage2" || menus.getMenuState() == "debugMenu")
                         {
@@ -395,6 +399,7 @@ namespace Evolo
                             fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         }
                         menus.Draw(spriteBatch);
+                        spriteBatch.DrawString(SeqoeUIMonoNormal, "LMB/RMB to navigate through menus", new Vector2(970 * GlobalVar.ScaleSize.X, 700 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                         break;
                     case "Credits":
                         background.Draw(spriteBatch, SeqoeUIMonoNormal);
