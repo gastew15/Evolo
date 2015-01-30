@@ -483,12 +483,12 @@ namespace Evolo.GameClass
 
             //Y Check
             //Down
-            if (player1GridPos.Y + 1 < gameField.GetLength(1) && gameField[(int)player1GridPos.X, (int)player1GridPos.Y + 1] == true)
+            if (player1GridPos.Y < gameField.GetLength(1) - 1 && gameField[(int)player1GridPos.X, (int)player1GridPos.Y + 1] == true)
             {
                 playerCanNotMoveDown = true;
             }
             //Up
-            if (player1GridPos.Y - 1 > 0 && gameField[(int)player1GridPos.X, (int)player1GridPos.Y - 1] == true)
+            if (player1GridPos.Y > 0 && gameField[(int)player1GridPos.X, (int)player1GridPos.Y - 1] == true)
             {
                 playerCanNotMoveUp = true;
             }
@@ -965,11 +965,11 @@ namespace Evolo.GameClass
             }
 
             //Player Jump Logic
-            if (player1Jump == true)
+            if (player1Jump == true && !playerCanNotMoveUp)
             {
                 if (gameTime.TotalGameTime.Milliseconds % 220 == 0)
                 {
-                    if (playerCanNotMoveDown == false)
+                    if (!playerCanNotMoveDown && player1GridPos.Y < gameField.GetLength(1) - 1)
                     {
                         player1GridPos.Y += 1;
                     }
@@ -980,11 +980,11 @@ namespace Evolo.GameClass
             }
             else
             {
-                if (player1GridPos.Y < gameField.GetLength(1) - 1 && playerCanNotMoveDown == false)
+                if (player1GridPos.Y < gameField.GetLength(1) && !playerCanNotMoveDown)
                 {
                     if (milisecondsElapsedPlayerTime - milisecondsPlayerGravityTime >= 0)
                     {
-                        if (player1GridPos.Y < gameField.GetLength(1) - 1 && playerCanNotMoveDown == false)
+                        if (player1GridPos.Y < gameField.GetLength(1) - 1 && !playerCanNotMoveDown)
                         {
                             player1GridPos.Y += 1;
                         }
