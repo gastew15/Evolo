@@ -393,6 +393,7 @@ namespace Evolo
                             fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         }
                         menus.Draw(spriteBatch);
+                        spriteBatch.DrawString(SeqoeUIMonoNormal, "LMB/RMB to navigate through menus", new Vector2(970 * GlobalVar.ScaleSize.X, 700 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                         break;
                     case "Credits":
                         background.Draw(spriteBatch, SeqoeUIMonoNormal);
