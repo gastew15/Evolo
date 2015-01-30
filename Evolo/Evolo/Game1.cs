@@ -70,7 +70,7 @@ namespace Evolo
         Boolean songTripped;
 
         //Credits
-        String[] creditsStringArray = new String[10] { "CREDITS", "Team", "G. Stewart - StarByte Designer & Lead Programer", "K. Jones - Main Artist & Generation Programer", "D. Jones - Supporting Programer & Artist", "J. Estrada - Programer & Tester", "A Special Thanks To", "D. Ely & The CACC", "AND", "To You The Player!" };
+        String[] creditsStringArray = new String[10] { "CREDITS", "Team", "G. Stewart - StarByte Designer & Lead Programer", "K. Jones - Main Artist & Generation Programer", "D. Jones - Supporting Programer & Artist", "J. Estrada - Programer & Tester", "A Special Thanks To", "D. Ely, The CACC and Lake Powell", "AND", "To You The Player!" };
 
         public Game1()
         {
