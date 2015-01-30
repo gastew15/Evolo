@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using StarByte.io;
 using System.Security.Cryptography;
 
 /*
  *  StarByte SaveHandler
  *  Author: G. Stewart
- *  Version: 10/15/14
+ *  Version: 1/30/15
  */
 
 namespace StarByte.io
@@ -17,12 +18,12 @@ namespace StarByte.io
     {
         private int numberOfSaveSlots, numberOfLinesPerSlot;
         private String writeLocation;
+
+        // The Encoder data for encyption
+        private EncoderSystem encoder;
+        private const int keysize = 256;
         private static readonly byte[] initVectorBytes = Encoding.ASCII.GetBytes("j8hek4rl93hjtq9b");
         private static readonly string passPhrase = "Hg564jkDhyt3";
-        private String[] defualtData;
-
-        // This constant is used to determine the keysize of the encryption algorithm.
-        private const int keysize = 256;
 
         /*
          * Main Constructor for the SaveHandler class
@@ -33,6 +34,8 @@ namespace StarByte.io
             this.numberOfSaveSlots = numberOfSaveSlots;
             this.numberOfLinesPerSlot = defualtData.Length;
             this.writeLocation = fileLocation + "\\" + fileName;
+
+            encoder = new EncoderSystem(initVectorBytes, passPhrase, keysize);
 
             Boolean fileOk;
 
@@ -73,7 +76,7 @@ namespace StarByte.io
                     {
                         for (int i = 0; i < numberOfLinesPerSlot; i++)
                         {
-                            sw.WriteLine(EncryptData(defualtData[i], passPhrase));
+                            sw.WriteLine(encoder.EncryptData(defualtData[i], passPhrase));
                         }
                     }
 
@@ -122,7 +125,7 @@ namespace StarByte.io
 
             for (int j = 0; j < previousLineData.Length; j++)
             {
-                writeLineData[j] = DecryptData(previousLineData[j], passPhrase);
+                writeLineData[j] = encoder.DecryptData(previousLineData[j], passPhrase);
             }
 
             for (int i = (saveSlot - 1) * numberOfLinesPerSlot; i < (saveSlot - 1) * numberOfLinesPerSlot + numberOfLinesPerSlot; i++)
@@ -139,7 +142,7 @@ namespace StarByte.io
 
                 for (int j = 0; j < writeLineData.Length; j++)
                 {
-                    sw.WriteLine(EncryptData(writeLineData[j], passPhrase)); 
+                    sw.WriteLine(encoder.EncryptData(writeLineData[j], passPhrase)); 
                 }
 
                 sw.Close();
@@ -167,7 +170,7 @@ namespace StarByte.io
 
                 while (line != null)
                 {
-                    previousLineData[lineReadNumber] = DecryptData(line, passPhrase);
+                    previousLineData[lineReadNumber] = encoder.DecryptData(line, passPhrase);
                     line = sr.ReadLine();    
                     lineReadNumber++;
                 }
@@ -191,64 +194,6 @@ namespace StarByte.io
             }
 
             return returnData;
-        }
-
-        /*
-         * Method that takes in plain String data and converts it into cypherText
-         */
-        private static string EncryptData(string plainText, string passPhrase)
-        {
-            byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-            using (PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, null))
-            {
-                byte[] keyBytes = password.GetBytes(keysize / 8);
-                using (RijndaelManaged symmetricKey = new RijndaelManaged())
-                {
-                    symmetricKey.Mode = CipherMode.CBC;
-                    using (ICryptoTransform encryptor = symmetricKey.CreateEncryptor(keyBytes, initVectorBytes))
-                    {
-                        using (MemoryStream memoryStream = new MemoryStream())
-                        {
-                            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
-                            {
-                                cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length);
-                                cryptoStream.FlushFinalBlock();
-                                byte[] cipherTextBytes = memoryStream.ToArray();
-                                return Convert.ToBase64String(cipherTextBytes);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /*
-         * Method that takes in cypher text and converts it into plain text
-         */
-        private static string DecryptData(string cipherText, string passPhrase)
-        {
-            byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
-            using (PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, null))
-            {
-                byte[] keyBytes = password.GetBytes(keysize / 8);
-                using (RijndaelManaged symmetricKey = new RijndaelManaged())
-                {
-                    symmetricKey.Mode = CipherMode.CBC;
-                    using (ICryptoTransform decryptor = symmetricKey.CreateDecryptor(keyBytes, initVectorBytes))
-                    {
-                        using (MemoryStream memoryStream = new MemoryStream(cipherTextBytes))
-                        {
-                            using (CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
-                            {
-                                byte[] plainTextBytes = new byte[cipherTextBytes.Length];
-                                int decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
-                                return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-      
+        }   
     }
 }

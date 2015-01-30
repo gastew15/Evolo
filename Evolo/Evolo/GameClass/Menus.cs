@@ -303,25 +303,25 @@ namespace Evolo.GameClass
                     }
                     else if (optionsMenu.menuNumberSelection() == 6)
                     {
+                        if (pausedLast == true)
+                            menuState = "PauseMenu";
+                        else
+                            menuState = "MainMenu";
                         //Exit & Save (Write options file to the Global Values)
                         optionsHandler.writeOptions(GlobalVar.OptionsArray);
                         GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
                         windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), Convert.ToBoolean(GlobalVar.OptionsArray[14]));
+                    }
+                    else if (optionsMenu.menuNumberSelection() == 7)
+                    {
                         if (pausedLast == true)
                             menuState = "PauseMenu";
                         else
                             menuState = "MainMenu";
-                    }
-                    else if (optionsMenu.menuNumberSelection() == 7)
-                    {
                         //Exit W/ Saving (Set Global Values to the options Files)
                         GlobalVar.OptionsArray = optionsHandler.loadOptions();
                         GlobalVar.ScreenSize = new Vector2(Convert.ToInt32(GlobalVar.OptionsArray[0]), Convert.ToInt32(GlobalVar.OptionsArray[1]));
                         windowSizeManager.SetScreenSize(new Vector2(GlobalVar.ScreenSize.X, GlobalVar.ScreenSize.Y), Convert.ToBoolean(GlobalVar.OptionsArray[14]));
-                        if (pausedLast == true)
-                            menuState = "PauseMenu";
-                        else
-                            menuState = "MainMenu";
                     }
                     break;
                 #endregion
