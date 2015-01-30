@@ -15,7 +15,7 @@ namespace Evolo.GameClass
 {
     class Menus
     {
-        private DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
+        
         private int customMenuPageMod, fileAmount, customLevelFileCount; //for changing pages and displaying more levels
         private String[] customLevelList;
         private Boolean gameWin = false;
@@ -32,6 +32,8 @@ namespace Evolo.GameClass
 
         //Temp string
         private String[] loadData = new string[] { "" };
+
+        private String[] levelInfo = { "0,14;0,15;23,10;1;390;10", "0,19;0,20;23,10;2;450;15", "0,14;0,15;23,10;1;390;10", "0,19;0,20;23,10;2;450;15", "0,14;0,15;23,10;1;390;10" };
 
         //Variables
         private Texture2D optionsTitle, menuTitle, pauseTitle, debugTitle, keybindBlockTitle, keybindPlayerTitle, gameLoseTitle, gameWinTitle, levelSelectMenuTitle, customLevelMenuTitle, menuButtonBackground, menuButtonBorder7, menuButtonBorder6, menuButtonBorder4, menuButtonBorder2, menuButtonBorder3;
@@ -63,6 +65,8 @@ namespace Evolo.GameClass
         private SoundEffect menuHoverChangeSoundEffect, menuClickedSoundEffect;
         private SingletonLevelSystem levels = SingletonLevelSystem.getInstance();
         private Boolean loadProfileFirstTimeStartUp;
+
+
 
         public Menus(GraphicsDeviceManager graphics)
         {
@@ -100,13 +104,74 @@ namespace Evolo.GameClass
             customLevelMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
             #endregion
 
-            customLevelFileCount = dInfo.GetFiles().Length;
-            customLevelList = new String[customLevelFileCount];
-            foreach (FileInfo file in dInfo.GetFiles())
+            #region Level File Checking
+            try
             {
-                customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
-                fileAmount++;
+                DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
+                customLevelFileCount = dInfo.GetFiles().Length - 1;
+                customLevelList = new String[customLevelFileCount];
+
+                foreach (FileInfo file in dInfo.GetFiles())
+                {
+                    if (file.ToString() != "Level Template.txt")
+                    {
+                        customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
+                        fileAmount++;
+                    }
+                }
             }
+            catch
+            {
+                if (!Directory.Exists("Levels"))
+                {
+                    Directory.CreateDirectory("Levels");
+                    Directory.CreateDirectory("Levels/CustomLevels");
+
+                    StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
+                    sw.Write("Player Start Position;Start Platform Position;End Platform Position;Level Modifier;Timer(Seconds);Lines to Clear");
+                    sw.WriteLine("");
+                    sw.WriteLine("Make sure there are no spaces in the cordinates");
+                    sw.WriteLine("");
+                    sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
+                    sw.WriteLine("");
+                    sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
+                    sw.Close();
+
+                    for (int i = 0; i < 5; i++)
+                    {
+                        StreamWriter sr = new StreamWriter("Levels/Level" + (i + 1) + ".dat");
+                        sr.Write(levelInfo[i]);
+                        sr.Close();
+                    }
+                }
+
+                else if(!Directory.Exists("Levels/CustomLevels"))
+                {
+                    Directory.CreateDirectory("Levels/CustomLevels");
+                    StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
+                    sw.Write("Player Start Position;Start Platform Position;End Platform Position;Level Modifier;Timer(Seconds);Lines to Clear");
+                    sw.WriteLine("");
+                    sw.WriteLine("Make sure there are no spaces in the cordinates");
+                    sw.WriteLine("");
+                    sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
+                    sw.WriteLine("");
+                    sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
+                    sw.Close();
+
+                }
+
+                DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
+                customLevelFileCount = dInfo.GetFiles().Length - 1;
+                customLevelList = new String[customLevelFileCount];
+
+                foreach (FileInfo file in dInfo.GetFiles())
+                {
+                    customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
+                    fileAmount++;
+                }
+
+            }
+            #endregion
 
             var mouseState = Mouse.GetState();
             var mousePosition = new Point(mouseState.X, mouseState.Y);
@@ -632,6 +697,7 @@ namespace Evolo.GameClass
                 #endregion
                 #region Custom Level Menu Update
                 case "CustomLevelSelect":
+
                     for (int i = 0; i < 4; i++)
                     {
                         if ((i + (customMenuPageMod * 4)) < customLevelFileCount)

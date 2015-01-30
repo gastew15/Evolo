@@ -18,9 +18,12 @@ namespace Evolo.GameClass
         private int levelMod;
         private int timer;
         private int lineToClear;
+        
 
+        //Private constructor so that the only class that can intitialize the level system is itself
         private SingletonLevelSystem() { }
 
+        //Method to check 
         public static SingletonLevelSystem getInstance()
         {
             if (null == SinLevelSys)
@@ -33,16 +36,48 @@ namespace Evolo.GameClass
 
         public void Update()
         {
-            StreamReader sr = new StreamReader("Levels/" + levelName + ".dat");
-            string[] paramaters = sr.ReadToEnd().Split(';');
-            sr.Close();
+            try
+            {
+                StreamReader sr = new StreamReader("Levels/" + levelName + ".dat");
+                string[] paramaters = sr.ReadToEnd().Split(';');
+                sr.Close();
 
-            playerStartPos = new Vector2(Convert.ToInt32(paramaters[0].Split(',')[0]), Convert.ToInt32(paramaters[0].Split(',')[1]));
-            startPlatPos = new Vector2(Convert.ToInt32(paramaters[1].Split(',')[0]), Convert.ToInt32(paramaters[1].Split(',')[1]));
-            endPlatPos = new Vector2(Convert.ToInt32(paramaters[2].Split(',')[0]), Convert.ToInt32(paramaters[2].Split(',')[1]));
-            levelMod = Convert.ToInt32(paramaters[3]);
-            timer = Convert.ToInt32(paramaters[4]);
-            lineToClear = Convert.ToInt32(paramaters[5]);
+                playerStartPos = new Vector2(Convert.ToInt32(paramaters[0].Split(',')[0]), Convert.ToInt32(paramaters[0].Split(',')[1]));
+                startPlatPos = new Vector2(Convert.ToInt32(paramaters[1].Split(',')[0]), Convert.ToInt32(paramaters[1].Split(',')[1]));
+                endPlatPos = new Vector2(Convert.ToInt32(paramaters[2].Split(',')[0]), Convert.ToInt32(paramaters[2].Split(',')[1]));
+                levelMod = Convert.ToInt32(paramaters[3]);
+                timer = Convert.ToInt32(paramaters[4]);
+                lineToClear = Convert.ToInt32(paramaters[5]);
+            }
+            catch
+            {
+                if (!File.Exists("Levels/" + levelName + ".dat"))
+                {
+                    StreamWriter stream = new StreamWriter("Levels/" + levelName + ".dat");
+
+                    switch (levelName)
+                    {
+                        case "Level1":
+                            stream.Write("0,14;0,15;23,10;1;390;10");
+                            break;
+                        case "Level2":
+                            stream.Write("0,19;0,20;23,10;2;450;15");
+                            break;
+                        case "Level3":
+                            stream.Write("0,14;0,15;23,10;1;390;10");
+                            break;
+                        case "Level4":
+                            stream.Write("0,19;0,20;23,10;2;450;15");
+                            break;
+                        case "Level5":
+                            stream.Write("0,14;0,15;23,10;1;390;10");
+                            break;
+                    }
+
+                    stream.Close();
+                }
+
+            }
         }
         public void setLevel(String levelName)
         {
