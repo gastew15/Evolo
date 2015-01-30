@@ -71,9 +71,9 @@ namespace Evolo.GameClass
 
         public void Initialize(String[] keyBindingInfo)
         {
-
+            GlobalVar.HighScore = new int[5];
             optionsHandler = new OptionsHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo");
-            saveHandler = new SaveHandler(6, new String[] { "1", "0" }, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo", "Save.dat");
+            saveHandler = new SaveHandler(6, new String[] { "1", "0", "0", "0", "0", "0" }, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo", "Save.dat");
 
             //2 pages to contain all of the key options, treat as seperate menus
             optionsKeybindingMenuPage1ButtonText = new String[6] { "PlayerLeft: " + "left", "PlayerRight: " + keyBindingInfo[1], "PlayerJump: " + keyBindingInfo[2], "Nothing At All", "Next Page ->", "Back" };
@@ -509,7 +509,11 @@ namespace Evolo.GameClass
                         if (saveHandler.loadData(GlobalVar.PlayerProfile) != null)
                         {
                             GlobalVar.HighestLevel = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[0]);
-                            GlobalVar.HighScore = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[1]);
+                            GlobalVar.HighScore[0] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[1]);
+                            GlobalVar.HighScore[1] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[2]);
+                            GlobalVar.HighScore[2] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[3]);
+                            GlobalVar.HighScore[3] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[4]);
+                            GlobalVar.HighScore[4] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[5]);
                         }
                         if (loadProfileFirstTimeStartUp)
                             menuState = "MainMenu";
@@ -533,11 +537,11 @@ namespace Evolo.GameClass
                     {
                         if (!GlobalVar.CustomLevel)
                         {
-                            if (GlobalVar.Score > GlobalVar.HighScore)
+                            if (GlobalVar.Score > GlobalVar.HighScore[Int32.Parse(GlobalVar.CurrentLevel) - 1])
                             {
-                                GlobalVar.HighScore = GlobalVar.Score;
+                                GlobalVar.HighScore[Int32.Parse(GlobalVar.CurrentLevel) - 1] = GlobalVar.Score;
                             }
-                            saveHandler.saveData(new String[] { GlobalVar.HighestLevel.ToString(), GlobalVar.HighScore.ToString() }, GlobalVar.PlayerProfile);
+                            saveHandler.saveData(new String[] { GlobalVar.HighestLevel.ToString(), GlobalVar.HighScore[0].ToString(), GlobalVar.HighScore[1].ToString(), GlobalVar.HighScore[2].ToString(), GlobalVar.HighScore[3].ToString(), GlobalVar.HighScore[4].ToString() }, GlobalVar.PlayerProfile);
                         }
                     }
                     if (gameLoseMenu.menuNumberSelection() == 1)
@@ -569,15 +573,15 @@ namespace Evolo.GameClass
                     {
                         if (!GlobalVar.CustomLevel)
                         {
-                            if (GlobalVar.Score > GlobalVar.HighScore)
+                            if (GlobalVar.Score > GlobalVar.HighScore[Int32.Parse(GlobalVar.CurrentLevel) - 1])
                             {
-                                GlobalVar.HighScore = GlobalVar.Score;
+                                GlobalVar.HighScore[Int32.Parse(GlobalVar.CurrentLevel) - 1] = GlobalVar.Score;
                             }
                             if (Int32.Parse(GlobalVar.CurrentLevel) + 1 > GlobalVar.HighestLevel)
                             {
                                 GlobalVar.HighestLevel = Int32.Parse(GlobalVar.CurrentLevel) + 1;
                             }
-                            saveHandler.saveData(new String[] { GlobalVar.HighScore.ToString(), GlobalVar.HighestLevel.ToString() }, GlobalVar.PlayerProfile);
+                            saveHandler.saveData(new String[] { GlobalVar.HighestLevel.ToString(), GlobalVar.HighScore[0].ToString(), GlobalVar.HighScore[1].ToString(), GlobalVar.HighScore[2].ToString(), GlobalVar.HighScore[3].ToString(), GlobalVar.HighScore[4].ToString() }, GlobalVar.PlayerProfile);
                         }
                     }
                     //Does button presses
@@ -619,10 +623,9 @@ namespace Evolo.GameClass
                     else if (levelSelectMenu.menuNumberSelection() != 0 && GlobalVar.HighestLevel >= levelSelectMenu.menuNumberSelection())
                     {
                         GlobalVar.CustomLevel = false;
-                        GlobalVar.CurrentLevel = levelSelectMenu.menuNumberSelection().ToString();
+                        GlobalVar.CurrentLevel =  levelSelectMenu.menuNumberSelection().ToString();
+                        levels.setLevel("Level" + GlobalVar.CurrentLevel);
                         GlobalVar.ResetGameField = true;
-                        levels.setLevel(GlobalVar.CurrentLevel);
-                        levels.Update();
                         GlobalVar.GameState = "Playing";
                     }
                     break;
@@ -675,7 +678,8 @@ namespace Evolo.GameClass
                     {
                         GlobalVar.CustomLevel = true;
                         GlobalVar.CurrentLevel = customLevelMenuText[customLevelMenu.menuNumberSelection() - 1];
-                        levels.setLevel(GlobalVar.CurrentLevel);
+                        levels.setLevel("CustomLevels/" + GlobalVar.CurrentLevel);
+                        GlobalVar.ResetGameField = true;
                         GlobalVar.GameState = "Playing";
                     }
                     break;

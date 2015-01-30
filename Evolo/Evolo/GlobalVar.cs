@@ -18,7 +18,7 @@ namespace Evolo
         static Vector2 _scaleSize;
         static String _currentLevel;
         static int _score;
-        static int _highScore;
+        static int[] _highScore;
         static int _highestLevel;
         static int _playerProfile;
 
@@ -70,7 +70,7 @@ namespace Evolo
             }
         }
 
-        public static int HighScore
+        public static int[] HighScore
         {
             get
             {

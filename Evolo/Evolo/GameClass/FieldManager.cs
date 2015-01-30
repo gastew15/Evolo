@@ -83,7 +83,7 @@ namespace Evolo.GameClass
         private double levelModifier;
 
         //Level System variables
-        private LevelSystem levels = new LevelSystem();
+        private SingletonLevelSystem levels = SingletonLevelSystem.getInstance();
 
         #endregion
 
@@ -95,7 +95,7 @@ namespace Evolo.GameClass
         public void Initialize()
         {
             player1SpriteEffects = SpriteEffects.None;
-            levels.setLevel("1");
+            levels.setLevel("Level1");
         }
 
         public void LoadContent(ContentManager Content)
@@ -107,6 +107,7 @@ namespace Evolo.GameClass
             platformTexture = Content.Load<Texture2D>("Sprites and pictures/Platform");
             hudTexture = Content.Load<Texture2D>("Sprites and pictures/GameHud");
             //Teromeno Set Up Reference
+            resetGameVariables();
         }
 
         public void Update(GameTime gameTime)
@@ -145,7 +146,8 @@ namespace Evolo.GameClass
             absTetrominoBlockFarthestDown = 0;
             tetrominoLastRotation = tetrominoRotation;
 
-            tetrominoLastGridPos = tetrominoGridPos[activeTetromino];
+            if(activeTetromino >= 0 && activeTetromino < tetrominoGridPos.Count)
+                tetrominoLastGridPos = tetrominoGridPos[activeTetromino];
 
             #endregion
 
@@ -1071,14 +1073,22 @@ namespace Evolo.GameClass
                     //spriteBatch.DrawString(SeqoeUIMonoNormal, "FPS: " + fpsManager.getFPS(), new Vector2((GlobalVar.ScreenSize.X - (SeqoeUIMonoNormal.MeasureString("FPS: " + fpsManager.getFPS()).X) * GlobalVar.ScaleSize.X) - 10, (5 * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 }
 
-                if (GlobalVar.HighScore < GlobalVar.Score && !GlobalVar.CustomLevel)
+                if (!GlobalVar.CustomLevel)
                 {
-                    spriteBatch.DrawString(font, "HIGH SCORE " + GlobalVar.Score, new Vector2(1120 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    if (GlobalVar.HighScore[Int32.Parse(GlobalVar.CurrentLevel) - 1] > GlobalVar.Score)
+                    {
+                        spriteBatch.DrawString(font, "HIGH SCORE " + GlobalVar.HighScore[Int32.Parse(GlobalVar.CurrentLevel) - 1], new Vector2(1120 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    }
+                    else
+                    {
+                        spriteBatch.DrawString(font, "HIGH SCORE " + GlobalVar.Score, new Vector2(1120 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    }
                 }
                 else
                 {
-                    spriteBatch.DrawString(font, "HIGH SCORE " + GlobalVar.HighScore, new Vector2(1120 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    spriteBatch.DrawString(font, "HIGH SCORE " + "N/A", new Vector2(1120 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 }
+
                 spriteBatch.DrawString(font, "Score: " + GlobalVar.Score, new Vector2(1120 * GlobalVar.ScaleSize.X, 305 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 spriteBatch.DrawString(font, "Lines left: " + linesToClear, new Vector2(1120 * GlobalVar.ScaleSize.X, 345 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 spriteBatch.DrawString(font, "Time left: " + (timer - milisecondsElapsedTime) / 1000, new Vector2(1120 * GlobalVar.ScaleSize.X, 385 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
