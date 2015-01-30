@@ -11,7 +11,11 @@ using StarByte.io;
 using StarByte.misc;
 using StarByte.graphics;
 using Evolo.GameClass;
-
+/**
+ * Evolo Background: Creates the background for the game
+ * Authour: Kurtis
+ * Version: 1/8/15
+ */
 namespace Evolo.GameClass
 {
     class Background

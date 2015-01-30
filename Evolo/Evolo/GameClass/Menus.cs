@@ -11,6 +11,12 @@ using System.IO;
 using StarByte.ui;
 using StarByte.io;
 
+/**
+ * Evolo Menu class: Creates every menu that is featured in Evolo to be sent to the Menu Handler
+ * Author: Kurtis, Gavin 
+ * Version: 1/30/15
+ */
+
 namespace Evolo.GameClass
 {
     class Menus

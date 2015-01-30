@@ -4,7 +4,11 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-
+/**
+ * Evolo Window Size Manager: Manages the size of the window and make sure the sprites are scaled correctly
+ * Author: Gavin
+ * Virsion: 10/30/14
+ */
 namespace Evolo.GameClass
 {
     class WindowSizeManager
