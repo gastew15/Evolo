@@ -12,7 +12,6 @@ namespace Evolo.GameClass
         private String[] lines;
         private SpriteFont font;
         private float scrollSpeed;
-        private Vector2 screenSize;
 
         public Credits(String[] lines, SpriteFont font)
         {
@@ -23,19 +22,23 @@ namespace Evolo.GameClass
         public void DrawCredits(SpriteBatch spriteBatch)
         {
             
-            scrollSpeed += .75f;
+            scrollSpeed += .75f * GlobalVar.ScaleSize.Y;
 
             for (int j = 0; j < lines.Length; j++)
             {
-                spriteBatch.DrawString(font, lines[j], new Vector2((GlobalVar.ScreenSize.X / 2) - ((font.MeasureString(lines[j]).X * GlobalVar.ScaleSize.X) / 2), (800 + (j * (50 * GlobalVar.ScaleSize.Y))) - scrollSpeed), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                spriteBatch.DrawString(font, lines[j], new Vector2((GlobalVar.ScreenSize.X / 2) - ((font.MeasureString(lines[j]).X * GlobalVar.ScaleSize.X) / 2), (GlobalVar.ScreenSize.Y + (j * 50 * GlobalVar.ScaleSize.Y)) - scrollSpeed), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
             }
 
-            if (800 + ((lines.Length * (50 * GlobalVar.ScaleSize.Y)) - scrollSpeed) < -25)
+            if ((GlobalVar.ScreenSize.Y + (lines.Length * 50 * GlobalVar.ScaleSize.Y)) - scrollSpeed < -10)
             {
                 GlobalVar.GameState = "MenuScreen";
                 scrollSpeed = 0;
             }
         }
 
+        public void resetCreditRoll()
+        {
+            scrollSpeed = 0;
+        }
     }
 }

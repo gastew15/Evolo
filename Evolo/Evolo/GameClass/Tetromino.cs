@@ -7,11 +7,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-
 /**
  * Evolo tetromino handler to handle the artibutes and movement of indivudal blocks with-in the tetromino
  * Author: Dalton, Josh, Gavin, Kurtis
- * Version: 11/24/14
+ * Version: 1/29/15
  */
 
 namespace Evolo.GameClass
@@ -20,32 +19,37 @@ namespace Evolo.GameClass
     {
 
         //Small Block Texture
-        Texture2D blockTexture;
+        private Texture2D blockTexture;
 
         //Small Block Postions
-        Vector2[] blockPos = new Vector2[4];
+        private Vector2[] blockPos = new Vector2[4];
 
-        Vector2[] currentBlockPos = new Vector2[4];
+        private Vector2[] currentBlockPos = new Vector2[4];
+
+        //Block Position Modifers
+        private Vector2[] blockPosModifers = new Vector2[] { new Vector2(), new Vector2(), new Vector2(), new Vector2() };
 
         //ScaleSize
-        Vector2 scaleSize;
+        private Vector2 scaleSize;
 
         //Start Position
-        Vector2 gridStartPosition;
+        private Vector2 gridStartPosition;
 
         //tetromino Color
-        Color drawColor;
+        private Color drawColor;
 
         //Spawn point for dominant block
-        Vector2 drawPoint; // X, Y
+        private Vector2 drawPoint; // X, Y
 
         //tetromino Type
-        int tetrominoType;
+        private int tetrominoType;
 
-        int rotation = 0;
+        //Used to tell what block is the center of rotation
+        private int rotationBlockPosition = 0;
 
+        private int rotation = 0;
 
-        Boolean[] blockPosActive = new Boolean[4] { true, true, true, true };
+        private Boolean[] blockPosActive = new Boolean[4] { true, true, true, true };
 
         public Tetromino(int tetrominoType, Texture2D blockTexture)
         {
@@ -64,114 +68,128 @@ namespace Evolo.GameClass
             {
                 //I  Block
                 case 1:
-
-                    blockPos[0] = drawPoint;
-                    blockPos[1] = new Vector2(drawPoint.X + 1, drawPoint.Y);
-                    blockPos[2] = new Vector2(drawPoint.X + 2, drawPoint.Y);
-                    blockPos[3] = new Vector2(drawPoint.X - 1, drawPoint.Y);
+                    blockPos[0] = new Vector2(drawPoint.X + blockPosModifers[0].X, drawPoint.Y + blockPosModifers[0].Y);
+                    blockPos[1] = new Vector2(drawPoint.X + 1 + blockPosModifers[1].X, drawPoint.Y + blockPosModifers[1].Y);
+                    blockPos[2] = new Vector2(drawPoint.X + 2+ blockPosModifers[2].X, drawPoint.Y + blockPosModifers[2].Y);
+                    blockPos[3] = new Vector2(drawPoint.X  + 3 + blockPosModifers[3].X, drawPoint.Y + blockPosModifers[3].Y);
                     drawColor = Color.Cyan;
-
+                    rotationBlockPosition = 1;
                     break;
                 //T Block
                 case 2:
-
-                    blockPos[0] = drawPoint;
-                    blockPos[1] = new Vector2(drawPoint.X, drawPoint.Y - 1);
-                    blockPos[2] = new Vector2(drawPoint.X - 1, drawPoint.Y);
-                    blockPos[3] = new Vector2(drawPoint.X + 1, drawPoint.Y);
-
+                    blockPos[0] = new Vector2(drawPoint.X + blockPosModifers[0].X, drawPoint.Y + blockPosModifers[0].Y);
+                    blockPos[1] = new Vector2(drawPoint.X + 1 + blockPosModifers[1].X, drawPoint.Y - 1 + blockPosModifers[1].Y);
+                    blockPos[2] = new Vector2(drawPoint.X + 1 + blockPosModifers[2].X, drawPoint.Y + blockPosModifers[2].Y);
+                    blockPos[3] = new Vector2(drawPoint.X + 2 + blockPosModifers[3].X, drawPoint.Y + blockPosModifers[3].Y);
+                    rotationBlockPosition = 2;
                     drawColor = Color.MediumPurple;
 
                     break;
                 //J block
                 case 3:
-
-                    blockPos[0] = drawPoint;
-                    blockPos[1] = new Vector2(drawPoint.X, drawPoint.Y - 1);
-                    blockPos[2] = new Vector2(drawPoint.X + 1, drawPoint.Y);
-                    blockPos[3] = new Vector2(drawPoint.X + 2, drawPoint.Y);
-
+                    blockPos[0] = new Vector2(drawPoint.X + blockPosModifers[0].X, drawPoint.Y + blockPosModifers[0].Y);
+                    blockPos[1] = new Vector2(drawPoint.X + blockPosModifers[1].X, drawPoint.Y - 1 + blockPosModifers[1].Y);
+                    blockPos[2] = new Vector2(drawPoint.X + 1 + blockPosModifers[2].X, drawPoint.Y + blockPosModifers[2].Y);
+                    blockPos[3] = new Vector2(drawPoint.X + 2 + blockPosModifers[3].X, drawPoint.Y + blockPosModifers[3].Y);
+                    rotationBlockPosition = 0;
                     drawColor = Color.Blue;
 
                     break;
                 //L Block
                 case 4:
-
-                    blockPos[0] = drawPoint;
-                    blockPos[1] = new Vector2(drawPoint.X, drawPoint.Y - 1);
-                    blockPos[2] = new Vector2(drawPoint.X - 1, drawPoint.Y);
-                    blockPos[3] = new Vector2(drawPoint.X - 2, drawPoint.Y);
-
+                    blockPos[0] = new Vector2(drawPoint.X + blockPosModifers[0].X, drawPoint.Y + blockPosModifers[0].Y);
+                    blockPos[1] = new Vector2(drawPoint.X + 1 + blockPosModifers[1].X, drawPoint.Y + blockPosModifers[1].Y);
+                    blockPos[2] = new Vector2(drawPoint.X + 2 + blockPosModifers[2].X, drawPoint.Y + blockPosModifers[2].Y);
+                    blockPos[3] = new Vector2(drawPoint.X + 2 + blockPosModifers[3].X, drawPoint.Y - 1 + blockPosModifers[3].Y);
+                    rotationBlockPosition = 2;
                     drawColor = Color.Orange;
-
                     break;
                 //O Block
                 case 5:
-
-                    blockPos[0] = drawPoint;
-                    blockPos[1] = new Vector2(drawPoint.X + 1, drawPoint.Y);
-                    blockPos[2] = new Vector2(drawPoint.X + 1, drawPoint.Y - 1);
-                    blockPos[3] = new Vector2(drawPoint.X, drawPoint.Y - 1);
-
+                    blockPos[0] = new Vector2(drawPoint.X + blockPosModifers[0].X, drawPoint.Y + blockPosModifers[0].Y);
+                    blockPos[1] = new Vector2(drawPoint.X + 1 + blockPosModifers[1].X, drawPoint.Y + blockPosModifers[1].Y);
+                    blockPos[2] = new Vector2(drawPoint.X + 1 + blockPosModifers[2].X, drawPoint.Y - 1 + blockPosModifers[2].Y);
+                    blockPos[3] = new Vector2(drawPoint.X + blockPosModifers[3].X, drawPoint.Y - 1 + blockPosModifers[3].Y);
+                    rotationBlockPosition = 0;
                     drawColor = Color.Yellow;
 
                     break;
                 //S Block
                 case 6:
-
-                    blockPos[0] = drawPoint;
-                    blockPos[1] = new Vector2(drawPoint.X + 1, drawPoint.Y - 1);
-                    blockPos[2] = new Vector2(drawPoint.X, drawPoint.Y - 1);
-                    blockPos[3] = new Vector2(drawPoint.X - 1, drawPoint.Y);
-
+                    blockPos[0] = new Vector2(drawPoint.X + blockPosModifers[0].X, drawPoint.Y + blockPosModifers[0].Y);
+                    blockPos[1] = new Vector2(drawPoint.X + 1 + blockPosModifers[1].X, drawPoint.Y + blockPosModifers[1].Y);
+                    blockPos[2] = new Vector2(drawPoint.X + 1 + blockPosModifers[2].X, drawPoint.Y - 1 + blockPosModifers[2].Y);
+                    blockPos[3] = new Vector2(drawPoint.X + 2 + blockPosModifers[3].X, drawPoint.Y - 1 + blockPosModifers[3].Y);
+                    rotationBlockPosition = 2;
                     drawColor = Color.LawnGreen;
 
                     break;
                 //Z Block
                 case 7:
-
-                    blockPos[0] = drawPoint;
-                    blockPos[1] = new Vector2(drawPoint.X - 1, drawPoint.Y - 1);
-                    blockPos[2] = new Vector2(drawPoint.X, drawPoint.Y - 1);
-                    blockPos[3] = new Vector2(drawPoint.X + 1, drawPoint.Y);
-
+                    blockPos[0] = new Vector2(drawPoint.X + blockPosModifers[0].X, drawPoint.Y - 1 + blockPosModifers[0].Y);
+                    blockPos[1] = new Vector2(drawPoint.X + 1 + blockPosModifers[1].X, drawPoint.Y - 1 + blockPosModifers[1].Y);
+                    blockPos[2] = new Vector2(drawPoint.X + 1 + blockPosModifers[2].X, drawPoint.Y + blockPosModifers[2].Y);
+                    blockPos[3] = new Vector2(drawPoint.X + 2 + blockPosModifers[3].X, drawPoint.Y + blockPosModifers[3].Y);
+                    rotationBlockPosition = 1;
                     drawColor = Color.Red;
 
                     break;
             }
 
             #region Rotation Math
-            currentBlockPos[0] = drawPoint;
+
             switch (rotation)
             {
                 case 0:
-                    for (int i = 1; i < 4; i++)
+                    for (int i = 0; i < 4; i++)
                     {
                         currentBlockPos[i] = blockPos[i];
                     }
                     break;
                 case 1:
-                    for (int i = 1; i < 4; i++)
+                    for (int i = 0; i < 4; i++)
                     {
-                        currentBlockPos[i].X = (float)(Math.Cos((Math.PI / 180) * 90) * (blockPos[i].X - drawPoint.X) - Math.Sin((Math.PI / 180) * 90) * (blockPos[i].Y - drawPoint.Y) + drawPoint.X);
-                        currentBlockPos[i].Y = (float)(Math.Sin((Math.PI / 180) * 90) * (blockPos[i].X - drawPoint.X) + Math.Cos((Math.PI / 180) * 90) * (blockPos[i].Y - drawPoint.Y) + drawPoint.Y);
+                        if (i != rotationBlockPosition)
+                        {
+                            currentBlockPos[i].X = (float)(Math.Cos((Math.PI / 180) * 90) * (blockPos[i].X - blockPos[rotationBlockPosition].X) - Math.Sin((Math.PI / 180) * 90) * (blockPos[i].Y - blockPos[rotationBlockPosition].Y) + blockPos[rotationBlockPosition].X);
+                            currentBlockPos[i].Y = (float)(Math.Sin((Math.PI / 180) * 90) * (blockPos[i].X - blockPos[rotationBlockPosition].X) + Math.Cos((Math.PI / 180) * 90) * (blockPos[i].Y - blockPos[rotationBlockPosition].Y) + blockPos[rotationBlockPosition].Y);
+                        }
+                        else
+                        {
+                            currentBlockPos[i] = blockPos[i];
+                        }
                     }
                     break;
                 case 2:
-                    for (int i = 1; i < 4; i++)
+                    for (int i = 0; i < 4; i++)
                     {
-                        currentBlockPos[i].X = (float)(Math.Cos((Math.PI / 180) * 180) * (blockPos[i].X - drawPoint.X) - Math.Sin((Math.PI / 180) * 180) * (blockPos[i].Y - drawPoint.Y) + drawPoint.X);
-                        currentBlockPos[i].Y = (float)(Math.Sin((Math.PI / 180) * 180) * (blockPos[i].X - drawPoint.X) + Math.Cos((Math.PI / 180) * 180) * (blockPos[i].Y - drawPoint.Y) + drawPoint.Y);
+                        if (i != rotationBlockPosition)
+                        {
+                            currentBlockPos[i].X = (float)(Math.Cos((Math.PI / 180) * 180) * (blockPos[i].X - blockPos[rotationBlockPosition].X) - Math.Sin((Math.PI / 180) * 180) * (blockPos[i].Y - blockPos[rotationBlockPosition].Y) + blockPos[rotationBlockPosition].X);
+                            currentBlockPos[i].Y = (float)(Math.Sin((Math.PI / 180) * 180) * (blockPos[i].X - blockPos[rotationBlockPosition].X) + Math.Cos((Math.PI / 180) * 180) * (blockPos[i].Y - blockPos[rotationBlockPosition].Y) + blockPos[rotationBlockPosition].Y);
+                        }
+                        else
+                        {
+                            currentBlockPos[i] = blockPos[i];
+                        }
                     }
                     break;
                 case 3:
-                    for (int i = 1; i < 4; i++)
+                    for (int i = 0; i < 4; i++)
                     {
-                        currentBlockPos[i].X = (float)(Math.Cos((Math.PI / 180) * 270) * (blockPos[i].X - drawPoint.X) - Math.Sin((Math.PI / 180) * 270) * (blockPos[i].Y - drawPoint.Y) + drawPoint.X);
-                        currentBlockPos[i].Y = (float)(Math.Sin((Math.PI / 180) * 270) * (blockPos[i].X - drawPoint.X) + Math.Cos((Math.PI / 180) * 270) * (blockPos[i].Y - drawPoint.Y) + drawPoint.Y);
+                        if (i != rotationBlockPosition)
+                        {
+                            currentBlockPos[i].X = (float)(Math.Cos((Math.PI / 180) * 270) * (blockPos[i].X - blockPos[rotationBlockPosition].X) - Math.Sin((Math.PI / 180) * 270) * (blockPos[i].Y - blockPos[rotationBlockPosition].Y) + blockPos[rotationBlockPosition].X);
+                            currentBlockPos[i].Y = (float)(Math.Sin((Math.PI / 180) * 270) * (blockPos[i].X - blockPos[rotationBlockPosition].X) + Math.Cos((Math.PI / 180) * 270) * (blockPos[i].Y - blockPos[rotationBlockPosition].Y) + blockPos[rotationBlockPosition].Y);
+                        }
+                        else
+                        {
+                            currentBlockPos[i] = blockPos[i];
+                        }
                     }
                     break;
             }
+
             #endregion
 
         }
@@ -200,7 +218,7 @@ namespace Evolo.GameClass
                 }
             }
 
-            return tempReturn;            
+            return tempReturn;
         }
 
         public void setRotation(int rotation)
@@ -240,16 +258,17 @@ namespace Evolo.GameClass
 
         public void setBlockPositions(Vector2[] blockPositions)
         {
-
             for (int i = 0; i < blockPosActive.Length; i++)
             {
-                if (blockPosActive[i] == true)
-                {
-                    currentBlockPos[i] = blockPos[i];
-                }
+                blockPosModifers[i] = new Vector2(blockPositions[i].X - currentBlockPos[i].X, blockPositions[i].Y - currentBlockPos[i].Y);
             }
 
-            blockPos = blockPos;
+            //blockPosModifers = blockPosModifers;
+        }
+
+        public Vector2[] getRawBlockPositions()
+        {
+            return currentBlockPos;
         }
     }
 }

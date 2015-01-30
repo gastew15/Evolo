@@ -57,7 +57,7 @@ namespace Evolo
 
         //Game
         String version = "Build V: 1.1.8.2"; // Major, Minor, Build, Revision #
-        Boolean tripped = false; //Boolean to chekc to see if the menus are active
+        Boolean mainMenuTripped = false; //Boolean to chekc to see if the menus are active
         const int defualtWidth = 1280, defualtHeight = 720;
 
         //Keys
@@ -70,7 +70,7 @@ namespace Evolo
         Boolean songTripped;
 
         //Credits
-        String[] creditsStringArray = new String[10] { "CREDITS", "Team", "Gavin Stewart - StarByte Designer & Lead Programer", "Kurtis Jones - Main Artist & Generation Programer", "Dalton Jones - Supporting Programer & Artist", "Josh Estrada - Programer & Tester", "A Special Thanks To", "Rb Witaker for helpful guides when we needed them", "AND", "To You The Player!" };
+        String[] creditsStringArray = new String[10] { "CREDITS", "Team", "G. Stewart - StarByte Designer & Lead Programer", "K. Jones - Main Artist & Generation Programer", "D. Jones - Supporting Programer & Artist", "J. Estrada - Programer & Tester", "A Special Thanks To", "D. Ely, The CACC and Lake Powell", "AND", "To You The Player!" };
 
         public Game1()
         {
@@ -96,7 +96,6 @@ namespace Evolo
                 var mouseState = Mouse.GetState();
                 var mousePosition = new Point(mouseState.X, mouseState.Y);
                 optionsHandler = new OptionsHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo");
-
                 gameTime = new GameTime();
                 //Loads and sets option values
                 GlobalVar.OptionsArray = optionsHandler.loadOptions();
@@ -156,7 +155,8 @@ namespace Evolo
                 //mainMenuMusic = Content.Load<Song>("Sounds/Music/spacesong2-8");
 
                 menus.LoadContent(this.Content, MenuFont);
-                menus.SetMenu("MainMenu");
+                menus.setLoadProfileFirstStartUp(true);
+                menus.SetMenu("LoadProfileMenu");
 
                 //TEMP LOAD CONTENT
                 background.LoadContent(this.Content);
@@ -199,9 +199,14 @@ namespace Evolo
         {
             try
             {
-
                 mouseStateCurrent = Mouse.GetState();
                 keybState = Keyboard.GetState();
+
+                if (GlobalVar.ResetGameField == true)
+                {
+                    fieldManager.resetGameVariables();
+                    GlobalVar.ResetGameField = false;
+                }
 
                 //GameState checking
                 gameState = GlobalVar.GameState;
@@ -215,9 +220,14 @@ namespace Evolo
                         if (menus.getMenuState() == "MainMenu")
                         {
                             //Reset Values
-                            GlobalVar.Score = 0;
-                            fieldManager.resetGameVariables();
+                            if (!mainMenuTripped)
+                            {
+                                GlobalVar.Score = 0;
+                                mainMenuTripped = true;
+                                menus.setLoadProfileFirstStartUp(false);
+                            }
                             GlobalVar.PreviousGameState = "MainMenu";
+                            credits.resetCreditRoll();
                         }
                         if (songTripped == false)
                         {
@@ -232,36 +242,33 @@ namespace Evolo
                         //MediaPlayer.Pause(mainMenuMusic);
                         fieldManager.Update(gameTime);
                         background.Update(gameTime, milliScecondsElapsedGameTime);
-                        tripped = false;
+
+                        if (fieldManager.getGameOver())
+                        {
+                            GlobalVar.GameState = "MenuScreen";
+                            if (fieldManager.getGameWin())
+                            {
+                                menus.SetMenu("GameWinMenu");
+                            }
+                            else
+                            {
+                                menus.SetMenu("GameLoseMenu");
+                            }
+                        }
+
+                        mainMenuTripped = false;
                         break;
 
                     case "Credits":
                         background.Update(gameTime, milliScecondsElapsedGameTime);
                         //MediaPlayer.Pause(mainMenuMusic);
-                        tripped = false;
                         break;
 
                     case "SplashScreen":
-                        //TEMP UPDATE
                         splashScreen.Update(milliScecondsElapsedGameTime, orginalSplashScreenStartTime);
                         if (splashScreen.getSplashScreenOver() == true)
                             GlobalVar.GameState = "MenuScreen";
                         background.Update(gameTime, milliScecondsElapsedGameTime);
-                        break;
-                    case "GameOver":
-                        menus.Update(gameTime, mouseStateCurrent, mouseStatePrevious, milliScecondsElapsedGameTime);
-                        fieldManager.resetGameVariables();
-                        
-                        if (fieldManager.getGameWin() == true)
-                        {
-                            menus.SetMenu("GameWinMenu");
-                        }
-                        else
-                        {
-                            menus.SetMenu("GameLoseMenu");
-                        }
-                        background.Update(gameTime, milliScecondsElapsedGameTime);
-                        //tripped = true;
                         break;
                 }
 
@@ -312,7 +319,7 @@ namespace Evolo
                         {
                             GlobalVar.GameState = "Playing";
                         }
-                        else if (menus.getMenuState() == "OptionsMenu" || menus.getMenuState() == "SaveSlotMenu")
+                        else if (menus.getMenuState() == "OptionsMenu" || menus.getMenuState() == "LoadProfileMenu" || menus.getMenuState() == "LevelSelect")
                         {
                             if (GlobalVar.PreviousGameState == "Playing")
                                 menus.SetMenu("PauseMenu");
@@ -323,9 +330,9 @@ namespace Evolo
                         {
                             menus.SetMenu("OptionsMenu");
                         }
-                        else
+                        else if (menus.getMenuState() == "CustomLevelSelect")
                         {
-                            //menus.SetMenu(menus.getPreviousMenuState());
+                            menus.SetMenu("LevelSelect");
                         }
                     }
                 }
@@ -381,14 +388,9 @@ namespace Evolo
                         background.Draw(spriteBatch, SeqoeUIMonoNormal);
                         fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         break;
-                    case "GameOver":
-                        background.Draw(spriteBatch, SeqoeUIMonoNormal);
-                        fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
-                        menus.Draw(spriteBatch);
-                        break;
                     case "MenuScreen":
                         background.Draw(spriteBatch, SeqoeUIMonoNormal);
-                        if (menus.getMenuState() == "PauseMenu")
+                        if (menus.getMenuState() == "PauseMenu" || menus.getMenuState() == "GameWinMenu" || menus.getMenuState() == "GameLoseMenu")
                         {
                             fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
                         }

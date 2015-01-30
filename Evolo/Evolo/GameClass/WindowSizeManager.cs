@@ -11,7 +11,6 @@ namespace Evolo.GameClass
     {
         private Vector2 screenSize;
         private GraphicsDeviceManager graphics;
-        private Boolean isFullScreen;
         private GameWindow Window;
 
         public WindowSizeManager(GraphicsDeviceManager graphics)
@@ -43,7 +42,7 @@ namespace Evolo.GameClass
 
         public Boolean GetFullscreenState()
         {
-            return isFullScreen;
+            return graphics.IsFullScreen;
         }
 
     }

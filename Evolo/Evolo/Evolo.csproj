@@ -80,6 +80,7 @@
     <Compile Include="GameClass\Menus.cs" />
     <Compile Include="GameClass\OptionsHandler.cs" />
     <Compile Include="GameClass\Player.cs" />
+    <Compile Include="GameClass\SingletonLevelSystem.cs" />
     <Compile Include="GameClass\Tetromino.cs" />
     <Compile Include="GameClass\WindowSizeManager.cs" />
     <Compile Include="GlobalVar.cs" />
@@ -93,8 +94,6 @@
     <Compile Include="StarByte\io\ScriptFileReader.cs" />
     <Compile Include="StarByte\io\SpriteSheetReader.cs" />
     <Compile Include="StarByte\misc\FPSManager.cs" />
-    <Compile Include="StarByte\part\Particle.cs" />
-    <Compile Include="StarByte\part\ParticleEffectsHandler.cs" />
     <Compile Include="StarByte\ui\MenuHandler.cs" />
     <Compile Include="StarByte\ui\PopUpHandler.cs" />
   </ItemGroup>

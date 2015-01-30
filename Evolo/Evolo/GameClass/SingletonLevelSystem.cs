@@ -8,12 +8,10 @@ using Microsoft.Xna.Framework;
 
 namespace Evolo.GameClass
 {
-    /// <summary>
-    /// Reads .lvl files into game and takes info from it, to determine the placements and values in the game
-    /// </summary>
-    class LevelSystem
+    public class SingletonLevelSystem
     {
-        private String levelName = "1";
+        private static SingletonLevelSystem SinLevelSys = null;
+        private String levelName;
         private Vector2 playerStartPos;
         private Vector2 startPlatPos;
         private Vector2 endPlatPos;
@@ -21,9 +19,21 @@ namespace Evolo.GameClass
         private int timer;
         private int lineToClear;
 
+        private SingletonLevelSystem() { }
+
+        public static SingletonLevelSystem getInstance()
+        {
+            if (null == SinLevelSys)
+            {
+                SinLevelSys = new SingletonLevelSystem();
+            }
+
+            return SinLevelSys;  
+        }
+
         public void Update()
         {
-            StreamReader sr = new StreamReader("Levels/Level" + levelName + ".dat");
+            StreamReader sr = new StreamReader("Levels/" + levelName + ".dat");
             string[] paramaters = sr.ReadToEnd().Split(';');
             sr.Close();
 
@@ -33,9 +43,7 @@ namespace Evolo.GameClass
             levelMod = Convert.ToInt32(paramaters[3]);
             timer = Convert.ToInt32(paramaters[4]);
             lineToClear = Convert.ToInt32(paramaters[5]);
-
         }
-
         public void setLevel(String levelName)
         {
             this.levelName = levelName;
