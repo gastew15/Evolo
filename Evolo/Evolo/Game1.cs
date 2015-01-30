@@ -319,12 +319,16 @@ namespace Evolo
                         {
                             GlobalVar.GameState = "Playing";
                         }
-                        else if (menus.getMenuState() == "OptionsMenu" || menus.getMenuState() == "LoadProfileMenu" || menus.getMenuState() == "LevelSelect")
+                        else if (menus.getMenuState() == "OptionsMenu" || menus.getMenuState() == "LevelSelect")
                         {
                             if (GlobalVar.PreviousGameState == "Playing")
                                 menus.SetMenu("PauseMenu");
                             else
                                 menus.SetMenu("MainMenu");
+                        }
+                        else if(menus.getMenuState() == "LoadProfileMenu" && !menus.getLoadProfileFirstStartUp())
+                        {
+                            menus.SetMenu("MainMenu");
                         }
                         else if (menus.getMenuState() == "OptionsResolutionMenu" || menus.getMenuState() == "OptionsKeybindingMenuPage1" || menus.getMenuState() == "OptionsKeybindingMenuPage2" || menus.getMenuState() == "debugMenu")
                         {
