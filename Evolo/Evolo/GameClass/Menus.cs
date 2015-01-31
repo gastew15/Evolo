@@ -837,10 +837,24 @@ namespace Evolo.GameClass
             {
                 mainMenu.setMenuHoverNumber(1);
                 optionsKeybindingMenuPage1.setMenuHoverNumber(1);
+                optionsKeybindingMenuPage2.setMenuHoverNumber(1);
                 optionsResolutionMenu.setMenuHoverNumber(1);
                 optionsMenu.setMenuHoverNumber(1);
                 pauseMenu.setMenuHoverNumber(1);
                 debugMenu.setMenuHoverNumber(1);
+                levelSelectMenu.setMenuHoverNumber(1);
+                customLevelMenu.setMenuHoverNumber(1);
+                loadProfileMenu.setMenuHoverNumber(1);
+
+                mainMenu.setMenuHoberNumberPrevious(1);
+                optionsKeybindingMenuPage1.setMenuHoberNumberPrevious(1);
+                optionsKeybindingMenuPage2.setMenuHoberNumberPrevious(1);
+                optionsResolutionMenu.setMenuHoberNumberPrevious(1);
+                optionsMenu.setMenuHoberNumberPrevious(1);
+                pauseMenu.setMenuHoberNumberPrevious(1);
+                debugMenu.setMenuHoberNumberPrevious(1);
+                levelSelectMenu.setMenuHoberNumberPrevious(1);
+                customLevelMenu.setMenuHoberNumberPrevious(1);
                 loadProfileMenu.setMenuHoverNumber(1);
             }
 

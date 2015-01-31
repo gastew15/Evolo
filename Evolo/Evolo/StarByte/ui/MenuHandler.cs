@@ -154,7 +154,7 @@ namespace StarByte.ui
                 }
             }
             //Enter Key Up Logic (Resets Boolean)
-            if (keybState.IsKeyUp(Keys.Enter))
+            if (keybState.IsKeyUp(Keys.Enter) && menuNumberHoverPrevious!= menuNumberHover)
             {
                 if (isPressedEnter)
                     isPressedEnter = false;
@@ -400,6 +400,11 @@ namespace StarByte.ui
         public void setMenuHoverNumber(int menuNumberHover)
         {
             this.menuNumberHover = menuNumberHover;
+        }
+
+        public void setMenuHoberNumberPrevious(int menuNumberHoverPrevious)
+        {
+            this.menuNumberHoverPrevious = menuNumberHoverPrevious;
         }
 
         public void setSimulatedButtonPress(int buttonToPress)
