@@ -10,15 +10,13 @@ namespace StarByte.io
     class EncoderSystem
     {
         private byte[] initVectorBytes;
-        private string passPhrase;
 
         // This constant is used to determine the keysize of the encryption algorithm.
         private int keysize;
 
-        public EncoderSystem(byte[] _initVectorBytes, string _passPhrase, int _keysize)
+        public EncoderSystem(byte[] _initVectorBytes, int _keysize)
         {
             initVectorBytes = _initVectorBytes;
-            passPhrase = _passPhrase;
             keysize = _keysize;
         }
 

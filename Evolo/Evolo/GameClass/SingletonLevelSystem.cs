@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using StarByte.io;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
@@ -14,7 +15,6 @@ using Microsoft.Xna.Framework;
 
 namespace Evolo.GameClass
 {
-
     public class SingletonLevelSystem
     {
         private static SingletonLevelSystem SinLevelSys = null;
@@ -25,10 +25,17 @@ namespace Evolo.GameClass
         private double levelMod;
         private int timer;
         private int lineToClear;
+        EncoderSystem encoder;
+        private const int keysize = 256;
+        private static readonly byte[] initVectorBytes = Encoding.ASCII.GetBytes("4khek4rl93h5qb5k");
+        private static readonly string passPhrase = "H5j3o3jkDje9";
         
 
         //Private constructor so that the only class that can intitialize the level system is itself
-        private SingletonLevelSystem() { }
+        private SingletonLevelSystem() 
+        {
+            encoder = new EncoderSystem(initVectorBytes, keysize);
+        }
 
         //Method to check 
         public static SingletonLevelSystem getInstance()
@@ -46,7 +53,13 @@ namespace Evolo.GameClass
             try
             {
                 StreamReader sr = new StreamReader("Levels/" + levelName + ".dat");
-                string[] paramaters = sr.ReadToEnd().Split(';');
+                string[] paramaters;
+
+                if(!GlobalVar.CustomLevel)
+                    paramaters = encoder.DecryptData(sr.ReadToEnd(), passPhrase).Split(';');
+                else
+                    paramaters = sr.ReadToEnd().Split(';');
+
                 sr.Close();
 
                 playerStartPos = new Vector2(Convert.ToInt32(paramaters[0].Split(',')[0]), Convert.ToInt32(paramaters[0].Split(',')[1]));
@@ -58,31 +71,6 @@ namespace Evolo.GameClass
             }
             catch
             {
-                if (!File.Exists("Levels/" + levelName + ".dat"))
-                {
-                    StreamWriter stream = new StreamWriter("Levels/" + levelName + ".dat");
-
-                    switch (levelName)
-                    {
-                        case "Level1":
-                            stream.Write("0,16;0,17;23,15;1;330;10");
-                            break;
-                        case "Level2":
-                            stream.Write("0,13;0,14;23,18;1.25;420;15");
-                            break;
-                        case "Level3":
-                            stream.Write("0,14;0,15;23,10;1.5;590;20");
-                            break;
-                        case "Level4":
-                            stream.Write("0,9;0,10;23,15;1.75;600;25");
-                            break;
-                        case "Level5":
-                            stream.Write("0,14;0,15;23,8;2.5;800;40");
-                            break;
-                    }
-
-                    stream.Close();
-                }
 
             }
         }

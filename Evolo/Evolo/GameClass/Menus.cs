@@ -20,8 +20,7 @@ using StarByte.io;
 namespace Evolo.GameClass
 {
     class Menus
-    {
-        
+    {       
         private int customMenuPageMod, fileAmount, customLevelFileCount; //for changing pages and displaying more levels
         private String[] customLevelList;
         private Boolean gameWin = false;
@@ -34,12 +33,16 @@ namespace Evolo.GameClass
         private String menuState;
         private String previousMenuState;
         private String storedRealPreviousMenuState;
+        EncoderSystem encoder;
+        private const int keysize = 256;
+        private static readonly byte[] initVectorBytes = Encoding.ASCII.GetBytes("4khek4rl93h5qb5k");
+        private static readonly string passPhrase = "H5j3o3jkDje9";
         //Playing, MenuScreen, GameOver
 
         //Temp string
         private String[] loadData = new string[] { "" };
 
-        private String[] levelInfo = { "0,14;0,15;23,10;1;390;10", "0,19;0,20;23,10;2;450;15", "0,14;0,15;23,10;1;390;10", "0,19;0,20;23,10;2;450;15", "0,14;0,15;23,10;1;390;10" };
+        private String[] levelInfo = { "0,16;0,17;23,15;1;330;10", "0,13;0,14;23,18;1.25;420;15", "0,14;0,15;23,10;1.5;590;20", "0,9;0,10;23,15;1.75;600;25", "0,14;0,15;23,8;2.5;800;40" };
 
         //Variables
         private Texture2D optionsTitle, menuTitle, pauseTitle, debugTitle, keybindBlockTitle, keybindPlayerTitle, gameLoseTitle, gameWinTitle, loadProfileTitle, levelSelectMenuTitle, customLevelMenuTitle, menuButtonBackground, menuButtonBorder7, menuButtonBorder6, menuButtonBorder4, menuButtonBorder2, menuButtonBorder3;
@@ -77,6 +80,7 @@ namespace Evolo.GameClass
         public Menus(GraphicsDeviceManager graphics)
         {
             this.graphics = graphics;
+            encoder = new EncoderSystem(initVectorBytes, keysize);
         }
 
         public void Initialize(String[] keyBindingInfo)
@@ -146,7 +150,7 @@ namespace Evolo.GameClass
                     for (int i = 0; i < 5; i++)
                     {
                         StreamWriter sr = new StreamWriter("Levels/Level" + (i + 1) + ".dat");
-                        sr.Write(levelInfo[i]);
+                        sr.Write(encoder.EncryptData(levelInfo[i], passPhrase));
                         sr.Close();
                     }
                 }

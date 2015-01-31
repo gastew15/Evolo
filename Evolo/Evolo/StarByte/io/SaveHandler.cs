@@ -35,7 +35,7 @@ namespace StarByte.io
             this.numberOfLinesPerSlot = defualtData.Length;
             this.writeLocation = fileLocation + "\\" + fileName;
 
-            encoder = new EncoderSystem(initVectorBytes, passPhrase, keysize);
+            encoder = new EncoderSystem(initVectorBytes, keysize);
 
             Boolean fileOk;
 
