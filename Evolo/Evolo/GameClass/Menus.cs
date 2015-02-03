@@ -20,7 +20,7 @@ using StarByte.io;
 namespace Evolo.GameClass
 {
     class Menus
-    {       
+    {
         private int customMenuPageMod, fileAmount, customLevelFileCount; //for changing pages and displaying more levels
         private String[] customLevelList;
         private Boolean gameWin = false;
@@ -42,6 +42,9 @@ namespace Evolo.GameClass
 
         //Temp string
         private String[] loadData = new string[] { "" };
+
+        KeyboardState currentKeyboardState;
+        KeyboardState previousKeyboardState;
 
         private String[] levelInfo = { "0,16;0,17;23,15;1;330;10", "0,13;0,14;23,18;1.25;420;15", "0,14;0,15;23,10;1.5;590;20", "0,9;0,10;23,15;1.75;600;25", "0,14;0,15;23,8;2.5;800;40" };
 
@@ -90,7 +93,7 @@ namespace Evolo.GameClass
             GlobalVar.HighScore = new int[5];
             optionsHandler = new OptionsHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo");
             saveHandler = new SaveHandler(6, new String[] { "1", "0", "0", "0", "0", "0" }, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo", "Save.dat");
-
+            currentKeyboardState = Keyboard.GetState();
             //2 pages to contain all of the key options, treat as seperate menus
             optionsKeybindingMenuPage1ButtonText = new String[6] { "PlayerLeft: " + "left", "PlayerRight: " + keyBindingInfo[1], "PlayerJump: " + keyBindingInfo[2], "Nothing At All", "Next Page ->", "Back" };
             optionsKeybindingMenuPage2ButtonText = new String[6] { "BlockLeft: " + keyBindingInfo[3], "BlockRight: " + keyBindingInfo[4], "BlockRotate: " + keyBindingInfo[5], "BlockDown: " + keyBindingInfo[6], "<- Previous Page", "Back" };
@@ -159,7 +162,7 @@ namespace Evolo.GameClass
                     }
                 }
 
-                else if(!Directory.Exists("Levels/CustomLevels"))
+                else if (!Directory.Exists("Levels/CustomLevels"))
                 {
                     Directory.CreateDirectory("Levels/CustomLevels");
                     StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
@@ -265,7 +268,7 @@ namespace Evolo.GameClass
             //PopUp
             renameProfilePopupPosition = new Vector2((GlobalVar.ScreenSize.X / 2) - ((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X) / 2) + 150, (GlobalVar.ScreenSize.Y / 2) - ((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y) / 2));
             renameProfilePopUpText = new String[] { "Hello Kurtis" };
-            renameProfilePopUp = new PopUpHandler(renameProfilePopupTexture, renameProfilePopupPosition,new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).X * GlobalVar.ScaleSize.X) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).Y * GlobalVar.ScaleSize.Y) / 2))), 10, 1, renameProfilePopUpText, font, new Color[] { Color.White }, GlobalVar.ScreenSize, true);
+            renameProfilePopUp = new PopUpHandler(renameProfilePopupTexture, renameProfilePopupPosition, new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).X * GlobalVar.ScaleSize.X) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).Y * GlobalVar.ScaleSize.Y) / 2))), 10, 1, renameProfilePopUpText, font, new Color[] { Color.White }, GlobalVar.ScreenSize, true);
         }
 
         public void Update(GameTime gameTime, MouseState mouseStateCurrent, MouseState mouseStatePrevious, float millisecondsElapsedGametime)
@@ -567,8 +570,52 @@ namespace Evolo.GameClass
                 #endregion
                 #region Load Profile Menu Update
                 case "LoadProfileMenu":
+
                     //TEMP
                     renameProfilePopUp.Update(gameTime, mouseStateCurrent, mouseStatePrevious, new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).X * GlobalVar.ScaleSize.X) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).Y * GlobalVar.ScaleSize.Y) / 2))), GlobalVar.ScreenSize, GlobalVar.ScaleSize);
+                    previousKeyboardState = currentKeyboardState;
+                    currentKeyboardState = Keyboard.GetState();
+
+                    Keys[] pressedKeys;
+                    pressedKeys = currentKeyboardState.GetPressedKeys();
+
+                    foreach (Keys key in pressedKeys)
+                    {
+                        if (previousKeyboardState.IsKeyUp(key))
+                        {
+                            if (key == Keys.Back) // overflows
+                            {
+                                if (renameProfilePopUpText[0].Length > 0)
+                                    renameProfilePopUpText[0] = renameProfilePopUpText[0].Remove(renameProfilePopUpText[0].Length - 1, 1);
+                            }
+                            else if (key == Keys.Enter)
+                            {
+                                //Go forward to load menu
+                            }
+                            else if (key == Keys.Space)
+                            {
+                                if (renameProfilePopUpText[0].Length < 11)
+                                    renameProfilePopUpText[0] = renameProfilePopUpText[0].Insert(renameProfilePopUpText[0].Length, " ");
+                            }
+                            else
+                            {
+                                if (renameProfilePopUpText[0].Length < 11)
+                                {
+                                    String keyString = key.ToString();
+
+                                    if (System.Text.RegularExpressions.Regex.IsMatch(keyString, @"[0-9]"))
+                                    {
+                                        //keyString = keyString.Substring(keyString.IndexOf(@"[0-9]"), keyString.IndexOf(@"[0-9]") + 1);
+                                    }
+
+                                    if (System.Text.RegularExpressions.Regex.IsMatch(keyString, @"[a-zA-Z0-9]") && keyString.Length == 1) //Numbers
+                                    {
+                                        renameProfilePopUpText[0] += keyString;
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     if (loadProfileFirstTimeStartUp)
                         loadProfileMenuButtonText[6] = "Quit";
@@ -596,7 +643,7 @@ namespace Evolo.GameClass
                     else if (loadProfileMenu.menuNumberSelection() != 0)
                     {
                         GlobalVar.PlayerProfile = loadProfileMenu.menuNumberSelection();
-                        menuState = "LoadRenameMenu";   
+                        menuState = "LoadRenameMenu";
                     }
 
                     break;
@@ -703,7 +750,7 @@ namespace Evolo.GameClass
                     else if (levelSelectMenu.menuNumberSelection() != 0 && GlobalVar.HighestLevel >= levelSelectMenu.menuNumberSelection())
                     {
                         GlobalVar.CustomLevel = false;
-                        GlobalVar.CurrentLevel =  levelSelectMenu.menuNumberSelection().ToString();
+                        GlobalVar.CurrentLevel = levelSelectMenu.menuNumberSelection().ToString();
                         levels.setLevel("Level" + GlobalVar.CurrentLevel);
                         GlobalVar.ResetGameField = true;
                         GlobalVar.GameState = "Playing";
@@ -764,7 +811,7 @@ namespace Evolo.GameClass
                         GlobalVar.GameState = "Playing";
                     }
                     break;
-                    #endregion
+                #endregion
                 #region Load Rename Menu Update
                 case "LoadRenameMenu":
                     loadRenameMenu.Update(gameTime,
@@ -778,7 +825,7 @@ namespace Evolo.GameClass
                         mainMenuColors,
                         Convert.ToBoolean(GlobalVar.OptionsArray[12]));
 
-                    
+
 
                     //Does button presses
                     if (loadRenameMenu.menuNumberSelection() == 1)
@@ -812,9 +859,9 @@ namespace Evolo.GameClass
                     break;
                 #endregion
             }
-            
-                
-                #region Toggle Button Color Changer
+
+
+            #region Toggle Button Color Changer
             //Checks for color updates from toggles for menus
 
             if (Convert.ToBoolean(GlobalVar.OptionsArray[9]) == true)
