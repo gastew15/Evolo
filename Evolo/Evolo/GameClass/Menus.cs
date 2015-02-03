@@ -219,8 +219,8 @@ namespace Evolo.GameClass
             levelSelectMenuTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_LevelSelect");
             customLevelMenuTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_CustomLevel");
             loadProfileTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Profile");
-            menuHoverChangeSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuHoverChangeEffect");
-            menuClickedSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/menuClickedEffect");
+            menuHoverChangeSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_MenuHover");
+            menuClickedSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_MenuClick");
             #endregion
             #region Menu Starting Positions
             //SP = Starting Position
