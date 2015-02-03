@@ -33,7 +33,8 @@ namespace Evolo.GameClass
         private String menuState;
         private String previousMenuState;
         private String storedRealPreviousMenuState;
-        EncoderSystem encoder;
+        private EncoderSystem encoder;
+        private PopUpHandler renameProfilePopUp;
         private const int keysize = 256;
         private static readonly byte[] initVectorBytes = Encoding.ASCII.GetBytes("4khek4rl93h5qb5k");
         private static readonly string passPhrase = "H5j3o3jkDje9";
@@ -45,9 +46,9 @@ namespace Evolo.GameClass
         private String[] levelInfo = { "0,16;0,17;23,15;1;330;10", "0,13;0,14;23,18;1.25;420;15", "0,14;0,15;23,10;1.5;590;20", "0,9;0,10;23,15;1.75;600;25", "0,14;0,15;23,8;2.5;800;40" };
 
         //Variables
-        private Texture2D optionsTitle, menuTitle, pauseTitle, debugTitle, keybindBlockTitle, keybindPlayerTitle, gameLoseTitle, gameWinTitle, loadProfileTitle, levelSelectMenuTitle, customLevelMenuTitle, menuButtonBackground, menuButtonBorder7, menuButtonBorder6, menuButtonBorder4, menuButtonBorder2, menuButtonBorder3;
+        private Texture2D optionsTitle, menuTitle, pauseTitle, debugTitle, keybindBlockTitle, keybindPlayerTitle, gameLoseTitle, gameWinTitle, loadProfileTitle, levelSelectMenuTitle, customLevelMenuTitle, menuButtonBackground, menuButtonBorder7, menuButtonBorder6, menuButtonBorder4, menuButtonBorder2, menuButtonBorder3, renameProfilePopupTexture;
         private int mainMenuVerticalSpacing = 24;
-        private Vector2 optionsCenterMenuSP, mainMenuSP, keybindingCenterMenuSP, pauseMenuSP, debugSP, loadProfileMenuSP, gameOverMenuSP, levelSelectMenuSp, customLevelMenuSp;
+        private Vector2 optionsCenterMenuSP, mainMenuSP, keybindingCenterMenuSP, pauseMenuSP, debugSP, loadProfileMenuSP, gameOverMenuSP, levelSelectMenuSp, customLevelMenuSp, renameProfilePopupPosition;
         private String[] mainMenuButtonText;
         private String[] optionsMenuButtonText;
         private String[] optionsResolutionMenuButtonText;
@@ -61,6 +62,7 @@ namespace Evolo.GameClass
         private String[] levelSelectMenuText;
         private String[] customLevelMenuText;
         private String[] loadProfileMenuButtonText;
+        private String[] renameProfilePopUpText;
         private Color[] mainMenuColors;
         private Color[] optionsMenuColors;
         private Color[] optionsResolutionMenuColors;
@@ -74,8 +76,6 @@ namespace Evolo.GameClass
         private SoundEffect menuHoverChangeSoundEffect, menuClickedSoundEffect;
         private SingletonLevelSystem levels = SingletonLevelSystem.getInstance();
         private Boolean loadProfileFirstTimeStartUp;
-
-
 
         public Menus(GraphicsDeviceManager graphics)
         {
@@ -203,10 +203,9 @@ namespace Evolo.GameClass
             menuButtonBorder2 = Content.Load<Texture2D>("Sprites and Pictures/ButtonBorder2");
 
             menuButtonBackground = Content.Load<Texture2D>("Sprites and Pictures/ButtonBackground");
-
             keybindBlockTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_KeybindBlock");
             keybindPlayerTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_KeybindPlayer");
-
+            renameProfilePopupTexture = Content.Load<Texture2D>("Sprites and Pictures/ButtonBackground");
             debugTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Debug");
             pauseTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Pause");
             menuTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_MainMenu");
@@ -258,6 +257,10 @@ namespace Evolo.GameClass
                 debugMenuButtonText[2] = "Debug Info: On";
 
             #endregion
+            //PopUp
+            renameProfilePopupPosition = new Vector2((GlobalVar.ScreenSize.X / 2) - ((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X) / 2) + 150, (GlobalVar.ScreenSize.Y / 2) - ((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y) / 2));
+            renameProfilePopUpText = new String[] { "Hello Kurtis" };
+            renameProfilePopUp = new PopUpHandler(renameProfilePopupTexture, renameProfilePopupPosition,new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).X * GlobalVar.ScaleSize.X) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).Y * GlobalVar.ScaleSize.Y) / 2))), 10, 1, renameProfilePopUpText, font, new Color[] { Color.White }, GlobalVar.ScreenSize, true);
         }
 
         public void Update(GameTime gameTime, MouseState mouseStateCurrent, MouseState mouseStatePrevious, float millisecondsElapsedGametime)
@@ -559,6 +562,9 @@ namespace Evolo.GameClass
                 #endregion
                 #region Load Profile Menu Update
                 case "LoadProfileMenu":
+                    //TEMP
+                    renameProfilePopUp.Update(gameTime, mouseStateCurrent, mouseStatePrevious, new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).X * GlobalVar.ScaleSize.X) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).Y * GlobalVar.ScaleSize.Y) / 2))), GlobalVar.ScreenSize, GlobalVar.ScaleSize);
+
                     if (loadProfileFirstTimeStartUp)
                         loadProfileMenuButtonText[6] = "Quit";
                     else
@@ -899,6 +905,7 @@ namespace Evolo.GameClass
                     break;
                 case "LoadProfileMenu":
                     loadProfileMenu.Draw(spriteBatch);
+                    renameProfilePopUp.Draw(spriteBatch);
                     break;
                 case "GameLoseMenu":
                     gameLoseMenu.Draw(spriteBatch);
