@@ -50,6 +50,25 @@ namespace StarByte.ui
             this.isDragable = isDragable;
         }
 
+        public PopUpHandler(Texture2D popupBackground, Vector2 popupWindowPos, Vector2 popupTextDrawPos, int verticalLineSpacing, int linesOnAPage, String[] popupText, SpriteFont font, Color[] textColor, Vector2 screenSize, Boolean isDragable)
+        {
+            this.popupBackground = popupBackground;
+            this.popupTextDrawPos = popupTextDrawPos;
+            this.popupTextDrawPosOrginal = popupTextDrawPos;
+            this.verticalLineSpacing = verticalLineSpacing;
+            this.linesOnAPage = linesOnAPage;
+            this.popupText = popupText;
+            this.font = font;
+            this.screenSize = screenSize;
+            this.popupWindowPos = popupWindowPos;
+            this.popupWindowStartingPos = popupWindowPos;
+            if (textColor == null)
+                this.textColor = new Color[popupText.Length];
+            else
+                this.textColor = textColor;
+            this.isDragable = isDragable;
+        }
+
         public void Update(GameTime gameTime, MouseState mouseStateCurrent, MouseState mouseStatePrevious, Vector2 textDrawPosition, Rectangle closeButtonRect,Vector2 screenSize, Vector2 drawScale)
         {
             this.closeButtonRect = closeButtonRect;
@@ -111,10 +130,55 @@ namespace StarByte.ui
             }
         }
 
+        public void Update(GameTime gameTime, MouseState mouseStateCurrent, MouseState mouseStatePrevious, Vector2 textDrawPosition, Vector2 screenSize, Vector2 drawScale)
+        {
+            this.screenSize = screenSize;
+            this.drawScale = drawScale;
+            this.popupTextDrawPosOrginal = textDrawPosition;
+
+            if (isDragable == true)
+            {
+                //Checks to see if the mouse is inside the bounds
+                if ((mouseStateCurrent.Y > popupWindowPos.Y && mouseStateCurrent.Y < (popupWindowPos.Y + (popupBackground.Height * drawScale.Y))) && (mouseStateCurrent.X > popupWindowPos.X && mouseStateCurrent.X < (popupWindowPos.X + (popupBackground.Width * drawScale.X))))
+                    popupWindowMouseOver = true;
+                else
+                    popupWindowMouseOver = false;
+
+                //Checks to see if the box is outside of bounds
+                if (popupWindowPos.X < 0)
+                    popupWindowPos.X = 0;
+                else if ((popupWindowPos.X + (popupBackground.Width * drawScale.X)) > screenSize.X)
+                    popupWindowPos.X = (screenSize.X - (popupBackground.Width * drawScale.X));
+                else if (popupWindowPos.Y < 0)
+                    popupWindowPos.Y = 0;
+                else if ((popupWindowPos.Y + (popupBackground.Height * drawScale.Y)) > screenSize.Y)
+                    popupWindowPos.Y = (screenSize.Y - (popupBackground.Height * drawScale.Y));
+
+                //Processes the information and decides to move the box or not
+                if (popupWindowMouseOver == true && (mouseStateCurrent.LeftButton == ButtonState.Pressed))
+                {
+                    popupWindowPos.X -= (mouseStatePrevious.X - mouseStateCurrent.X);
+                    popupWindowPos.Y -= (mouseStatePrevious.Y - mouseStateCurrent.Y);
+
+                    popupWindowDrawColor = Color.LightGray;
+                }
+                else
+                {
+                    popupWindowDrawColor = Color.White;
+                }
+            }
+            else
+            {
+                popupWindowPos = popupWindowStartingPos;
+                popupWindowDrawColor = Color.White;
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(popupBackground, popupWindowPos, null, Color.White, 0f, new Vector2(0, 0), drawScale, SpriteEffects.None, 1f);
-            spriteBatch.Draw(closeButtonTexture, new Vector2((closeButtonRect.X + (popupWindowPos.X - popupWindowStartingPos.X)), (closeButtonRect.Y + (popupWindowPos.Y - popupWindowStartingPos.Y))), null, closeButtonColor, 0f, new Vector2(0, 0), drawScale, SpriteEffects.None, 1f);
+            if(closeButtonTexture != null)
+                spriteBatch.Draw(closeButtonTexture, new Vector2((closeButtonRect.X + (popupWindowPos.X - popupWindowStartingPos.X)), (closeButtonRect.Y + (popupWindowPos.Y - popupWindowStartingPos.Y))), null, closeButtonColor, 0f, new Vector2(0, 0), drawScale, SpriteEffects.None, 1f);
             Vector2 textDrawPos;
 
             popupTextDrawPos = new Vector2(popupTextDrawPosOrginal.X + (popupWindowPos.X - popupWindowStartingPos.X), popupTextDrawPosOrginal.Y + (popupWindowPos.Y - popupWindowStartingPos.Y));
