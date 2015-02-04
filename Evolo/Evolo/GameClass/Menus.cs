@@ -81,6 +81,9 @@ namespace Evolo.GameClass
         private SoundEffect menuHoverChangeSoundEffect, menuClickedSoundEffect;
         private SingletonLevelSystem levels = SingletonLevelSystem.getInstance();
         private Boolean loadProfileFirstTimeStartUp;
+        private Boolean renameTripped;
+        private String profileName = "";
+        private int localPlayerProfile;
 
         public Menus(GraphicsDeviceManager graphics)
         {
@@ -92,7 +95,7 @@ namespace Evolo.GameClass
         {
             GlobalVar.HighScore = new int[5];
             optionsHandler = new OptionsHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo");
-            saveHandler = new SaveHandler(6, new String[] { "1", "0", "0", "0", "0", "0" }, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo", "Save.dat");
+            saveHandler = new SaveHandler(6, new String[] { "Profile", "1", "0", "0", "0", "0", "0" }, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo", "Save.dat");
             currentKeyboardState = Keyboard.GetState();
             //2 pages to contain all of the key options, treat as seperate menus
             optionsKeybindingMenuPage1ButtonText = new String[6] { "PlayerLeft: " + "left", "PlayerRight: " + keyBindingInfo[1], "PlayerJump: " + keyBindingInfo[2], "Nothing At All", "Next Page ->", "Back" };
@@ -265,10 +268,16 @@ namespace Evolo.GameClass
                 debugMenuButtonText[2] = "Debug Info: On";
 
             #endregion
+            //Profile Name Load
+            for(int k = 0; k < loadProfileMenuButtonText.Length - 1; k++)
+            {
+                loadProfileMenuButtonText[k] = saveHandler.loadData(k + 1)[0];
+            }
+
             //PopUp
-            renameProfilePopupPosition = new Vector2((GlobalVar.ScreenSize.X / 2) - ((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X) / 2) + 150, (GlobalVar.ScreenSize.Y / 2) - ((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y) / 2));
-            renameProfilePopUpText = new String[] { "Hello Kurtis" };
-            renameProfilePopUp = new PopUpHandler(renameProfilePopupTexture, renameProfilePopupPosition, new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).X * GlobalVar.ScaleSize.X) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).Y * GlobalVar.ScaleSize.Y) / 2))), 10, 1, renameProfilePopUpText, font, new Color[] { Color.White }, GlobalVar.ScreenSize, true);
+            renameProfilePopupPosition = new Vector2((GlobalVar.ScreenSize.X / 2) - ((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2), (GlobalVar.ScreenSize.Y / 2) - ((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y * 2) / 2));
+            renameProfilePopUpText = new String[] { profileName };
+            renameProfilePopUp = new PopUpHandler(renameProfilePopupTexture, renameProfilePopupPosition, new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).X * GlobalVar.ScaleSize.X) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).Y * GlobalVar.ScaleSize.Y) / 2))), 10, 1, renameProfilePopUpText, font, new Color[] { Color.White }, GlobalVar.ScreenSize, false);
         }
 
         public void Update(GameTime gameTime, MouseState mouseStateCurrent, MouseState mouseStatePrevious, float millisecondsElapsedGametime)
@@ -570,53 +579,6 @@ namespace Evolo.GameClass
                 #endregion
                 #region Load Profile Menu Update
                 case "LoadProfileMenu":
-
-                    //TEMP
-                    renameProfilePopUp.Update(gameTime, mouseStateCurrent, mouseStatePrevious, new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).X * GlobalVar.ScaleSize.X) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).Y * GlobalVar.ScaleSize.Y) / 2))), GlobalVar.ScreenSize, GlobalVar.ScaleSize);
-                    previousKeyboardState = currentKeyboardState;
-                    currentKeyboardState = Keyboard.GetState();
-
-                    Keys[] pressedKeys;
-                    pressedKeys = currentKeyboardState.GetPressedKeys();
-
-                    foreach (Keys key in pressedKeys)
-                    {
-                        if (previousKeyboardState.IsKeyUp(key))
-                        {
-                            if (key == Keys.Back) // overflows
-                            {
-                                if (renameProfilePopUpText[0].Length > 0)
-                                    renameProfilePopUpText[0] = renameProfilePopUpText[0].Remove(renameProfilePopUpText[0].Length - 1, 1);
-                            }
-                            else if (key == Keys.Enter)
-                            {
-                                //Go forward to load menu
-                            }
-                            else if (key == Keys.Space)
-                            {
-                                if (renameProfilePopUpText[0].Length < 11)
-                                    renameProfilePopUpText[0] = renameProfilePopUpText[0].Insert(renameProfilePopUpText[0].Length, " ");
-                            }
-                            else
-                            {
-                                if (renameProfilePopUpText[0].Length < 11)
-                                {
-                                    String keyString = key.ToString();
-
-                                    if (System.Text.RegularExpressions.Regex.IsMatch(keyString, @"[0-9]"))
-                                    {
-                                        //keyString = keyString.Substring(keyString.IndexOf(@"[0-9]"), keyString.IndexOf(@"[0-9]") + 1);
-                                    }
-
-                                    if (System.Text.RegularExpressions.Regex.IsMatch(keyString, @"[a-zA-Z0-9]") && keyString.Length == 1) //Numbers
-                                    {
-                                        renameProfilePopUpText[0] += keyString;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
                     if (loadProfileFirstTimeStartUp)
                         loadProfileMenuButtonText[6] = "Quit";
                     else
@@ -642,7 +604,9 @@ namespace Evolo.GameClass
                     }
                     else if (loadProfileMenu.menuNumberSelection() != 0)
                     {
-                        GlobalVar.PlayerProfile = loadProfileMenu.menuNumberSelection();
+                        localPlayerProfile = loadProfileMenu.menuNumberSelection();
+                        profileName = saveHandler.loadData(localPlayerProfile)[0];
+                        renameProfilePopUpText[0] = profileName;
                         menuState = "LoadRenameMenu";
                     }
 
@@ -668,7 +632,7 @@ namespace Evolo.GameClass
                             {
                                 GlobalVar.HighScore[Int32.Parse(GlobalVar.CurrentLevel) - 1] = GlobalVar.Score;
                             }
-                            saveHandler.saveData(new String[] { GlobalVar.HighestLevel.ToString(), GlobalVar.HighScore[0].ToString(), GlobalVar.HighScore[1].ToString(), GlobalVar.HighScore[2].ToString(), GlobalVar.HighScore[3].ToString(), GlobalVar.HighScore[4].ToString() }, GlobalVar.PlayerProfile);
+                            saveHandler.saveData(new String[] { profileName, GlobalVar.HighestLevel.ToString(), GlobalVar.HighScore[0].ToString(), GlobalVar.HighScore[1].ToString(), GlobalVar.HighScore[2].ToString(), GlobalVar.HighScore[3].ToString(), GlobalVar.HighScore[4].ToString() }, GlobalVar.PlayerProfile);
                         }
                     }
                     if (gameLoseMenu.menuNumberSelection() == 1)
@@ -708,7 +672,7 @@ namespace Evolo.GameClass
                             {
                                 GlobalVar.HighestLevel = Int32.Parse(GlobalVar.CurrentLevel) + 1;
                             }
-                            saveHandler.saveData(new String[] { GlobalVar.HighestLevel.ToString(), GlobalVar.HighScore[0].ToString(), GlobalVar.HighScore[1].ToString(), GlobalVar.HighScore[2].ToString(), GlobalVar.HighScore[3].ToString(), GlobalVar.HighScore[4].ToString() }, GlobalVar.PlayerProfile);
+                            saveHandler.saveData(new String[] { profileName, GlobalVar.HighestLevel.ToString(), GlobalVar.HighScore[0].ToString(), GlobalVar.HighScore[1].ToString(), GlobalVar.HighScore[2].ToString(), GlobalVar.HighScore[3].ToString(), GlobalVar.HighScore[4].ToString() }, GlobalVar.PlayerProfile);
                         }
                     }
                     //Does button presses
@@ -814,47 +778,108 @@ namespace Evolo.GameClass
                 #endregion
                 #region Load Rename Menu Update
                 case "LoadRenameMenu":
-                    loadRenameMenu.Update(gameTime,
-                        mouseStateCurrent,
-                        mouseStatePrevious,
-                        GlobalVar.ScreenSize,
-                        new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((loadProfileTitle.Height + menuButtonBorder4.Height) * GlobalVar.ScaleSize.Y)) / 2) + loadProfileTitle.Height * GlobalVar.ScaleSize.Y),
-                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder4.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((loadProfileTitle.Height + menuButtonBorder4.Height) * GlobalVar.ScaleSize.Y)) / 2) + loadProfileTitle.Height * GlobalVar.ScaleSize.Y),
-                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((loadProfileTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((loadProfileTitle.Height + menuButtonBorder4.Height) * GlobalVar.ScaleSize.Y)) / 2)),
-                        GlobalVar.ScaleSize,
-                        mainMenuColors,
-                        Convert.ToBoolean(GlobalVar.OptionsArray[12]));
-
-
-
-                    //Does button presses
-                    if (loadRenameMenu.menuNumberSelection() == 1)
+                    if (!renameTripped)
                     {
-                        if (saveHandler.loadData(GlobalVar.PlayerProfile) != null)
+                        loadRenameMenu.Update(gameTime,
+                            mouseStateCurrent,
+                            mouseStatePrevious,
+                            GlobalVar.ScreenSize,
+                            new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((loadProfileTitle.Height + menuButtonBorder4.Height) * GlobalVar.ScaleSize.Y)) / 2) + loadProfileTitle.Height * GlobalVar.ScaleSize.Y),
+                            new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder4.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((loadProfileTitle.Height + menuButtonBorder4.Height) * GlobalVar.ScaleSize.Y)) / 2) + loadProfileTitle.Height * GlobalVar.ScaleSize.Y),
+                            new Vector2((GlobalVar.ScreenSize.X / 2) - ((loadProfileTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((loadProfileTitle.Height + menuButtonBorder4.Height) * GlobalVar.ScaleSize.Y)) / 2)),
+                            GlobalVar.ScaleSize,
+                            mainMenuColors,
+                            Convert.ToBoolean(GlobalVar.OptionsArray[12]));
+
+                        //Does button presses
+                        if (loadRenameMenu.menuNumberSelection() == 1)
                         {
-                            GlobalVar.HighestLevel = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[0]);
-                            GlobalVar.HighScore[0] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[1]);
-                            GlobalVar.HighScore[1] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[2]);
-                            GlobalVar.HighScore[2] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[3]);
-                            GlobalVar.HighScore[3] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[4]);
-                            GlobalVar.HighScore[4] = Int32.Parse(saveHandler.loadData(GlobalVar.PlayerProfile)[5]);
+                            GlobalVar.PlayerProfile = localPlayerProfile;
+                            if (saveHandler.loadData(GlobalVar.PlayerProfile) != null)
+                            {
+                                String[] loadData = saveHandler.loadData(GlobalVar.PlayerProfile); 
+                                GlobalVar.HighestLevel = Int32.Parse(loadData[1]);
+                                GlobalVar.HighScore[0] = Int32.Parse(loadData[2]);
+                                GlobalVar.HighScore[1] = Int32.Parse(loadData[3]);
+                                GlobalVar.HighScore[2] = Int32.Parse(loadData[4]);
+                                GlobalVar.HighScore[3] = Int32.Parse(loadData[5]);
+                                GlobalVar.HighScore[4] = Int32.Parse(loadData[6]);
+                                saveHandler.saveData(new String[] { profileName, loadData[1], loadData[2], loadData[3], loadData[4], loadData[5], loadData[6] }, GlobalVar.PlayerProfile);
+                            }
+                            if (loadProfileFirstTimeStartUp)
+                                menuState = "MainMenu";
+                            else
+                                menuState = "LoadProfileMenu";
                         }
-                        if (loadProfileFirstTimeStartUp)
-                            menuState = "MainMenu";
-                        else
+                        else if (loadRenameMenu.menuNumberSelection() == 2)
+                        {
+                            //rename
+                            renameProfilePopUpText[0] = profileName;
+                            renameTripped = true;
+                        }
+                        else if (loadRenameMenu.menuNumberSelection() == 3)
+                        {
+                            //reset
+                            profileName = "PROFILE";
+                            loadProfileMenuButtonText[localPlayerProfile - 1] = profileName;
+                            String[] loadData = saveHandler.loadData(localPlayerProfile);
+                            saveHandler.saveData(new String[] { profileName, "1", "0", "0", "0", "0", "0" }, localPlayerProfile);
+                        }
+                        else if (loadRenameMenu.menuNumberSelection() == 4)
+                        {
                             menuState = "LoadProfileMenu";
+                        }
                     }
-                    else if (loadRenameMenu.menuNumberSelection() == 2)
+                    else
                     {
+                        renameProfilePopUp.Update(gameTime, mouseStateCurrent, mouseStatePrevious, new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).X * GlobalVar.ScaleSize.X *2) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y *2) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).Y * GlobalVar.ScaleSize.Y*2) / 2))), GlobalVar.ScreenSize, new Vector2(GlobalVar.ScaleSize.X * 2, GlobalVar.ScaleSize.Y * 2) );
+                        previousKeyboardState = currentKeyboardState;
+                        currentKeyboardState = Keyboard.GetState();
 
-                    }
-                    else if (loadRenameMenu.menuNumberSelection() == 3)
-                    {
+                        Keys[] pressedKeys;
+                        pressedKeys = currentKeyboardState.GetPressedKeys();
 
-                    }
-                    else if (loadRenameMenu.menuNumberSelection() == 4)
-                    {
-                        menuState = "LoadProfileMenu";
+                        foreach (Keys key in pressedKeys)
+                        {
+                            if (previousKeyboardState.IsKeyUp(key))
+                            {
+                                if (key == Keys.Back) // overflows
+                                {
+                                    if (renameProfilePopUpText[0].Length > 0)
+                                        renameProfilePopUpText[0] = renameProfilePopUpText[0].Remove(renameProfilePopUpText[0].Length - 1, 1);
+                                }
+                                else if (key == Keys.Enter)
+                                {
+                                    renameTripped = false;
+                                    profileName = renameProfilePopUpText[0];
+                                    loadProfileMenuButtonText[localPlayerProfile - 1] = profileName;
+                                    String[] loadData = saveHandler.loadData(localPlayerProfile);
+                                    saveHandler.saveData(new String[] { profileName, loadData[1], loadData[2], loadData[3], loadData[4], loadData[5], loadData[6] }, localPlayerProfile);
+                                }
+                                else if (key == Keys.Space)
+                                {
+                                    if (renameProfilePopUpText[0].Length < 11)
+                                        renameProfilePopUpText[0] = renameProfilePopUpText[0].Insert(renameProfilePopUpText[0].Length, " ");
+                                }
+                                else
+                                {
+                                    if (renameProfilePopUpText[0].Length < 11)
+                                    {
+                                        String keyString = key.ToString();
+
+                                        if (System.Text.RegularExpressions.Regex.IsMatch(keyString, @"[0-9]"))
+                                        {
+                                            keyString = keyString.Substring(1, 1);
+                                        }
+
+                                        if (System.Text.RegularExpressions.Regex.IsMatch(keyString, @"[a-zA-Z0-9]") && keyString.Length == 1)
+                                        {
+                                            renameProfilePopUpText[0] += keyString;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     break;
                 #endregion
@@ -992,7 +1017,6 @@ namespace Evolo.GameClass
                     break;
                 case "LoadProfileMenu":
                     loadProfileMenu.Draw(spriteBatch);
-                    renameProfilePopUp.Draw(spriteBatch);
                     break;
                 case "GameLoseMenu":
                     gameLoseMenu.Draw(spriteBatch);
@@ -1007,7 +1031,13 @@ namespace Evolo.GameClass
                     customLevelMenu.Draw(spriteBatch);
                     break;
                 case "LoadRenameMenu":
-                    loadRenameMenu.Draw(spriteBatch);
+                    if (!renameTripped)
+                        loadRenameMenu.Draw(spriteBatch);
+                    else
+                    {
+                        renameProfilePopUp.Draw(spriteBatch);
+                        spriteBatch.DrawString(font, "Press Enter to Confirm", new Vector2((GlobalVar.ScreenSize.X / 2) - (font.MeasureString("Press Enter to Confirm").X * GlobalVar.ScaleSize.X / 2), 420 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    }
                     break;
             }
 
