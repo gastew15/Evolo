@@ -95,7 +95,7 @@ namespace Evolo.GameClass
         {
             GlobalVar.HighScore = new int[5];
             optionsHandler = new OptionsHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo");
-            saveHandler = new SaveHandler(6, new String[] { "Profile", "1", "0", "0", "0", "0", "0" }, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo", "Save.dat");
+            saveHandler = new SaveHandler(6, new String[] { "PROFILE", "1", "0", "0", "0", "0", "0" }, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo", "Save.dat");
             currentKeyboardState = Keyboard.GetState();
             //2 pages to contain all of the key options, treat as seperate menus
             optionsKeybindingMenuPage1ButtonText = new String[6] { "PlayerLeft: " + "left", "PlayerRight: " + keyBindingInfo[1], "PlayerJump: " + keyBindingInfo[2], "Nothing At All", "Next Page ->", "Back" };
