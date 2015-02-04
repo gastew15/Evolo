@@ -61,7 +61,7 @@ namespace Evolo
         const int defualtWidth = 1280, defualtHeight = 720;
 
         //Keys
-        string[] keyBindingInfo = new string[7];
+        string[] keyBindingInfo = new string[8];
         Boolean isPressedEsc;
         Boolean isPressedRightBtn;
         Texture2D gameMouseTexture;
@@ -108,7 +108,7 @@ namespace Evolo
                 //Sets Keybinding Info from options Load
                 for (int i = 0; i < keyBindingInfo.Length; i++)
                 {
-                    keyBindingInfo[i] = "WIP";//GlobalVar.OptionsArray[i + 2];
+                    keyBindingInfo[i] = GlobalVar.OptionsArray[i + 2];
                 }
 
                 GlobalVar.ScaleSize = new Vector2(GlobalVar.ScreenSize.X / defualtWidth, GlobalVar.ScreenSize.Y / defualtHeight);
