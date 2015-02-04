@@ -832,6 +832,7 @@ namespace Evolo.GameClass
                     }
                     else
                     {
+                        renameProfilePopupPosition = new Vector2((GlobalVar.ScreenSize.X / 2) - ((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2), (GlobalVar.ScreenSize.Y / 2) - ((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y * 2) / 2));
                         renameProfilePopUp.Update(gameTime, mouseStateCurrent, mouseStatePrevious, new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).X * GlobalVar.ScaleSize.X *2) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y *2) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).Y * GlobalVar.ScaleSize.Y*2) / 2))), GlobalVar.ScreenSize, new Vector2(GlobalVar.ScaleSize.X * 2, GlobalVar.ScaleSize.Y * 2) );
                         previousKeyboardState = currentKeyboardState;
                         currentKeyboardState = Keyboard.GetState();
@@ -1045,7 +1046,8 @@ namespace Evolo.GameClass
 
         public void SetMenu(String menuState)
         {
-            this.menuState = menuState;
+            if(!renameTripped)
+                this.menuState = menuState;
         }
 
         public void SetGameOver(Boolean gameWin)

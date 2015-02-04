@@ -336,6 +336,10 @@ namespace Evolo
                         {
                             menus.SetMenu("LevelSelect");
                         }
+                        else if (menus.getMenuState() == "LoadRenameMenu")
+                        {
+                            menus.SetMenu("LoadProfileMenu");
+                        }
                     }
                 }
 
