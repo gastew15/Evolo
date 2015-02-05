@@ -95,6 +95,7 @@ namespace Evolo.GameClass
         {
             GlobalVar.HighScore = new int[5];
             optionsHandler = new OptionsHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo");
+            //{Profile Name, levels unlocked, High score for level 1, HS for level 2, HS for level 3, HS for level 4, HS for level 5}
             saveHandler = new SaveHandler(6, new String[] { "PROFILE", "1", "0", "0", "0", "0", "0" }, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo", "Save.dat");
             currentKeyboardState = Keyboard.GetState();
             //2 pages to contain all of the key options, treat as seperate menus
