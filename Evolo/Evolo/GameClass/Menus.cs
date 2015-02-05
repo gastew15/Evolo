@@ -215,7 +215,7 @@ namespace Evolo.GameClass
             menuButtonBackground = Content.Load<Texture2D>("Sprites and Pictures/ButtonBackground");
             keybindBlockTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_KeybindBlock");
             keybindPlayerTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_KeybindPlayer");
-            renameProfilePopupTexture = Content.Load<Texture2D>("Sprites and Pictures/ButtonBackground");
+            renameProfilePopupTexture = Content.Load<Texture2D>("Sprites and Pictures/ButtonBorderPopup");
             debugTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Debug");
             pauseTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Pause");
             menuTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_MainMenu");
@@ -1037,12 +1037,14 @@ namespace Evolo.GameClass
                     else
                     {
                         renameProfilePopUp.Draw(spriteBatch);
-                        spriteBatch.DrawString(font, "Press Enter to Confirm", new Vector2((GlobalVar.ScreenSize.X / 2) - (font.MeasureString("Press Enter to Confirm").X * GlobalVar.ScaleSize.X / 2), 420 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                        spriteBatch.DrawString(font, "Type Name Here", new Vector2((GlobalVar.ScreenSize.X / 2) - (font.MeasureString("Type Name Here").X * GlobalVar.ScaleSize.X / 2), (renameProfilePopupPosition.Y + 52) * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                        spriteBatch.DrawString(font, "Press Enter to Confirm", new Vector2((GlobalVar.ScreenSize.X / 2) - (font.MeasureString("Press Enter to Confirm").X * GlobalVar.ScaleSize.X / 2), (renameProfilePopupPosition.Y + 120) * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                     }
                     break;
             }
-
         }
+
+      
 
         public void SetMenu(String menuState)
         {
