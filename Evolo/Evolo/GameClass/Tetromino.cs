@@ -72,7 +72,7 @@ namespace Evolo.GameClass
                     blockPos[1] = new Vector2(drawPoint.X + 1 + blockPosModifers[1].X, drawPoint.Y + blockPosModifers[1].Y);
                     blockPos[2] = new Vector2(drawPoint.X + 2+ blockPosModifers[2].X, drawPoint.Y + blockPosModifers[2].Y);
                     blockPos[3] = new Vector2(drawPoint.X  + 3 + blockPosModifers[3].X, drawPoint.Y + blockPosModifers[3].Y);
-                    drawColor = Color.Blue;
+                    drawColor = Color.Cyan;
                     rotationBlockPosition = 1;
                     break;
                 //T Block
@@ -82,7 +82,7 @@ namespace Evolo.GameClass
                     blockPos[2] = new Vector2(drawPoint.X + 1 + blockPosModifers[2].X, drawPoint.Y + blockPosModifers[2].Y);
                     blockPos[3] = new Vector2(drawPoint.X + 2 + blockPosModifers[3].X, drawPoint.Y + blockPosModifers[3].Y);
                     rotationBlockPosition = 2;
-                    drawColor = Color.Blue;
+                    drawColor = Color.MediumPurple;
 
                     break;
                 //J block
@@ -102,7 +102,7 @@ namespace Evolo.GameClass
                     blockPos[2] = new Vector2(drawPoint.X + 2 + blockPosModifers[2].X, drawPoint.Y + blockPosModifers[2].Y);
                     blockPos[3] = new Vector2(drawPoint.X + 2 + blockPosModifers[3].X, drawPoint.Y - 1 + blockPosModifers[3].Y);
                     rotationBlockPosition = 2;
-                    drawColor = Color.Blue;
+                    drawColor = Color.Orange;
                     break;
                 //O Block
                 case 5:
@@ -111,7 +111,7 @@ namespace Evolo.GameClass
                     blockPos[2] = new Vector2(drawPoint.X + 1 + blockPosModifers[2].X, drawPoint.Y - 1 + blockPosModifers[2].Y);
                     blockPos[3] = new Vector2(drawPoint.X + blockPosModifers[3].X, drawPoint.Y - 1 + blockPosModifers[3].Y);
                     rotationBlockPosition = 0;
-                    drawColor = Color.Blue;
+                    drawColor = Color.Yellow;
 
                     break;
                 //S Block
@@ -121,7 +121,7 @@ namespace Evolo.GameClass
                     blockPos[2] = new Vector2(drawPoint.X + 1 + blockPosModifers[2].X, drawPoint.Y - 1 + blockPosModifers[2].Y);
                     blockPos[3] = new Vector2(drawPoint.X + 2 + blockPosModifers[3].X, drawPoint.Y - 1 + blockPosModifers[3].Y);
                     rotationBlockPosition = 2;
-                    drawColor = Color.Blue;
+                    drawColor = Color.LawnGreen;
 
                     break;
                 //Z Block
@@ -131,11 +131,11 @@ namespace Evolo.GameClass
                     blockPos[2] = new Vector2(drawPoint.X + 1 + blockPosModifers[2].X, drawPoint.Y + blockPosModifers[2].Y);
                     blockPos[3] = new Vector2(drawPoint.X + 2 + blockPosModifers[3].X, drawPoint.Y + blockPosModifers[3].Y);
                     rotationBlockPosition = 1;
-                    drawColor = Color.Blue;
+                    drawColor = Color.Red;
 
                     break;
             }
-            
+
             #region Rotation Math
 
             switch (rotation)
