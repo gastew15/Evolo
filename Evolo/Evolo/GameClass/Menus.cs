@@ -98,7 +98,7 @@ namespace Evolo.GameClass
             saveHandler = new SaveHandler(6, new String[] { "PROFILE", "1", "0", "0", "0", "0", "0" }, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo", "Save.dat");
             currentKeyboardState = Keyboard.GetState();
             //2 pages to contain all of the key options, treat as seperate menus
-            optionsKeybindingMenuPage1ButtonText = new String[6] { "PlayerLeft: " + "left", "PlayerRight: " + keyBindingInfo[1], "PlayerJump: " + keyBindingInfo[2], "Nothing At All", "Next Page ->", "Back" };
+            optionsKeybindingMenuPage1ButtonText = new String[6] { "PlayerLeft: " + keyBindingInfo[0], "PlayerRight: " + keyBindingInfo[1], "PlayerJump: " + keyBindingInfo[2], "Nothing At All", "Next Page ->", "Back" };
             optionsKeybindingMenuPage2ButtonText = new String[6] { "BlockLeft: " + keyBindingInfo[3], "BlockRight: " + keyBindingInfo[4], "BlockRotate: " + keyBindingInfo[5], "BlockDown: " + keyBindingInfo[6], "<- Previous Page", "Back" };
             optionsMenuButtonText = new String[7] { "Resolution", "Key Bindings", "Debug Options", "Sound: OFF", "Music: OFF", "Exit & Save", "Exit W/O Saving" };
             optionsResolutionMenuButtonText = new String[7] { "Full Screen", "800 x 600", "1280 x 720", "1366 x 768", "1600 x 900", "1920 x 1080", "Back" };
@@ -273,7 +273,6 @@ namespace Evolo.GameClass
             {
                 loadProfileMenuButtonText[k] = saveHandler.loadData(k + 1)[0];
             }
-
             //PopUp
             renameProfilePopupPosition = new Vector2((GlobalVar.ScreenSize.X / 2) - ((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2), (GlobalVar.ScreenSize.Y / 2) - ((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y * 2) / 2));
             renameProfilePopUpText = new String[] { profileName };
@@ -483,6 +482,7 @@ namespace Evolo.GameClass
                 #endregion
                 #region Options Key Binding Menu Page1 Update
                 case "OptionsKeybindingMenuPage1":
+                    optionsKeybindingMenuPage1ButtonText = new String[6] { "PlayerLeft: " + GlobalVar.OptionsArray[2], "PlayerRight: " + GlobalVar.OptionsArray[3], "PlayerJump: " + GlobalVar.OptionsArray[4], "Nothing At All", "Next Page ->", "Back" };
                     optionsKeybindingMenuPage1.Update(gameTime,
                         mouseStateCurrent,
                         mouseStatePrevious,
@@ -493,18 +493,19 @@ namespace Evolo.GameClass
                         GlobalVar.ScaleSize,
                         optionsKeybindingMenuColors,
                         Convert.ToBoolean(GlobalVar.OptionsArray[12]));
-                    if (optionsKeybindingMenuPage1.menuNumberSelection() == 4)
+                    if (optionsKeybindingMenuPage1.menuNumberSelection() > 0 && optionsKeybindingMenuPage1.menuNumberSelection() < 4)
                     {
-
+                        //Pop Up Key Binding Box
                     }
-                    if (optionsKeybindingMenuPage1.menuNumberSelection() == 5)
+                    else if (optionsKeybindingMenuPage1.menuNumberSelection() == 5)
                         menuState = "OptionsKeybindingMenuPage2";
-                    if (optionsKeybindingMenuPage1.menuNumberSelection() == 6)
+                    else if (optionsKeybindingMenuPage1.menuNumberSelection() == 6)
                         menuState = "OptionsMenu";
                     break;
                 #endregion
                 #region Options Key Binding Menu Page2 Update
                 case "OptionsKeybindingMenuPage2":
+                    optionsKeybindingMenuPage2ButtonText = new String[6] { "BlockLeft: " + GlobalVar.OptionsArray[5], "BlockRight: " + GlobalVar.OptionsArray[6], "BlockRotate: " + GlobalVar.OptionsArray[7], "BlockDown: " + GlobalVar.OptionsArray[8], "<- Previous Page", "Back" };
                     optionsKeybindingMenuPage2.Update(gameTime,
                         mouseStateCurrent,
                         mouseStatePrevious,
@@ -517,8 +518,12 @@ namespace Evolo.GameClass
                         Convert.ToBoolean(GlobalVar.OptionsArray[12]));
                     if (optionsKeybindingMenuPage2.menuNumberSelection() == 5)
                         menuState = "OptionsKeybindingMenuPage1";
-                    if (optionsKeybindingMenuPage2.menuNumberSelection() == 6)
+                    else if (optionsKeybindingMenuPage2.menuNumberSelection() == 6)
                         menuState = "OptionsMenu";
+                    else if(optionsKeybindingMenuPage2.menuNumberSelection() != 0)
+                    {
+                        //Pop Up Key Binding Box
+                    }
                     break;
                 #endregion
                 #region Debug Menu Update
