@@ -1042,8 +1042,7 @@ namespace Evolo.GameClass
                     else
                     {
                         renameProfilePopUp.Draw(spriteBatch);
-                        spriteBatch.DrawString(font, "Type Name Here", new Vector2((GlobalVar.ScreenSize.X / 2) - (font.MeasureString("Type Name Here").X * GlobalVar.ScaleSize.X / 2), (renameProfilePopupPosition.Y + 52) * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                        spriteBatch.DrawString(font, "Press Enter to Confirm", new Vector2((GlobalVar.ScreenSize.X / 2) - (font.MeasureString("Press Enter to Confirm").X * GlobalVar.ScaleSize.X / 2), (renameProfilePopupPosition.Y + 120) * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                        spriteBatch.DrawString(font, "Press Enter to Confirm", new Vector2((GlobalVar.ScreenSize.X / 2) - (font.MeasureString("Press Enter to Confirm").X * GlobalVar.ScaleSize.X / 2), (renameProfilePopupPosition.Y + 180) * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                     }
                     break;
             }
