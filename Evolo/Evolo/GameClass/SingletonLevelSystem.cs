@@ -76,24 +76,8 @@ namespace Evolo.GameClass
                 if (!File.Exists("Levels/" + levelName + ".dat"))
                 {
                     StreamWriter sw = new StreamWriter("Levels/" + levelName + ".dat");
-                    switch (levelName)
-                    {
-                        case "Level1":
-                            sw.Write(encoder.EncryptData(levelInfo[1], passPhrase));
-                            break;
-                        case "Level2":
-                            sw.Write(encoder.EncryptData(levelInfo[2], passPhrase));
-                            break;
-                        case "Level3":
-                            sw.Write(encoder.EncryptData(levelInfo[3], passPhrase));
-                            break;
-                        case "Level4":
-                            sw.Write(encoder.EncryptData(levelInfo[4], passPhrase));
-                            break;
-                        case "Level5":
-                            sw.Write(encoder.EncryptData(levelInfo[5], passPhrase));
-                            break;
-                    }
+
+                    sw.Write(encoder.EncryptData(levelInfo[Convert.ToInt32(GlobalVar.CurrentLevel)], passPhrase));
                     sw.Close();
 
                     StreamReader sr = new StreamReader("Levels/" + levelName + ".dat");
