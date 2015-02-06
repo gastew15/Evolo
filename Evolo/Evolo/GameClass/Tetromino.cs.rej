@@ -1,0 +1,10 @@
+diff a/Evolo/Evolo/GameClass/Tetromino.cs b/Evolo/Evolo/GameClass/Tetromino.cs	(rejected hunks)
+@@ -72,7 +72,7 @@
+                     blockPos[1] = new Vector2(drawPoint.X + 1 + blockPosModifers[1].X, drawPoint.Y + blockPosModifers[1].Y);
+                     blockPos[2] = new Vector2(drawPoint.X + 2+ blockPosModifers[2].X, drawPoint.Y + blockPosModifers[2].Y);
+                     blockPos[3] = new Vector2(drawPoint.X  + 3 + blockPosModifers[3].X, drawPoint.Y + blockPosModifers[3].Y);
+-                    drawColor = Color.Cyan;
++                    drawColor = Color.Blue;
+                     rotationBlockPosition = 1;
+                     break;
+                 //T Block
