@@ -150,7 +150,7 @@ namespace Evolo
                 //SeqoeUIMonoNormal = Content.Load<SpriteFont>("Fonts/SeqoeUIMonoNormal");
                 SeqoeUIMonoNormal = Content.Load<SpriteFont>("Fonts/font");
                 MenuFont = Content.Load<SpriteFont>("Fonts/MenuFont");
-                //mainMenuMusic = Content.Load<Song>("Sounds/Music/spacesong2-8");
+                
 
                 menus.LoadContent(this.Content, MenuFont);
                 menus.setLoadProfileFirstStartUp(true);
@@ -305,6 +305,7 @@ namespace Evolo
                     {
                         menus.SetMenu("PauseMenu");
                         GlobalVar.GameState = "MenuScreen";
+                        MediaPlayer.Pause();
                     }
                     else if (gameState == "Credits")
                     {
@@ -315,6 +316,11 @@ namespace Evolo
                     {
                         if (menus.getMenuState() == "PauseMenu")
                         {
+                            GlobalVar.GameState = "Playing";
+                            if (GlobalVar.OptionsArray[13].Equals("false"))
+                                MediaPlayer.Stop();
+                            else
+                                MediaPlayer.Resume();
                             GlobalVar.GameState = "Playing";
                         }
                         else if (menus.getMenuState() == "OptionsMenu" || menus.getMenuState() == "LevelSelect")

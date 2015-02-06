@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using System.IO;
 using StarByte.ui;
 using StarByte.io;
@@ -79,6 +80,7 @@ namespace Evolo.GameClass
         private Color[] loadRenameMenuColors;
         private GraphicsDeviceManager graphics;
         private SoundEffect menuHoverChangeSoundEffect, menuClickedSoundEffect;
+        private Song mainThemeSong;
         private SingletonLevelSystem levels = SingletonLevelSystem.getInstance();
         private Boolean loadProfileFirstTimeStartUp;
         private Boolean renameTripped;
@@ -190,7 +192,19 @@ namespace Evolo.GameClass
                     sw.Close();
 
                 }
+                else if(!File.Exists("Levels/CustomLevels/Level Template.txt"))
+                {
+                    StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
+                    sw.Write("Player Start Position;Start Platform Position;End Platform Position;Level Modifier;Timer(Seconds);Lines to Clear");
+                    sw.WriteLine("");
+                    sw.WriteLine("Make sure there are no spaces in the cordinates");
+                    sw.WriteLine("");
+                    sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
+                    sw.WriteLine("");
+                    sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
+                    sw.Close();
 
+                }
                 DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
                 customLevelFileCount = dInfo.GetFiles().Length - 1;
                 customLevelList = new String[customLevelFileCount];
@@ -203,6 +217,8 @@ namespace Evolo.GameClass
                         fileAmount++;
                     }
                 }
+
+                
 
             }
             #endregion
@@ -236,8 +252,10 @@ namespace Evolo.GameClass
             levelSelectMenuTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_LevelSelect");
             customLevelMenuTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_CustomLevel");
             loadProfileTitle = Content.Load<Texture2D>("Sprites and Pictures/Logo_Profile");
+            //Loading Sounds & Songs
             menuHoverChangeSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_MenuHover");
             menuClickedSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_MenuClick");
+            mainThemeSong = Content.Load<Song>("Sounds/Music/EvoloTheme");
             #endregion
             #region Menu Starting Positions
             //SP = Starting Position
@@ -347,15 +365,24 @@ namespace Evolo.GameClass
                         pauseMenuColors,
                         Convert.ToBoolean(GlobalVar.OptionsArray[12]));
                     pausedLast = true;
+
+                    
                     if (pauseMenu.menuNumberSelection() == 1)
                     {
                         pauseMenu.setMenuHoverNumber(1);
                         GlobalVar.GameState = "Playing";
+                        if (GlobalVar.OptionsArray[13].Equals("false"))
+                            MediaPlayer.Stop();
+                        else
+                            MediaPlayer.Resume();
                     }
                     else if (pauseMenu.menuNumberSelection() == 2)
                         menuState = "OptionsMenu";
                     else if (pauseMenu.menuNumberSelection() == 3)
+                    {
                         menuState = "MainMenu";
+                        MediaPlayer.Stop();
+                    }
                     break;
                 #endregion
                 #region Options Menu Update
@@ -401,6 +428,7 @@ namespace Evolo.GameClass
                         {
                             GlobalVar.OptionsArray[13] = "false";
                             optionsMenuButtonText[4] = "Music: OFF";
+                            MediaPlayer.Stop();
                         }
                     }
                     else if (optionsMenu.menuNumberSelection() == 6)
@@ -729,6 +757,8 @@ namespace Evolo.GameClass
                     }
                     else if (levelSelectMenu.menuNumberSelection() != 0 && GlobalVar.HighestLevel >= levelSelectMenu.menuNumberSelection())
                     {
+                        if (GlobalVar.OptionsArray[13].Equals("true"))
+                            MediaPlayer.Play(mainThemeSong);
                         GlobalVar.CustomLevel = false;
                         GlobalVar.CurrentLevel = levelSelectMenu.menuNumberSelection().ToString();
                         levels.setLevel("Level" + GlobalVar.CurrentLevel);

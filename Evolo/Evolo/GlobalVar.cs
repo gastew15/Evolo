@@ -16,7 +16,7 @@ namespace Evolo
         static Boolean _resetGameField;
         static Vector2 _screenSize;
         static Vector2 _scaleSize;
-        static String _currentLevel;
+        static String _currentLevel = "1";
         static int _score;
         static int[] _highScore;
         static int _highestLevel;
