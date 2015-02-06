@@ -180,7 +180,19 @@ namespace Evolo.GameClass
                     sw.Close();
 
                 }
+                else if(!File.Exists("Levels/CustomLevels/Level Template.txt"))
+                {
+                    StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
+                    sw.Write("Player Start Position;Start Platform Position;End Platform Position;Level Modifier;Timer(Seconds);Lines to Clear");
+                    sw.WriteLine("");
+                    sw.WriteLine("Make sure there are no spaces in the cordinates");
+                    sw.WriteLine("");
+                    sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
+                    sw.WriteLine("");
+                    sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
+                    sw.Close();
 
+                }
                 DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
                 customLevelFileCount = dInfo.GetFiles().Length - 1;
                 customLevelList = new String[customLevelFileCount];
@@ -193,6 +205,8 @@ namespace Evolo.GameClass
                         fileAmount++;
                     }
                 }
+
+                
 
             }
             #endregion
