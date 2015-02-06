@@ -125,9 +125,7 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Sounds\Music\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Compile Include="Sprites and Pictures\SkyBlock1.png">
       <Name>SkyBlock1</Name>
@@ -351,6 +349,11 @@
       <Name>Sound_MenuHover</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="Sounds\Music\EvoloTheme.mp3">
+      <Name>EvoloTheme</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
     </Compile>
     <Content Include="Sprites and Pictures\ButtonPopup1.png">
       <Name>ButtonPopup1</Name>
