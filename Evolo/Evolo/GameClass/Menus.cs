@@ -202,6 +202,11 @@ namespace Evolo.GameClass
                     sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
                     sw.WriteLine("");
                     sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
+                    sw.WriteLine("");
+                    sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
+                    sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
+                    sw.WriteLine("");
+                    sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
                     sw.Close();
 
                 }
