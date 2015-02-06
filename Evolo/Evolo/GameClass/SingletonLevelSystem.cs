@@ -73,11 +73,11 @@ namespace Evolo.GameClass
             catch
             {
                 #region File Recreaction
-                if (!File.Exists("Levels/" + levelName + ".dat"))
+                if (!(File.Exists("Levels/" + levelName + ".dat")))
                 {
                     StreamWriter sw = new StreamWriter("Levels/" + levelName + ".dat");
 
-                    sw.Write(encoder.EncryptData(levelInfo[Convert.ToInt32(GlobalVar.CurrentLevel)], passPhrase));
+                    sw.Write(encoder.EncryptData(levelInfo[(Convert.ToInt32(GlobalVar.CurrentLevel)) - 1], passPhrase));
                     sw.Close();
 
                     StreamReader sr = new StreamReader("Levels/" + levelName + ".dat");
