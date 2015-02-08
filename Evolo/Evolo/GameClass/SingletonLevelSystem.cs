@@ -27,10 +27,9 @@ namespace Evolo.GameClass
         private int lineToClear;
         EncoderSystem encoder;
         private const int keysize = 256;
-        private String[] levelInfo = { "0,16;0,17;23,15;1;330;10", "0,13;0,14;23,18;1.25;420;15", "0,14;0,15;23,10;1.5;590;20", "0,9;0,10;23,15;1.75;600;25", "0,14;0,15;23,8;2.5;800;40" };
+        private String[] levelInfo = { "0,16;0,17;23,15;1;330;10", "0,13;0,14;23,18;1.25;420;15", "0,14;0,15;23,10;1.5;590;20", "0,9;0,10;23,15;1.75;600;25", "0,14;0,15;23,8;2.5;800;40", "0,17;0,18;23,18;1;99999;5" };
         private static readonly byte[] initVectorBytes = Encoding.ASCII.GetBytes("4khek4rl93h5qb5k");
-        private static readonly string passPhrase = "H5j3o3jkDje9";
-        
+        private static readonly string passPhrase = "H5j3o3jkDje9";        
 
         //Private constructor so that the only class that can intitialize the level system is itself
         private SingletonLevelSystem() 
@@ -56,7 +55,7 @@ namespace Evolo.GameClass
                 StreamReader sr = new StreamReader("Levels/" + levelName + ".dat");
                 string[] paramaters;
 
-                if(!GlobalVar.CustomLevel)
+                if(!GlobalVar.CustomLevel || levelName.Equals("Level6"))
                     paramaters = encoder.DecryptData(sr.ReadToEnd(), passPhrase).Split(';');
                 else
                     paramaters = sr.ReadToEnd().Split(';');
@@ -83,7 +82,7 @@ namespace Evolo.GameClass
                     StreamReader sr = new StreamReader("Levels/" + levelName + ".dat");
                     string[] paramaters;
 
-                    if (!GlobalVar.CustomLevel)
+                    if (!GlobalVar.CustomLevel || levelName.Equals("Level6"))
                         paramaters = encoder.DecryptData(sr.ReadToEnd(), passPhrase).Split(';');
                     else
                         paramaters = sr.ReadToEnd().Split(';');
@@ -100,6 +99,7 @@ namespace Evolo.GameClass
                 #endregion
             }
         }
+
         public void setLevel(String levelName)
         {
             this.levelName = levelName;

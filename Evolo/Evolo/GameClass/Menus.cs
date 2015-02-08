@@ -47,7 +47,7 @@ namespace Evolo.GameClass
         KeyboardState currentKeyboardState;
         KeyboardState previousKeyboardState;
 
-        private String[] levelInfo = { "0,16;0,17;23,15;1;330;10", "0,13;0,14;23,18;1.25;360;18", "0,14;0,15;23,10;1.5;520;26", "0,9;0,10;23,15;1.75;660;30", "0,14;0,15;23,8;2.5;720;53" };
+        private String[] levelInfo = { "0,16;0,17;23,15;1;330;10", "0,13;0,14;23,18;1.25;360;18", "0,14;0,15;23,10;1.5;520;26", "0,9;0,10;23,15;1.75;660;30", "0,14;0,15;23,8;2.5;720;53", "0,17;0,18;23,18;1;99999;5" };
 
         //Variables
         private Texture2D optionsTitle, menuTitle, pauseTitle, debugTitle, keybindBlockTitle, keybindPlayerTitle, gameLoseTitle, gameWinTitle, loadProfileTitle, levelSelectMenuTitle, customLevelMenuTitle, menuButtonBackground, menuButtonBorder7, menuButtonBorder6, menuButtonBorder4, menuButtonBorder2, menuButtonBorder3, renameProfilePopupTexture;
@@ -165,7 +165,7 @@ namespace Evolo.GameClass
                     sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
                     sw.Close();
 
-                    for (int i = 0; i < 5; i++)
+                    for (int i = 0; i < 6; i++)
                     {
                         StreamWriter sr = new StreamWriter("Levels/Level" + (i + 1) + ".dat");
                         sr.Write(encoder.EncryptData(levelInfo[i], passPhrase));
@@ -346,9 +346,17 @@ namespace Evolo.GameClass
                     {
                         GlobalVar.GameState = "Credits";
                     }
-                    else if (mainMenu.menuNumberSelection() == 4)
+                    else if (mainMenu.menuNumberSelection() == 5)
                     {
-                        //Put Help Screen Stuff Here
+                        if (GlobalVar.OptionsArray[13].Equals("true"))
+                            MediaPlayer.Play(mainThemeSong);
+                        GlobalVar.CustomLevel = true;
+                        GlobalVar.CurrentLevel = "6";
+                        levels.setLevel("Level" + GlobalVar.CurrentLevel);
+                        GlobalVar.ResetGameField = true;
+                        GlobalVar.GameState = "Playing";
+                        GlobalVar.GameState = "MenuScreen";
+                        menuState = "PauseMenu";
                     }
                     else if (mainMenu.menuNumberSelection() == 6)
                     {
@@ -819,6 +827,8 @@ namespace Evolo.GameClass
                     }
                     else if (customLevelMenu.menuNumberSelection() != 0 && !(customLevelMenuText[customLevelMenu.menuNumberSelection() - 1].Equals("Blank")))
                     {
+                        if (GlobalVar.OptionsArray[13].Equals("true"))
+                            MediaPlayer.Play(mainThemeSong);
                         GlobalVar.CustomLevel = true;
                         GlobalVar.CurrentLevel = customLevelMenuText[customLevelMenu.menuNumberSelection() - 1];
                         levels.setLevel("CustomLevels/" + GlobalVar.CurrentLevel);
@@ -936,7 +946,6 @@ namespace Evolo.GameClass
                     break;
                 #endregion
             }
-
 
             #region Toggle Button Color Changer
             //Checks for color updates from toggles for menus

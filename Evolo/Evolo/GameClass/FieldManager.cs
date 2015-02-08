@@ -1059,6 +1059,7 @@ namespace Evolo.GameClass
            
                 spriteBatch.DrawString(font, "Next Block:" , new Vector2(1090 * GlobalVar.ScaleSize.X, 35 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
 
+                //HighScore Draw
                 if (!GlobalVar.CustomLevel)
                 {
                     if (GlobalVar.HighScore[Int32.Parse(GlobalVar.CurrentLevel) - 1] > GlobalVar.Score)
@@ -1073,6 +1074,12 @@ namespace Evolo.GameClass
                 else
                 {
                     spriteBatch.DrawString(font, "HIGH SCORE " + "N/A", new Vector2(1120 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                }
+
+                //Tutorial Draw (A little ghetto)
+                if(GlobalVar.CurrentLevel.Equals("6"))
+                {
+                    spriteBatch.DrawString(font, "Objective:\nMove player to\nother platform and \nclear the number\nof lines indicated \non the right\n\nControls:\n -Player-\n Left: A\n Right: D\n Jump: W\n\n -Blocks-\n Left: LArrow\n Right: RArrow\n Rotate: UArrow\n SpeedUp: DArrow", new Vector2(blankBlockTexture.Width * GlobalVar.ScaleSize.X + 5, blankBlockTexture.Height * GlobalVar.ScaleSize.Y + 5), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 }
 
                 spriteBatch.DrawString(font, "Score: " + GlobalVar.Score, new Vector2(1120 * GlobalVar.ScaleSize.X, 305 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
@@ -1144,14 +1151,6 @@ namespace Evolo.GameClass
 
         public void resetGameVariables()
         {
-
-            //Level information
-            levels.Update();
-            levelModifier = levels.getLevelMod();
-            timer = levels.getTimer() * 1000;            
-            gameField = new Boolean[26, 22];  
-            linesToClear = levels.getLinesToClear();
-
             //Resets Timers
             milisecondsElapsedTetrominoTime = 0;
             milisecondsElapsedPlayerTime1 = 0;
@@ -1165,8 +1164,8 @@ namespace Evolo.GameClass
             player1GridPos = levels.getPlayerPos();
             endPlatformGridPos = levels.getEndPlatPos();
             startPlatformGridPos = levels.getStartPlatPos();
-            //Setting win/losing states
 
+            //Setting win/losing states
             gameWin = false;
             gameOver = false;
             gameField = new Boolean[26, 22];
