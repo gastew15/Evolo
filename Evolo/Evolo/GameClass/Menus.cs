@@ -131,12 +131,17 @@ namespace Evolo.GameClass
             try
             {
                 DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
-                customLevelFileCount = dInfo.GetFiles().Length - 1;
+
+                foreach (FileInfo file in dInfo.GetFiles())
+                {
+                    if (file.ToString().Contains(".dat"))
+                        customLevelFileCount++;
+                }
                 customLevelList = new String[customLevelFileCount];
 
                 foreach (FileInfo file in dInfo.GetFiles())
                 {
-                    if (file.ToString() != "Level Template.txt")
+                    if (file.ToString().Contains(".dat"))
                     {
                         customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
                         fileAmount++;
@@ -771,7 +776,10 @@ namespace Evolo.GameClass
                     else if (levelSelectMenu.menuNumberSelection() != 0 && GlobalVar.HighestLevel >= levelSelectMenu.menuNumberSelection())
                     {
                         if (GlobalVar.OptionsArray[13].Equals("true"))
+                        {
                             MediaPlayer.Play(mainThemeSong);
+                            MediaPlayer.IsRepeating = true;
+                        }
                         GlobalVar.CustomLevel = false;
                         GlobalVar.CurrentLevel = levelSelectMenu.menuNumberSelection().ToString();
                         levels.setLevel("Level" + GlobalVar.CurrentLevel);
@@ -827,13 +835,20 @@ namespace Evolo.GameClass
                     }
                     else if (customLevelMenu.menuNumberSelection() != 0 && !(customLevelMenuText[customLevelMenu.menuNumberSelection() - 1].Equals("Blank")))
                     {
-                        if (GlobalVar.OptionsArray[13].Equals("true"))
-                            MediaPlayer.Play(mainThemeSong);
-                        GlobalVar.CustomLevel = true;
-                        GlobalVar.CurrentLevel = customLevelMenuText[customLevelMenu.menuNumberSelection() - 1];
-                        levels.setLevel("CustomLevels/" + GlobalVar.CurrentLevel);
-                        GlobalVar.ResetGameField = true;
-                        GlobalVar.GameState = "Playing";
+                        try
+                        {
+                            if (GlobalVar.OptionsArray[13].Equals("true"))
+                                MediaPlayer.Play(mainThemeSong);
+                            GlobalVar.CustomLevel = true;
+                            GlobalVar.CurrentLevel = customLevelMenuText[customLevelMenu.menuNumberSelection() - 1];
+                            levels.setLevel("CustomLevels/" + GlobalVar.CurrentLevel);
+                            GlobalVar.ResetGameField = true;
+                            GlobalVar.GameState = "Playing";
+                        }
+                        catch
+                        {
+                            
+                        }
                     }
                     break;
                 #endregion
