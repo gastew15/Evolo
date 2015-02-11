@@ -266,6 +266,7 @@ namespace Evolo.GameClass
             menuHoverChangeSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_MenuHover");
             menuClickedSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_MenuClick");
             mainThemeSong = Content.Load<Song>("Sounds/Music/EvoloTheme");
+            MediaPlayer.IsRepeating = true;
             #endregion
             #region Menu Starting Positions
             //SP = Starting Position
@@ -778,7 +779,6 @@ namespace Evolo.GameClass
                         if (GlobalVar.OptionsArray[13].Equals("true"))
                         {
                             MediaPlayer.Play(mainThemeSong);
-                            MediaPlayer.IsRepeating = true;
                         }
                         GlobalVar.CustomLevel = false;
                         GlobalVar.CurrentLevel = levelSelectMenu.menuNumberSelection().ToString();
