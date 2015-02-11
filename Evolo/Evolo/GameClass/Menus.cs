@@ -128,23 +128,7 @@ namespace Evolo.GameClass
             #endregion
 
             #region Level File Checking
-            try
-            {
-                DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
-                customLevelFileCount = dInfo.GetFiles().Length - 1;
-                customLevelList = new String[customLevelFileCount];
 
-                foreach (FileInfo file in dInfo.GetFiles())
-                {
-                    if (file.ToString() != "Level Template.txt")
-                    {
-                        customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
-                        fileAmount++;
-                    }
-                }
-            }
-            catch
-            {
                 if (!Directory.Exists("Levels"))
                 {
                     Directory.CreateDirectory("Levels");
@@ -192,7 +176,7 @@ namespace Evolo.GameClass
                     sw.Close();
 
                 }
-                else if(!File.Exists("Levels/CustomLevels/Level Template.txt"))
+                else if (!File.Exists("Levels/CustomLevels/Level Template.txt"))
                 {
                     StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
                     sw.Write("Player Start Position;Start Platform Position;End Platform Position;Level Modifier;Timer(Seconds);Lines to Clear");
@@ -208,24 +192,18 @@ namespace Evolo.GameClass
                     sw.WriteLine("");
                     sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
                     sw.Close();
-
                 }
+
                 DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
-                customLevelFileCount = dInfo.GetFiles().Length - 1;
+                customLevelFileCount = dInfo.GetFiles("*.dat").Length;
                 customLevelList = new String[customLevelFileCount];
 
-                foreach (FileInfo file in dInfo.GetFiles())
+                foreach (FileInfo file in dInfo.GetFiles("*.dat"))
                 {
-                    if (file.ToString() != "Level Template.txt")
-                    {
-                        customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
-                        fileAmount++;
-                    }
+                    customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
+                    fileAmount++;
                 }
-
-                
-
-            }
+            
             #endregion
 
             var mouseState = Mouse.GetState();
@@ -261,6 +239,7 @@ namespace Evolo.GameClass
             menuHoverChangeSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_MenuHover");
             menuClickedSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_MenuClick");
             mainThemeSong = Content.Load<Song>("Sounds/Music/EvoloTheme");
+            MediaPlayer.IsRepeating = true;
             #endregion
             #region Menu Starting Positions
             //SP = Starting Position
@@ -771,7 +750,9 @@ namespace Evolo.GameClass
                     else if (levelSelectMenu.menuNumberSelection() != 0 && GlobalVar.HighestLevel >= levelSelectMenu.menuNumberSelection())
                     {
                         if (GlobalVar.OptionsArray[13].Equals("true"))
+                        {
                             MediaPlayer.Play(mainThemeSong);
+                        }
                         GlobalVar.CustomLevel = false;
                         GlobalVar.CurrentLevel = levelSelectMenu.menuNumberSelection().ToString();
                         levels.setLevel("Level" + GlobalVar.CurrentLevel);
@@ -788,7 +769,7 @@ namespace Evolo.GameClass
                         if ((i + (customMenuPageMod * 4)) < customLevelFileCount)
                             customLevelMenuText[i] = customLevelList[i + (customMenuPageMod * 4)];
                         else
-                            customLevelMenuText[i] = "Blank";
+                            customLevelMenuText[i] = "(Blank)";
                     }
                     if (customMenuPageMod > 0)
                         customLevelMenuText[4] = "Pg" + (customMenuPageMod) + "<-Previous";
@@ -827,20 +808,27 @@ namespace Evolo.GameClass
                     }
                     else if (customLevelMenu.menuNumberSelection() != 0 && !(customLevelMenuText[customLevelMenu.menuNumberSelection() - 1].Equals("Blank")))
                     {
-                        if (GlobalVar.OptionsArray[13].Equals("true"))
-                            MediaPlayer.Play(mainThemeSong);
-                        GlobalVar.CustomLevel = true;
-                        GlobalVar.CurrentLevel = customLevelMenuText[customLevelMenu.menuNumberSelection() - 1];
-                        levels.setLevel("CustomLevels/" + GlobalVar.CurrentLevel);
-                        levels.Update();
-                        
-                        if(!(levels.getError() == true))
+                        try
                         {
-                        GlobalVar.ResetGameField = true;
-                        GlobalVar.GameState = "Playing";
+                            if (GlobalVar.OptionsArray[13].Equals("true"))
+                                MediaPlayer.Play(mainThemeSong);
+                            GlobalVar.CustomLevel = true;
+                            GlobalVar.CurrentLevel = customLevelMenuText[customLevelMenu.menuNumberSelection() - 1];
+                            levels.setLevel("CustomLevels/" + GlobalVar.CurrentLevel);
+                            levels.Update();
+
+                            if(!levels.getError() == true)
+                            {
+                            GlobalVar.ResetGameField = true;
+                            GlobalVar.GameState = "Playing";
+                            }
+                        }
+                        catch
+                        {
+                            
                         }
                     }
-                    break;
+                        break;
                 #endregion
                 #region Load Rename Menu Update
                 case "LoadRenameMenu":
