@@ -128,28 +128,7 @@ namespace Evolo.GameClass
             #endregion
 
             #region Level File Checking
-            try
-            {
-                DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
 
-                foreach (FileInfo file in dInfo.GetFiles())
-                {
-                    if (file.ToString().Contains(".dat"))
-                        customLevelFileCount++;
-                }
-                customLevelList = new String[customLevelFileCount];
-
-                foreach (FileInfo file in dInfo.GetFiles())
-                {
-                    if (file.ToString().Contains(".dat"))
-                    {
-                        customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
-                        fileAmount++;
-                    }
-                }
-            }
-            catch
-            {
                 if (!Directory.Exists("Levels"))
                 {
                     Directory.CreateDirectory("Levels");
@@ -197,7 +176,7 @@ namespace Evolo.GameClass
                     sw.Close();
 
                 }
-                else if(!File.Exists("Levels/CustomLevels/Level Template.txt"))
+                else if (!File.Exists("Levels/CustomLevels/Level Template.txt"))
                 {
                     StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
                     sw.Write("Player Start Position;Start Platform Position;End Platform Position;Level Modifier;Timer(Seconds);Lines to Clear");
@@ -213,24 +192,18 @@ namespace Evolo.GameClass
                     sw.WriteLine("");
                     sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
                     sw.Close();
-
                 }
+
                 DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
-                customLevelFileCount = dInfo.GetFiles().Length - 1;
+                customLevelFileCount = dInfo.GetFiles("*.dat").Length;
                 customLevelList = new String[customLevelFileCount];
 
-                foreach (FileInfo file in dInfo.GetFiles())
+                foreach (FileInfo file in dInfo.GetFiles("*.dat"))
                 {
-                    if (file.ToString() != "Level Template.txt")
-                    {
-                        customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
-                        fileAmount++;
-                    }
+                    customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
+                    fileAmount++;
                 }
-
-                
-
-            }
+            
             #endregion
 
             var mouseState = Mouse.GetState();
@@ -796,7 +769,7 @@ namespace Evolo.GameClass
                         if ((i + (customMenuPageMod * 4)) < customLevelFileCount)
                             customLevelMenuText[i] = customLevelList[i + (customMenuPageMod * 4)];
                         else
-                            customLevelMenuText[i] = "Blank";
+                            customLevelMenuText[i] = "(Blank)";
                     }
                     if (customMenuPageMod > 0)
                         customLevelMenuText[4] = "Pg" + (customMenuPageMod) + "<-Previous";
