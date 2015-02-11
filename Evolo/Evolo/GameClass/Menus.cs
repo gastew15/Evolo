@@ -832,8 +832,13 @@ namespace Evolo.GameClass
                         GlobalVar.CustomLevel = true;
                         GlobalVar.CurrentLevel = customLevelMenuText[customLevelMenu.menuNumberSelection() - 1];
                         levels.setLevel("CustomLevels/" + GlobalVar.CurrentLevel);
+                        levels.Update();
+                        
+                        if(!(levels.getError() == true))
+                        {
                         GlobalVar.ResetGameField = true;
                         GlobalVar.GameState = "Playing";
+                        }
                     }
                     break;
                 #endregion
