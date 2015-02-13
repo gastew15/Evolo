@@ -18,13 +18,14 @@ namespace Evolo.GameClass
     class FieldManager
     {
         #region Variables
-
-        private Boolean gameWin;
-        private Boolean gameOver;
+  
         //Gamefield Variables
         private Boolean[,] gameField = new Boolean[26, 22];
         private Vector2 gridStartPos;
         private int linesToClear;
+        private Boolean gameWin;
+        private Boolean gameOver;
+        private Tutorial tutorial = new Tutorial();
 
         //Timing Variables
         private int milisecondsElapsedTetrominoTime = 0;
@@ -49,6 +50,7 @@ namespace Evolo.GameClass
 
         //Content Variables
         private Texture2D blockTexture, playerTexture, blankBlockTexture, fullBlockTexture;
+        private SpriteFont font;
 
         //Player Variables
         private SpriteEffects player1SpriteEffects;
@@ -100,14 +102,18 @@ namespace Evolo.GameClass
             levels.setLevel("Level1");
         }
 
-        public void LoadContent(ContentManager Content)
+        public void LoadContent(ContentManager Content, SpriteFont font)
         {
+            this.font = font;
             blockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
             fullBlockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
             blankBlockTexture = Content.Load<Texture2D>("Sprites and pictures/blankBlock4");
             playerTexture = Content.Load<Texture2D>("Sprites and pictures/CharacterTest");
             platformTexture = Content.Load<Texture2D>("Sprites and pictures/Platform");
             hudTexture = Content.Load<Texture2D>("Sprites and pictures/GameHud");
+
+            tutorial.LoadContent(Content, font);
+
             //Teromeno Set Up Reference
             resetGameVariables();
         }
@@ -1007,6 +1013,12 @@ namespace Evolo.GameClass
             //Player Update
             player1.Update(new Vector2(gridStartPos.X + (player1GridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (player1GridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), GlobalVar.ScaleSize, Color.White);
 
+            //Tutorial Update (A little ghetto)
+            if (GlobalVar.CurrentLevel.Equals("6"))
+            {
+                tutorial.Update();
+            }
+
             //Store in Variable Last
             player1GridPosPrevious = player1GridPos;
 
@@ -1018,7 +1030,7 @@ namespace Evolo.GameClass
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, SpriteFont font)
+        public void Draw(SpriteBatch spriteBatch)
         {
             Color backdropColor;
 
@@ -1079,7 +1091,7 @@ namespace Evolo.GameClass
                 //Tutorial Draw (A little ghetto)
                 if(GlobalVar.CurrentLevel.Equals("6"))
                 {
-                    spriteBatch.DrawString(font, "Objective:\nMove player to\nother platform and \nclear the number\nof lines indicated \non the right\n\nControls:\n -Player-\n Left: A\n Right: D\n Jump: W\n\n -Blocks-\n Left: LArrow\n Right: RArrow\n Rotate: UArrow\n SpeedUp: DArrow", new Vector2(blankBlockTexture.Width * GlobalVar.ScaleSize.X + 5, blankBlockTexture.Height * GlobalVar.ScaleSize.Y + 5), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    tutorial.Draw(spriteBatch);
                 }
 
                 spriteBatch.DrawString(font, "Score: " + GlobalVar.Score, new Vector2(1120 * GlobalVar.ScaleSize.X, 305 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);

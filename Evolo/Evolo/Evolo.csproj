@@ -85,6 +85,7 @@
     <Compile Include="GameClass\Player.cs" />
     <Compile Include="GameClass\SingletonLevelSystem.cs" />
     <Compile Include="GameClass\Tetromino.cs" />
+    <Compile Include="GameClass\Tutorial.cs" />
     <Compile Include="GameClass\WindowSizeManager.cs" />
     <Compile Include="GlobalVar.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

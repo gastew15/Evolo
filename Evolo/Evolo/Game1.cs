@@ -158,7 +158,7 @@ namespace Evolo
 
                 //TEMP LOAD CONTENT
                 background.LoadContent(this.Content);
-                fieldManager.LoadContent(this.Content);
+                fieldManager.LoadContent(this.Content, SeqoeUIMonoNormal);
                 splashScreenImages = new Texture2D[3];
                 splashScreenImages[0] = Content.Load<Texture2D>("Sprites and pictures/CognativeThought");
                 splashScreenImages[1] = Content.Load<Texture2D>("Sprites and pictures/TwistedTransistors");
@@ -398,13 +398,13 @@ namespace Evolo
                 {
                     case "Playing":
                         background.Draw(spriteBatch, SeqoeUIMonoNormal);
-                        fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        fieldManager.Draw(spriteBatch);
                         break;
                     case "MenuScreen":
                         background.Draw(spriteBatch, SeqoeUIMonoNormal);
                         if (menus.getMenuState() == "PauseMenu" || menus.getMenuState() == "GameWinMenu" || menus.getMenuState() == "GameLoseMenu")
                         {
-                            fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
+                            fieldManager.Draw(spriteBatch);
                         }
                         menus.Draw(spriteBatch);
                         spriteBatch.DrawString(SeqoeUIMonoNormal, "LMB/RMB to navigate through menus", new Vector2(970 * GlobalVar.ScaleSize.X, 700 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
