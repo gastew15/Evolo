@@ -1079,7 +1079,7 @@ namespace Evolo.GameClass
                 //Tutorial Draw (A little ghetto)
                 if(GlobalVar.CurrentLevel.Equals("6"))
                 {
-                    spriteBatch.DrawString(font, "Objective:\nMove player to\the other platform and \nclear the number\nof lines indicated \non the right\n\nControls:\n -Player-\n Left: A\n Right: D\n Jump: W\n\n -Blocks-\n Left: LArrow\n Right: RArrow\n Rotate: UArrow\n SpeedUp: DArrow", new Vector2(blankBlockTexture.Width * GlobalVar.ScaleSize.X + 5, blankBlockTexture.Height * GlobalVar.ScaleSize.Y + 5), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    spriteBatch.DrawString(font, "Objective:\nMove player to\nother platform and \nclear the number\nof lines indicated \non the right\n\nControls:\n -Player-\n Left: A\n Right: D\n Jump: W\n\n -Blocks-\n Left: LArrow\n Right: RArrow\n Rotate: UArrow\n SpeedUp: DArrow", new Vector2(blankBlockTexture.Width * GlobalVar.ScaleSize.X + 5, blankBlockTexture.Height * GlobalVar.ScaleSize.Y + 5), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 }
 
                 spriteBatch.DrawString(font, "Score: " + GlobalVar.Score, new Vector2(1120 * GlobalVar.ScaleSize.X, 305 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
