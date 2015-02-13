@@ -7,6 +7,11 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using StarByte.ui;
 
+/**
+* Evolo Tutorial System to be used to display tutorial information
+* Author: G. Stewart
+* Version: 2/13/15
+*/
 namespace Evolo.GameClass
 {
     class Tutorial
@@ -33,11 +38,24 @@ namespace Evolo.GameClass
             //Content Loading
             tutorialPopupTexture = Content.Load<Texture2D>("Sprites and Pictures/tutorialPopup");
             tutorialPopupCloseButtonTexture = Content.Load<Texture2D>("Sprites and Pictures/tutorialPopupCloseButton");
+
+            //Set Up Tutorial PopUp
+            //Temp
+            /*
+             seraTerminalPosition = new Vector2((GlobalVar.ScreenSize.X / 2) - (seraTerminalTexture.Width / 2), (GlobalVar.ScreenSize.Y / 2) - (seraTerminalTexture.Height / 2));
+            seraTerminalTextDrawPos = new Vector2(seraTerminalPosition.X + (12 * GlobalVar.ScaleSize.X), seraTerminalPosition.Y + 20);
+            seraTerminalCloseButtonRect = new Rectangle((int)seraTerminalPosition.X + (int)(380 * GlobalVar.ScaleSize.X), (int)seraTerminalPosition.Y + (int)(2 * GlobalVar.ScaleSize.Y), (int)(seraTerminalTexture.Width * GlobalVar.ScaleSize.X), (int)(seraTerminalTexture.Height * GlobalVar.ScaleSize.Y));
+            seraTerminal = new PopUpHandler(seraTerminalTexture, seraTerminalCloseButtonTexture, seraTerminalPosition, seraTerminalTextDrawPos, seraTerminalVerticalLineSpacing, seraTerminalLinesOnPage, seraTerminalDrawText, font, seraTerminalTextColor, GlobalVar.ScreenSize, seraTerminalCloseButtonRect, seraTerminalIsDragable);
+             */
         }
 
         public void Update()
         {
-
+            //Temp
+            /*
+             seraTerminalCloseButtonRect = new Rectangle((int)seraTerminalPosition.X + (int)(380 * GlobalVar.ScaleSize.X), (int)seraTerminalPosition.Y + (int)(2 * GlobalVar.ScaleSize.Y), (int)(seraTerminalCloseButtonTexture.Width * GlobalVar.ScaleSize.X), (int)(seraTerminalCloseButtonTexture.Height * GlobalVar.ScaleSize.Y));
+                seraTerminal.Update(gameTime, mouseStateCurrent, mouseStatePrevious, new Vector2(seraTerminalPosition.X + (12 * GlobalVar.ScaleSize.X), seraTerminalPosition.Y + 20), seraTerminalCloseButtonRect, GlobalVar.ScreenSize, GlobalVar.ScaleSize);
+             */
         }
 
         public void Draw(SpriteBatch spriteBatch)
