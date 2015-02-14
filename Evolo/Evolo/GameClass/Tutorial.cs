@@ -29,15 +29,17 @@ namespace Evolo.GameClass
         private Color[] tutorialPopupColor;
         private Boolean isActive = true;
         private GameTime gameTime;
+        private Boolean enterKeyTripped = false;
         private MouseState mouseStateCurrent, mouseStatePrevious;
+        private KeyboardState keybState;
 
         public void LoadContent(ContentManager Content, SpriteFont font)
         {
             this.font = font;
 
             //Array Intilization for text & colors to be used in popups
-            tutorialPopupText = new String[] { "", "          Welcome to the tutorial Level!", "", "", "", "", "", "", "              Press Enter to Continue", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "" };
-            tutorialPopupColor = new Color[] { Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, };
+            tutorialPopupText = new String[] { /*1*/  "", "          Welcome to the tutorial Level!", "", "", "", "", "", "", "               Press Enter to Continue",      /*2*/      "", "                         Objective", "     You need to clear the number of lines", " shown on the right of the screen, and move", "    the player from the start platform to the", "        end platform before time expires.", "", "", "               Press Enter to Continue",    /*3*/     "", "                      What To Avoid", "     Blocks hitting the top of the player will", "       end the game, as will having a block", "          reach the top of the play field.", "    Additonally, be careful while moving the", "      player, as it's easy to become stuck.", "", "               Press Enter to Continue",  /*4*/   "", "                     Player Controls", "                      Move Left - " + GlobalVar.OptionsArray[2], "                     Move Right - " + GlobalVar.OptionsArray[3], "                       Jump Up - " + GlobalVar.OptionsArray[3], "", "", "", "               Press Enter to Continue",  /*5*/   "", "                     Block Controls", "                    Move Left - " + GlobalVar.OptionsArray[5], "                  Move Right - " + GlobalVar.OptionsArray[6], "                       Rotate - " + GlobalVar.OptionsArray[7], "              Speed Up Descent - " + GlobalVar.OptionsArray[8], "", "", "               Press Enter to Continue",  /*6*/   "", "                    That's About It!", " All that's left now is for you to start playing!", "", "", "", "", "", "                Press Enter to Begin!" };
+            tutorialPopupColor = new Color[] { /*1*/ Color.White, Color.Yellow, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White,    /*2*/ Color.White, Color.Yellow, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White,      /*3*/ Color.White, Color.Yellow, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White,   /*4*/ Color.White, Color.Yellow, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, /*5*/ Color.White, Color.Yellow, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, /*6*/ Color.Yellow, Color.Yellow, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White, Color.White };
 
             //Content Loading
             tutorialPopupTexture = Content.Load<Texture2D>("Sprites and Pictures/tutorialPopup");
@@ -55,8 +57,28 @@ namespace Evolo.GameClass
             this.gameTime = gameTime;
             this.mouseStateCurrent = mouseStateCurrent;
             this.mouseStatePrevious = mouseStatePrevious;
+            keybState = Keyboard.GetState();
             //Checking, if ey pressed ooe to next, if close pressed voe to next set closoe to false
 
+            if (!enterKeyTripped && keybState.IsKeyDown(Keys.Enter))
+            {
+                enterKeyTripped = true;
+
+                if (tutorialPopupCurrentTextSelection < (tutorialPopupText.Length / tutorialPopupLinesOnPage) -1)
+                {
+                    tutorialPopupCurrentTextSelection++;
+                }
+                else
+                {
+                    isActive = false;
+                }
+            }
+            else if (keybState.IsKeyUp(Keys.Enter))
+            {
+                enterKeyTripped = false;
+            }
+
+            tutorialPopup.setText(getCurrentTextData(), getCurrentColorData());
             tutorialPopupCloseButtonRect = new Rectangle((int)tutorialPopupPosition.X + (int)(380 * GlobalVar.ScaleSize.X), (int)tutorialPopupPosition.Y + (int)(2 * GlobalVar.ScaleSize.Y), (int)(tutorialPopupCloseButtonTexture.Width * GlobalVar.ScaleSize.X), (int)(tutorialPopupCloseButtonTexture.Height * GlobalVar.ScaleSize.Y));
             tutorialPopup.Update(gameTime, mouseStateCurrent, mouseStatePrevious, new Vector2(tutorialPopupPosition.X + (12 * GlobalVar.ScaleSize.X), tutorialPopupPosition.Y + 20), tutorialPopupCloseButtonRect, GlobalVar.ScreenSize, GlobalVar.ScaleSize);
 
