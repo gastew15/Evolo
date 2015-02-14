@@ -238,7 +238,7 @@ namespace Evolo
 
                     case "Playing":
                         //MediaPlayer.Pause(mainMenuMusic);
-                        fieldManager.Update(gameTime);
+                        fieldManager.Update(gameTime, mouseStateCurrent, mouseStatePrevious);
                         background.Update(gameTime, milliScecondsElapsedGameTime);
 
                         if (fieldManager.getGameOver())
@@ -422,7 +422,7 @@ namespace Evolo
               
 
                 //MOUSE DRAWING LOGIC
-                if (!(gameState == "Credits" || gameState == "SplashScreen" || gameState == "Playing"))
+                if (!(gameState == "Credits" || gameState == "SplashScreen" || (gameState == "Playing" && !fieldManager.getTutorialActive())))
                 {
                     if (GlobalVar.OptionsArray[9].Equals("false"))
                     {

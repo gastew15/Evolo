@@ -334,8 +334,6 @@ namespace Evolo.GameClass
                         levels.setLevel("Level" + GlobalVar.CurrentLevel);
                         GlobalVar.ResetGameField = true;
                         GlobalVar.GameState = "Playing";
-                        GlobalVar.GameState = "MenuScreen";
-                        menuState = "PauseMenu";
                     }
                     else if (mainMenu.menuNumberSelection() == 6)
                     {
