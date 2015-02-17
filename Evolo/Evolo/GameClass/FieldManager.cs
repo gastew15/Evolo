@@ -106,9 +106,9 @@ namespace Evolo.GameClass
         public void LoadContent(ContentManager Content, SpriteFont font)
         {
             this.font = font;
-            blockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
-            fullBlockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
-            blankBlockTexture = Content.Load<Texture2D>("Sprites and pictures/blankBlock4");
+            blockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock");
+            fullBlockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock");
+            blankBlockTexture = Content.Load<Texture2D>("Sprites and pictures/blankBlock");
             playerTexture = Content.Load<Texture2D>("Sprites and pictures/CharacterTest");
             platformTexture = Content.Load<Texture2D>("Sprites and pictures/Platform");
             hudTexture = Content.Load<Texture2D>("Sprites and pictures/GameHud");

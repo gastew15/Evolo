@@ -84,7 +84,7 @@ namespace Evolo.GameClass
 
         public void LoadContent(ContentManager Content)
         {
-            bBlockTexture = Content.Load<Texture2D>("Sprites and Pictures/SkyBlock4");
+            bBlockTexture = Content.Load<Texture2D>("Sprites and Pictures/SkyBlock");
         }
 
         public void Update(GameTime gameTime, float millisecondsElapsedGameTime)
