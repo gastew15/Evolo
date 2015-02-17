@@ -29,7 +29,7 @@ namespace Evolo.GameClass
         private Color[] tutorialPopupColor;
         private Boolean isActive = true;
         private GameTime gameTime;
-        private Boolean enterKeyTripped = false;
+        private Boolean enterKeyTripped = true;
         private MouseState mouseStateCurrent, mouseStatePrevious;
         private KeyboardState keybState;
 

@@ -129,81 +129,81 @@ namespace Evolo.GameClass
 
             #region Level File Checking
 
-                if (!Directory.Exists("Levels"))
+            if (!Directory.Exists("Levels"))
+            {
+                Directory.CreateDirectory("Levels");
+                Directory.CreateDirectory("Levels/CustomLevels");
+
+                StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
+                sw.Write("Player Start Position(0, between 1-19);Start Platform Position(0, 1 more than Player Start Positon's Y Positon);End Platform Position(23, between 2-20);Level Modifier(non negative numbers, unless you want negative points!);Timer(Seconds);Lines to Clear(whole numbers above 0)");
+                sw.WriteLine("");
+                sw.WriteLine("Make sure there are no spaces in the cordinates");
+                sw.WriteLine("");
+                sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
+                sw.WriteLine("");
+                sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
+                sw.WriteLine("");
+                sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
+                sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
+                sw.WriteLine("");
+                sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
+                sw.Close();
+
+                for (int i = 0; i < 6; i++)
                 {
-                    Directory.CreateDirectory("Levels");
-                    Directory.CreateDirectory("Levels/CustomLevels");
-
-                    StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
-                    sw.Write("Player Start Position(0, between 1-19);Start Platform Position(0, 1 more than Player Start Positon's Y Positon);End Platform Position(23, between 2-20);Level Modifier(non negative numbers, unless you want negative points!);Timer(Seconds);Lines to Clear(whole numbers above 0)");
-                    sw.WriteLine("");
-                    sw.WriteLine("Make sure there are no spaces in the cordinates");
-                    sw.WriteLine("");
-                    sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
-                    sw.WriteLine("");
-                    sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
-                    sw.WriteLine("");
-                    sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
-                    sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
-                    sw.WriteLine("");
-                    sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
-                    sw.Close();
-
-                    for (int i = 0; i < 6; i++)
-                    {
-                        StreamWriter sr = new StreamWriter("Levels/Level" + (i + 1) + ".dat");
-                        sr.Write(encoder.EncryptData(levelInfo[i], passPhrase));
-                        sr.Close();
-                    }
+                    StreamWriter sr = new StreamWriter("Levels/Level" + (i + 1) + ".dat");
+                    sr.Write(encoder.EncryptData(levelInfo[i], passPhrase));
+                    sr.Close();
                 }
+            }
 
-                else if (!Directory.Exists("Levels/CustomLevels"))
-                {
-                    Directory.CreateDirectory("Levels/CustomLevels");
-                    StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
-                    sw.Write("Player Start Position(0, between 1-19);Start Platform Position(0, 1 more than Player Start Positon's Y Positon);End Platform Position(23, between 2-20);Level Modifier(non negative numbers, unless you want negative points!);Timer(Seconds);Lines to Clear(whole numbers above 0)");
-                    sw.WriteLine("");
-                    sw.WriteLine("Make sure there are no spaces in the cordinates");
-                    sw.WriteLine("");
-                    sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
-                    sw.WriteLine("");
-                    sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
-                    sw.WriteLine("");
-                    sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
-                    sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
-                    sw.WriteLine("");
-                    sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
-                    sw.Close();
+            else if (!Directory.Exists("Levels/CustomLevels"))
+            {
+                Directory.CreateDirectory("Levels/CustomLevels");
+                StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
+                sw.Write("Player Start Position(0, between 1-19);Start Platform Position(0, 1 more than Player Start Positon's Y Positon);End Platform Position(23, between 2-20);Level Modifier(non negative numbers, unless you want negative points!);Timer(Seconds);Lines to Clear(whole numbers above 0)");
+                sw.WriteLine("");
+                sw.WriteLine("Make sure there are no spaces in the cordinates");
+                sw.WriteLine("");
+                sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
+                sw.WriteLine("");
+                sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
+                sw.WriteLine("");
+                sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
+                sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
+                sw.WriteLine("");
+                sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
+                sw.Close();
 
-                }
-                else if (!File.Exists("Levels/CustomLevels/Level Template.txt"))
-                {
-                    StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
-                    sw.Write("Player Start Position;Start Platform Position;End Platform Position;Level Modifier;Timer(Seconds);Lines to Clear");
-                    sw.WriteLine("");
-                    sw.WriteLine("Make sure there are no spaces in the cordinates");
-                    sw.WriteLine("");
-                    sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
-                    sw.WriteLine("");
-                    sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
-                    sw.WriteLine("");
-                    sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
-                    sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
-                    sw.WriteLine("");
-                    sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
-                    sw.Close();
-                }
+            }
+            else if (!File.Exists("Levels/CustomLevels/Level Template.txt"))
+            {
+                StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
+                sw.Write("Player Start Position;Start Platform Position;End Platform Position;Level Modifier;Timer(Seconds);Lines to Clear");
+                sw.WriteLine("");
+                sw.WriteLine("Make sure there are no spaces in the cordinates");
+                sw.WriteLine("");
+                sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
+                sw.WriteLine("");
+                sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
+                sw.WriteLine("");
+                sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
+                sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
+                sw.WriteLine("");
+                sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
+                sw.Close();
+            }
 
-                DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
-                customLevelFileCount = dInfo.GetFiles("*.dat").Length;
-                customLevelList = new String[customLevelFileCount];
+            DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
+            customLevelFileCount = dInfo.GetFiles("*.dat").Length;
+            customLevelList = new String[customLevelFileCount];
 
-                foreach (FileInfo file in dInfo.GetFiles("*.dat"))
-                {
-                    customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
-                    fileAmount++;
-                }
-            
+            foreach (FileInfo file in dInfo.GetFiles("*.dat"))
+            {
+                customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
+                fileAmount++;
+            }
+
             #endregion
 
             var mouseState = Mouse.GetState();
@@ -282,7 +282,7 @@ namespace Evolo.GameClass
 
             #endregion
             //Profile Name Load
-            for(int k = 0; k < loadProfileMenuButtonText.Length - 1; k++)
+            for (int k = 0; k < loadProfileMenuButtonText.Length - 1; k++)
             {
                 loadProfileMenuButtonText[k] = saveHandler.loadData(k + 1)[0];
             }
@@ -1015,17 +1015,6 @@ namespace Evolo.GameClass
                 levelSelectMenu.setMenuHoverNumber(1);
                 customLevelMenu.setMenuHoverNumber(1);
                 loadProfileMenu.setMenuHoverNumber(1);
-
-                mainMenu.setMenuHoberNumberPrevious(1);
-                optionsKeybindingMenuPage1.setMenuHoberNumberPrevious(1);
-                optionsKeybindingMenuPage2.setMenuHoberNumberPrevious(1);
-                optionsResolutionMenu.setMenuHoberNumberPrevious(1);
-                optionsMenu.setMenuHoberNumberPrevious(1);
-                pauseMenu.setMenuHoberNumberPrevious(1);
-                debugMenu.setMenuHoberNumberPrevious(1);
-                levelSelectMenu.setMenuHoberNumberPrevious(1);
-                customLevelMenu.setMenuHoberNumberPrevious(1);
-                loadProfileMenu.setMenuHoverNumber(1);
             }
 
             if (menuState != previousMenuState)
@@ -1093,11 +1082,11 @@ namespace Evolo.GameClass
             }
         }
 
-      
+
 
         public void SetMenu(String menuState)
         {
-            if(!renameTripped)
+            if (!renameTripped)
                 this.menuState = menuState;
         }
 
