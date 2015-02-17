@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Microsoft.Xna.Framework.Input;
 using StarByte.io;
 
 
@@ -20,7 +21,7 @@ namespace Evolo.GameClass
         {
             this.folderLocation = folderLocation;
             //TEMP / Defualt Values
-            optionsArray = new string[15] { "1280", "720", "A", "D", "W", "Left", "Right", "Up", "Down", "false", "false", "false", "true", "true", "false"};
+            optionsArray = new string[15] { "1280", "720", "A", "D", "W", "Left", "Right", "Up", "Down", "false", "false", "false", "true", "true", "false" };
         }
 
         public void writeOptions(string[] optionsArray)
@@ -39,7 +40,7 @@ namespace Evolo.GameClass
 
                 sw.Close();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 errorHandler.WriteError(2, 146, "Options Write Failure! " + e);
             }
@@ -55,12 +56,22 @@ namespace Evolo.GameClass
                 string line = sr.ReadLine();
                 int lineReadNumber = 0;
 
-                while(line != null)
+                while (line != null)
                 {
                     //Use Line Data Here
                     List<string> words = new List<string>(line.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
 
-                    optionsArray[lineReadNumber] = words[1];
+                    if (lineReadNumber >= 2 && lineReadNumber <= 8)
+                    {
+                        if (Enum.IsDefined(typeof(Keys), words[1]))
+                        {
+                            optionsArray[lineReadNumber] = words[1];
+                        }
+                    }
+                    else
+                    {
+                        optionsArray[lineReadNumber] = words[1];
+                    }
 
                     line = sr.ReadLine();
                     lineReadNumber++;
@@ -68,7 +79,7 @@ namespace Evolo.GameClass
 
                 sr.Close();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 errorHandler.WriteError(1, 159, "Options Load Failure Attempting New File Creation(Ignore If First Start) " + e);
                 try
@@ -82,7 +93,7 @@ namespace Evolo.GameClass
 
                     sw.Close();
                 }
-                catch(Exception o)
+                catch (Exception o)
                 {
                     errorHandler.WriteError(2, 174, "Options Creation Failure! " + o);
                 }

@@ -413,5 +413,10 @@ namespace StarByte.ui
             menuNumberHoverPrevious = buttonToPress;
             overRideButtonPress = true;
         }
+
+        public void resetEnterTripped()
+        {
+            isPressedEnter = true;
+        }
     }
 }

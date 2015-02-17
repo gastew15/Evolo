@@ -56,12 +56,11 @@ namespace Evolo
         //Variables
 
         //Game
-        String version = "Build V: 1.9.8.5"; // Major, Minor, Build, Revision #
+        String version = "Build V: 0.9.9.2"; // Major, Minor, Build, Revision #
         Boolean mainMenuTripped = false; //Boolean to chekc to see if the menus are active
         const int defualtWidth = 1280, defualtHeight = 720;
 
         //Keys
-        string[] keyBindingInfo = new string[8];
         Boolean isPressedEsc;
         Boolean isPressedRightBtn;
         Texture2D gameMouseTexture;
@@ -105,12 +104,6 @@ namespace Evolo
                 graphics.IsFullScreen = Convert.ToBoolean(GlobalVar.OptionsArray[14]);
                 graphics.ApplyChanges();
 
-                //Sets Keybinding Info from options Load
-                for (int i = 0; i < keyBindingInfo.Length; i++)
-                {
-                    keyBindingInfo[i] = GlobalVar.OptionsArray[i + 2];
-                }
-
                 GlobalVar.ScaleSize = new Vector2(GlobalVar.ScreenSize.X / defualtWidth, GlobalVar.ScreenSize.Y / defualtHeight);
                 GlobalVar.GameState = "SplashScreen";
                 //Load up classes we need
@@ -125,7 +118,7 @@ namespace Evolo
                 fieldManager.Initialize();
                 background.Initialize();
 
-                menus.Initialize(keyBindingInfo);
+                menus.Initialize();
                 base.Initialize();
             }
             catch (Exception e)

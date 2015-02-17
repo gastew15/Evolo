@@ -88,7 +88,7 @@ namespace Evolo.GameClass
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font, "Objective:\nMove player to\nother platform and \nclear the number\nof lines indicated \non the right\n\nControls:\n -Player-\n Left: A\n Right: D\n Jump: W\n\n -Blocks-\n Left: LArrow\n Right: RArrow\n Rotate: UArrow\n SpeedUp: DArrow", new Vector2(32 * GlobalVar.ScaleSize.X + 5, 32 * GlobalVar.ScaleSize.Y + 5), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+            spriteBatch.DrawString(font, "Objective:\nMove player to\nother platform and \nclear the number\nof lines indicated \non the right\n\nControls:\n -Player-\n Left: " + GlobalVar.OptionsArray[2] + "\n Right: " + GlobalVar.OptionsArray[3] + "\n Jump: " + GlobalVar.OptionsArray[4] + "\n\n -Blocks-\n Left: " + GlobalVar.OptionsArray[5] + "\n Right: " + GlobalVar.OptionsArray[6] + "\n Rotate: " + GlobalVar.OptionsArray[7] + "\n SpeedUp: " + GlobalVar.OptionsArray[8], new Vector2(32 * GlobalVar.ScaleSize.X + 5, 32 * GlobalVar.ScaleSize.Y + 5), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
             if (isActive)
             {
                 tutorialPopup.Draw(spriteBatch);

@@ -533,7 +533,7 @@ namespace Evolo.GameClass
                 {
                     if (keyLeftDown == true)
                     {
-                        if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                        if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[5], true)))
                         {
                             keyLeftDown = false;
                             tetrominoGridPos[activeTetromino] = new Vector2(tetrominoGridPos[activeTetromino].X - 1, tetrominoGridPos[activeTetromino].Y);
@@ -548,7 +548,7 @@ namespace Evolo.GameClass
 
                         milisecondsElapsedKeyLeft -= milisecondExpirationKeyLeft;
                     }
-                    else if (Keyboard.GetState().IsKeyUp(Keys.Left))
+                    else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[5], true)))
                     {
                         if (keyLeftDown == false)
                         {
@@ -562,7 +562,7 @@ namespace Evolo.GameClass
                 {
                     if (keyRightDown == true)
                     {
-                        if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                        if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[6], true)))
                         {
                             keyRightDown = false;
                             tetrominoGridPos[activeTetromino] = new Vector2(tetrominoGridPos[activeTetromino].X + 1, tetrominoGridPos[activeTetromino].Y);
@@ -577,7 +577,7 @@ namespace Evolo.GameClass
 
                         milisecondsElapsedKeyRight -= milisecondExpirationKeyRight;
                     }
-                    else if (Keyboard.GetState().IsKeyUp(Keys.Right))
+                    else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[6], true)))
                     {
                         if (keyRightDown == false)
                         {
@@ -587,12 +587,12 @@ namespace Evolo.GameClass
                 }
 
                 //Keyboard Input (Down Key) *Speed Up
-                if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[8], true)))
                 {
                     milisecondsTetrominoFallTime = 100;
 
                 }
-                else if (Keyboard.GetState().IsKeyUp(Keys.Down))
+                else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[8], true)))
                 {
                     milisecondsTetrominoFallTime = 300;
                 }
@@ -608,7 +608,7 @@ namespace Evolo.GameClass
 
                     if (keyUpDown == true)
                     {
-                        if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                        if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[7], true)))
                         {
                             keyUpDown = false;
 
@@ -657,7 +657,7 @@ namespace Evolo.GameClass
                         }
                     }
 
-                    else if (Keyboard.GetState().IsKeyUp(Keys.Up))
+                    else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[7], true)))
                     {
                         if (keyUpDown == false)
                         {
@@ -885,7 +885,7 @@ namespace Evolo.GameClass
                 //Left
                 if (keyADown == true && playerCanNotMoveLeft == false && player1GridPos.X > 0)
                 {
-                    if (Keyboard.GetState().IsKeyDown(Keys.A))
+                    if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[2], true)))
                     {
                         keyADown = false;
                         player1SpriteEffects = SpriteEffects.FlipHorizontally;
@@ -901,7 +901,7 @@ namespace Evolo.GameClass
 
                     milisecondsElapsedKeyA -= milisecondExpirationKeyA;
                 }
-                else if (Keyboard.GetState().IsKeyUp(Keys.A))
+                else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[2], true)))
                 {
                     if (keyADown == false)
                     {
@@ -912,7 +912,7 @@ namespace Evolo.GameClass
                 //Right
                 if (keyDDown == true && playerCanNotMoveRight == false && player1GridPos.X < gameField.GetLength(0) - 1)
                 {
-                    if (Keyboard.GetState().IsKeyDown(Keys.D))
+                    if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[3], true)))
                     {
                         keyDDown = false;
                         player1SpriteEffects = SpriteEffects.None;
@@ -928,7 +928,7 @@ namespace Evolo.GameClass
 
                     milisecondsElapsedKeyD -= milisecondExpirationKeyD;
                 }
-                else if (Keyboard.GetState().IsKeyUp(Keys.D))
+                else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[3], true)))
                 {
                     if (keyDDown == false)
                     {
@@ -939,7 +939,7 @@ namespace Evolo.GameClass
                 //Up
                 if (keyWDown == true && playerCanNotMoveUp == false)
                 {
-                    if (Keyboard.GetState().IsKeyDown(Keys.W))
+                    if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[4], true)))
                     {
                         if (player1Jump == false)
                         {
@@ -949,7 +949,7 @@ namespace Evolo.GameClass
                         }
                     }
                 }
-                else if (Keyboard.GetState().IsKeyUp(Keys.W))
+                else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[4], true)))
                 {
                     if (keyWDown == false)
                     {
