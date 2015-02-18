@@ -47,18 +47,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sounds\Sound Effects\menuClickedEffect.wav">
-      <Name>menuClickedEffect</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-    <Compile Include="Sounds\Sound Effects\menuHoverChangeEffect.wav">
-      <Name>menuHoverChangeEffect</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Sprites and Pictures\BasicBlock.png">
       <Name>BasicBlock</Name>
       <Importer>TextureImporter</Importer>
