@@ -236,11 +236,6 @@
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
     </Compile>
-    <Compile Include="Sounds\Sound Effects\Sound_MenuClick.wav">
-      <Name>Sound_MenuClick</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
     <Compile Include="Sounds\Sound Effects\Sound_BlockClear.wav">
       <Name>Sound_BlockClear</Name>
       <Importer>WavImporter</Importer>
@@ -251,13 +246,18 @@
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
-    <Compile Include="Sounds\Sound Effects\Sound_MenuHover.wav">
-      <Name>Sound_MenuHover</Name>
+    <Compile Include="Sounds\Sound Effects\Sound_PlayerMove.wav">
+      <Name>Sound_PlayerMove</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
-    <Compile Include="Sounds\Sound Effects\Sound_PlayerMove.wav">
-      <Name>Sound_PlayerMove</Name>
+    <Compile Include="Sounds\Sound Effects\Sound_MenuClick.wav">
+      <Name>Sound_MenuClick</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="Sounds\Sound Effects\Sound_MenuHover.wav">
+      <Name>Sound_MenuHover</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
