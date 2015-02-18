@@ -586,24 +586,76 @@ namespace Evolo.GameClass
                 #endregion
                 #region Options Key Binding Menu Page2 Update
                 case "OptionsKeybindingMenuPage2":
-                    optionsKeybindingMenuPage2ButtonText = new String[6] { "BlockLeft: " + GlobalVar.OptionsArray[5], "BlockRight: " + GlobalVar.OptionsArray[6], "BlockRotate: " + GlobalVar.OptionsArray[7], "BlockDown: " + GlobalVar.OptionsArray[8], "<- Previous Page", "Back" };
-                    optionsKeybindingMenuPage2.Update(gameTime,
-                        mouseStateCurrent,
-                        mouseStatePrevious,
-                        GlobalVar.ScreenSize,
-                        new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindBlockTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + keybindBlockTitle.Height * GlobalVar.ScaleSize.Y),
-                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder6.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindBlockTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + keybindBlockTitle.Height * GlobalVar.ScaleSize.Y),
-                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((keybindBlockTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindBlockTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2)),
-                        GlobalVar.ScaleSize,
-                        optionsKeybindingMenuColors,
-                        Convert.ToBoolean(GlobalVar.OptionsArray[12]));
-                    if (optionsKeybindingMenuPage2.menuNumberSelection() == 5)
-                        menuState = "OptionsKeybindingMenuPage1";
-                    else if (optionsKeybindingMenuPage2.menuNumberSelection() == 6)
-                        menuState = "OptionsMenu";
-                    else if(optionsKeybindingMenuPage2.menuNumberSelection() != 0)
+                    if (!keyBindingTripped)
                     {
-                        //Pop Up Key Binding Box
+                        optionsKeybindingMenuPage2.Update(gameTime,
+                            mouseStateCurrent,
+                            mouseStatePrevious,
+                            GlobalVar.ScreenSize,
+                            new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindBlockTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + keybindBlockTitle.Height * GlobalVar.ScaleSize.Y),
+                            new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder6.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindBlockTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + keybindBlockTitle.Height * GlobalVar.ScaleSize.Y),
+                            new Vector2((GlobalVar.ScreenSize.X / 2) - ((keybindBlockTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindBlockTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2)),
+                            GlobalVar.ScaleSize,
+                            optionsKeybindingMenuColors,
+                            Convert.ToBoolean(GlobalVar.OptionsArray[12]));
+                        if (optionsKeybindingMenuPage2.menuNumberSelection() == 5)
+                            menuState = "OptionsKeybindingMenuPage1";
+                        else if (optionsKeybindingMenuPage2.menuNumberSelection() == 6)
+                            menuState = "OptionsMenu";
+                        else if (optionsKeybindingMenuPage2.menuNumberSelection() > 0 && optionsKeybindingMenuPage2.menuNumberSelection() <= 4)
+                        {
+                            optionsKeybindingMenuPage2.resetEnterTripped();
+                            keyBindingTripped = true;
+                            keyRebindingText[0] = GlobalVar.OptionsArray[optionsKeybindingMenuPage2.menuNumberSelection() + 4];
+                        }
+                    }
+                    else
+                    {
+                        renameProfilePopUp.setText(keyRebindingText, new Color[] { Color.White });
+                        renameProfilePopupPosition = new Vector2((GlobalVar.ScreenSize.X / 2) - ((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2), (GlobalVar.ScreenSize.Y / 2) - ((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y * 2) / 2));
+                        renameProfilePopUp.Update(gameTime, mouseStateCurrent, mouseStatePrevious, new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2) - ((font.MeasureString(keyRebindingText[0]).X * GlobalVar.ScaleSize.X * 2) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y * 2) / 2) - ((font.MeasureString(keyRebindingText[0]).Y * GlobalVar.ScaleSize.Y * 2) / 2))), GlobalVar.ScreenSize, new Vector2(GlobalVar.ScaleSize.X * 2, GlobalVar.ScaleSize.Y * 2));
+                        previousKeyboardState = currentKeyboardState;
+                        currentKeyboardState = Keyboard.GetState();
+
+                        Keys[] pressedKeys;
+                        pressedKeys = currentKeyboardState.GetPressedKeys();
+
+                        foreach (Keys key in pressedKeys)
+                        {
+                            if (previousKeyboardState.IsKeyUp(key))
+                            {
+                                if (key == Keys.Back) // overflows
+                                {
+                                    if (keyRebindingText[0].Length > 0)
+                                        keyRebindingText[0] = keyRebindingText[0].Remove(keyRebindingText[0].Length - 1, 1);
+                                }
+                                else if (key == Keys.Enter)
+                                {
+                                    keyBindingTripped = false;
+
+                                    if (Enum.IsDefined(typeof(Keys), keyRebindingText[0]))
+                                    {
+                                        List<string> words = new List<string>(optionsKeybindingMenuPage2ButtonText[optionsKeybindingMenuPage2.menuNumberSelection() - 1].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                                        optionsKeybindingMenuPage2ButtonText[optionsKeybindingMenuPage2.menuNumberSelection() - 1] = words[0] + " " + keyRebindingText[0];
+                                        GlobalVar.OptionsArray[optionsKeybindingMenuPage2.menuNumberSelection() + 4] = keyRebindingText[0];
+                                    }
+                                }
+                                else if (key == Keys.Space)
+                                {
+                                    if (keyRebindingText[0].Length <= 11)
+                                        keyRebindingText[0] = keyRebindingText[0].Insert(keyRebindingText[0].Length, " ");
+                                }
+                                else
+                                {
+                                    if (keyRebindingText[0].Length <= 11)
+                                    {
+                                        String keyString = key.ToString();
+
+                                        keyRebindingText[0] += keyString;
+                                    }
+                                }
+                            }
+                        }
                     }
                     break;
                 #endregion
@@ -1110,7 +1162,13 @@ namespace Evolo.GameClass
                     }
                     break;
                 case "OptionsKeybindingMenuPage2":
-                    optionsKeybindingMenuPage2.Draw(spriteBatch);
+                    if (!keyBindingTripped)
+                        optionsKeybindingMenuPage2.Draw(spriteBatch);
+                    else
+                    {
+                        renameProfilePopUp.Draw(spriteBatch);
+                        spriteBatch.DrawString(font, "Press Enter to Confirm", new Vector2((GlobalVar.ScreenSize.X / 2) - (font.MeasureString("Press Enter to Confirm").X * GlobalVar.ScaleSize.X / 2), (renameProfilePopupPosition.Y + 205) * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    }
                     break;
                 case "debugMenu":
                     debugMenu.Draw(spriteBatch);
