@@ -246,11 +246,6 @@
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
-    <Compile Include="Sounds\Sound Effects\Sound_PlayerMove.wav">
-      <Name>Sound_PlayerMove</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
     <Compile Include="Sounds\Sound Effects\Sound_MenuClick.wav">
       <Name>Sound_MenuClick</Name>
       <Importer>WavImporter</Importer>
