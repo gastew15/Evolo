@@ -50,11 +50,13 @@ namespace Evolo.GameClass
         private String debugStringData = "";
         private Random random = new Random();
 
-        private SoundEffect tetrominoLockSoundEffect, lineClearSoundEffect;
-
         //Content Variables
         private Texture2D blockTexture, playerTexture, blankBlockTexture, fullBlockTexture;
         private SpriteFont font;
+
+        //Sound Variables
+        SoundEffect blockClear;
+        SoundEffect blockLock;
 
         //Player Variables
         private SpriteEffects player1SpriteEffects;
@@ -115,10 +117,11 @@ namespace Evolo.GameClass
             playerTexture = Content.Load<Texture2D>("Sprites and pictures/CharacterTest");
             platformTexture = Content.Load<Texture2D>("Sprites and pictures/Platform");
             hudTexture = Content.Load<Texture2D>("Sprites and pictures/GameHud");
-            tetrominoLockSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_BlockLock");
-            lineClearSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_BlockClear");
+            blockClear = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_BlockClear");
+            blockLock= Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_BlockLock");
 
             tutorial.LoadContent(Content, font);
+
             //Teromeno Set Up Reference
             resetGameVariables();
         }
@@ -699,6 +702,8 @@ namespace Evolo.GameClass
                     //Checks for block lock delay before locking in place and spawning new block
                     if (milisecondsElapsedTetrominoTime - milisecondsTetrominoLockDelayTime >= 1)
                     {
+                        blockLock.Play();
+
                         //New Boolean Array to tell the game which lines are filled
                         Boolean[] isfilled = new Boolean[4];
                         for (int o = 0; o < isfilled.Length; o++)
@@ -725,26 +730,105 @@ namespace Evolo.GameClass
                             }
                         }
 
+                        //Tetromino Line Clearing (DISABLED)
+                        /*
+                        //Acessing all the tetromino Y values that are within the lines needed to be clear
+                        for (int i = 0; i < tetromino.Count - 1; i++)
+                        {
+                            for (int j = 0; j < 4; j++)
+                            {
+                                //Checks which tetromino's are within the playing field
+                                if ((int)tetromino[i].getPositions()[j].Y >= 3 && (int)tetromino[i].getPositions()[j].Y < gameField.GetLength(1))
+                                {
+                                    for (int n = 0; n < isfilled.Length; n++)
+                                    {
+                                        //Checking to see if the Y positons of the tetromino is within 4 blocks from the tetromino that just landed and to see if they are within a line that is needed to be cleared
+                                        if (isfilled[n] == true && (int)tetromino[i].getPositions()[j].Y == (absTetrominoBlockFarthestDown - 3) + n)
+                                        {
+                                            // temp boolean to later set the Active Pos to false or true.
+                                            Boolean[] tempHolding = new Boolean[4];
+
+                                            for (int a = 0; a < tempHolding.Length; a++)
+                                            {
+                                                //Seeing which Y pos of the blocks are apart of the temp boolean array
+                                                if (a == j)
+                                                {
+                                                    //Sets the boolean to false to then later set the whether the block is Active or not to false
+                                                    tempHolding[a] = false;
+                                                }
+                                                else
+                                                {
+                                                    //Leaves the Active Pos as is.
+                                                    tempHolding[a] = tetromino[i].getBlockPosActive()[a];
+                                                }
+                                            }
+                                            //Sets the tetromino PosActive to the temp Holding array
+                                            tetromino[i].setBlockPosActive(tempHolding);
+                                        }
+                                    }
+                                }
+                            }
+                            //If Tetromino Positions array is empty it's removed from the list
+                            if (tetromino[i].getPositions().Length == 0)
+                            {
+                                tetromino.RemoveAt(i);
+                                tetrominoGridPos.RemoveAt(i);
+                            }
+                        }
+
+                        //Line Down For What?
+                        for (int a = 0; a < 4; a++)
+                        {
+                            for (int i = 0; i < tetrominoGridPos.Count - 1; i++)
+                            {
+                                if (tetrominoGridPos[i].Y <= (absTetrominoBlockFarthestDown - 3) + a && isfilled[a] == true)
+                                {
+                                    tetrominoGridPos[i] = new Vector2(tetrominoGridPos[i].X, tetrominoGridPos[i].Y + 1);
+
+                                    tetromino[i].Update(tetrominoGridPos[i], gridStartPos, GlobalVar.ScaleSize);
+
+                                    for (int j = 0; j < 4; j++)
+                                    {
+                                        if (tetromino[i].getRawBlockPositions()[j].Y > (absTetrominoBlockFarthestDown - 3) + a)
+                                        {
+                                            Vector2[] tempHolding = new Vector2[4];
+
+                                            for (int k = 0; k < tempHolding.Length; k++)
+                                            {
+                                                if (k == j)
+                                                {
+                                                    tempHolding[k] = new Vector2(tetromino[i].getRawBlockPositions()[k].X, tetromino[i].getRawBlockPositions()[k].Y - 1);
+                                                }
+                                                else
+                                                {
+                                                    tempHolding[k] = tetromino[i].getRawBlockPositions()[k];
+                                                }
+                                            }
+
+                                            tetromino[i].setBlockPositions(tempHolding);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                         */
+
                         //Hit box clearing
                         int lineClearCount = 0;
                         for (int n = 0; n < isfilled.Length; n++)
                         {
-                            for (int i = 3; i < gameField.GetLength(0) - 3; i++)
                             //Much simple virsion of the line clearing above
                             if (isfilled[n] == true)
                             {
-                                if (GlobalVar.OptionsArray[12].Equals("true"))
-                                    lineClearSoundEffect.Play();
-
                                 lineClearCount++;
                                 linesToClear -= 1;
                                 if (linesToClear <= 0)
                                 {
                                     linesToClear = 0;
                                 }
-                                for (int c = 3; c < gameField.GetLength(0) - 3; c++)
+                                for (int i = 3; i < gameField.GetLength(0) - 3; i++)
                                 {
-                                    gameField[c, (absTetrominoBlockFarthestDown - 3) + n] = false;
+                                    gameField[i, (absTetrominoBlockFarthestDown - 3) + n] = false;
                                 }
 
                                 //Moves all the blocks down
@@ -755,7 +839,8 @@ namespace Evolo.GameClass
                                         gameField[e, j] = gameField[e, j - 1];
                                     }
                                 }
-                            }
+                                blockClear.Play();
+                            }        
                         }
                         //Adds Points for the lines cleared
                         GlobalVar.Score += (int)(750 * lineClearCount * 1.5 * levelModifier);
@@ -777,13 +862,6 @@ namespace Evolo.GameClass
 
                         tetrominoHistoryAddItem(tetristype);
 
-
-                    activeTetromino += 1;
-                    if (GlobalVar.OptionsArray[12].Equals("true"))
-                        tetrominoLockSoundEffect.Play();
-                    //Sets new Tetromino in the Preview
-                    tetromino.Add(new Tetromino(tetristype, blockTexture));
-                    tetrominoGridPos.Add(new Vector2(28.5f, 4));
                         activeTetromino += 1;
                         //Sets new Tetromino in the Preview
                         tetromino.Add(new Tetromino(tetristype, blockTexture));
