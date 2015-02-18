@@ -52,14 +52,13 @@ namespace Evolo.GameClass
         //Variables
         private Texture2D optionsTitle, menuTitle, pauseTitle, debugTitle, keybindBlockTitle, keybindPlayerTitle, gameLoseTitle, gameWinTitle, loadProfileTitle, levelSelectMenuTitle, customLevelMenuTitle, menuButtonBackground, menuButtonBorder7, menuButtonBorder6, menuButtonBorder4, menuButtonBorder2, menuButtonBorder3, renameProfilePopupTexture;
         private int mainMenuVerticalSpacing = 24;
-        private Vector2 optionsCenterMenuSP, mainMenuSP, keybindingCenterMenuSP, pauseMenuSP, debugSP, loadProfileMenuSP, gameOverMenuSP, levelSelectMenuSp, customLevelMenuSp, renameProfilePopupPosition;
+        private Vector2 optionsCenterMenuSP, keybindingCenterMenuSP, pauseMenuSP, debugSP, loadProfileMenuSP, renameProfilePopupPosition;
         private String[] mainMenuButtonText;
         private String[] optionsMenuButtonText;
         private String[] optionsResolutionMenuButtonText;
         private String[] optionsKeybindingMenuPage1ButtonText;
         private String[] optionsKeybindingMenuPage2ButtonText;
         private String[] pauseMenuButtonText;
-        private String[] keyBindingInfo;
         private String[] debugMenuButtonText;
         private String[] gameLoseMenuText;
         private String[] gameWinMenuText;
@@ -244,7 +243,6 @@ namespace Evolo.GameClass
             #endregion
             #region Menu Starting Positions
             //SP = Starting Position
-            mainMenuSP = new Vector2();
             optionsCenterMenuSP = new Vector2((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width / 2), (GlobalVar.ScreenSize.Y / 2) - (((menuButtonBackground.Height * optionsMenuButtonText.Length) + (mainMenuVerticalSpacing * (optionsMenuButtonText.Length - 1))) / 2));
             keybindingCenterMenuSP = new Vector2((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width / 2), (GlobalVar.ScreenSize.Y / 2) - (((menuButtonBackground.Height * optionsKeybindingMenuPage1ButtonText.Length) + (mainMenuVerticalSpacing * (optionsMenuButtonText.Length - 1))) / 2));
             pauseMenuSP = new Vector2((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width / 2), (GlobalVar.ScreenSize.Y / 2) - (((menuButtonBackground.Height * pauseMenuButtonText.Length) + (mainMenuVerticalSpacing * (pauseMenuButtonText.Length - 1))) / 2));

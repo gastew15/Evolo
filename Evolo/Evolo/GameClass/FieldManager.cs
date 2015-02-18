@@ -43,7 +43,6 @@ namespace Evolo.GameClass
         //Keyboard Variables / Misc
         private bool keyLeftDown, keyRightDown, keyUpDown;
         private bool keyADown, keyDDown, keyWDown;
-        private bool keyEnterDown = false;
         private int milisecondExpirationKeyA = 200, milisecondExpirationKeyD = 200;
         private int milisecondExpirationKeyLeft = 200, milisecondExpirationKeyRight = 200;
         private int milisecondsElapsedKeyA = 0, milisecondsElapsedKeyD = 0, milisecondsElapsedKeyLeft = 0, milisecondsElapsedKeyRight = 0, milisecondsElapsedKeyUp = 0;
@@ -78,7 +77,7 @@ namespace Evolo.GameClass
         private int[] tetrominoHistory = new int[4];
         private Vector2 tetrominoLastGridPos = new Vector2();
         private Vector2[] tetrominoBlockLastPositions, tetrominoBlockPositions;
-        private Boolean tetrominoCanNotMoveRight, tetrominoCanNotMoveLeft, tetrominoCanNotMoveDown, tetrominoCanNotMoveUp;
+        private Boolean tetrominoCanNotMoveRight, tetrominoCanNotMoveLeft, tetrominoCanNotMoveDown;
         private Boolean tetrominoCanRotate;
         private Tetromino rotationTestTetromino;
 
@@ -149,7 +148,6 @@ namespace Evolo.GameClass
                 tetrominoCanNotMoveRight = false;
                 tetrominoCanNotMoveLeft = false;
                 tetrominoCanNotMoveDown = false;
-                tetrominoCanNotMoveUp = false;
                 tetrominoCanRotate = true;
 
                 playerCanNotMoveRight = false;
@@ -456,14 +454,6 @@ namespace Evolo.GameClass
                 //(Up / Down)
                 for (int i = 0; i < farthestTetrominoBlockUp.Length; i++)
                 {
-                    if (farthestTetrominoBlockUp[i] > 0)
-                    {
-                        if (gameField[xValuesUsedForY[i], farthestTetrominoBlockUp[i] - 1] == true)
-                        {
-                            tetrominoCanNotMoveUp = true;
-                        }
-                    }
-
                     if (farthestTetrominoBlockDown[i] < gameField.GetLength(1) - 1)
                     {
                         if (gameField[xValuesUsedForY[i], farthestTetrominoBlockDown[i] + 1] == true)

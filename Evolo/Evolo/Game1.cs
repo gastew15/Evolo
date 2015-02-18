@@ -51,7 +51,7 @@ namespace Evolo
         //Variables
 
         //Game
-        String version = "Build V: 0.9.9.2"; // Major, Minor, Build, Revision #
+        String version = "Build V: 1.0.0.0"; // Major, Minor, Build, Revision #
         Boolean mainMenuTripped = false; //Boolean to chekc to see if the menus are active
         const int defualtWidth = 1280, defualtHeight = 720;
 
@@ -115,7 +115,7 @@ namespace Evolo
                 background = new Background();
                 fieldManager = new FieldManager();
                 //Change to real values later
-                splashScreenWaitTime = new float[3] { 2.0f, 2.0f, 4.0f };
+                splashScreenWaitTime = new float[3] { 2.5f, 2.5f, 5.0f };
                 fieldManager.Initialize();
                 background.Initialize();
 

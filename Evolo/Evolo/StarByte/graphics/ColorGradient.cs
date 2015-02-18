@@ -19,7 +19,6 @@ namespace StarByte.graphics
         private Vector3 blockColor = new Vector3(0, 0, 0);
         private Vector3 orginalBlockColor;
         private Vector3 endBlockColor;
-        private Boolean trippedRed, trippedGreen, trippedBlue;
         private Vector3 pixelsRequiredToChange = new Vector3(0, 0, 0);
         private int totalDistanceToTravel;
         private Vector2 startPosition, currentPosition;

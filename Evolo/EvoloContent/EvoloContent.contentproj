@@ -256,11 +256,11 @@
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
-    <Content Include="Sprites and Pictures\ButtonPopup1.png">
+    <Compile Include="Sprites and Pictures\ButtonPopup1.png">
       <Name>ButtonPopup1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
-    </Content>
+    </Compile>
     <Compile Include="Sprites and Pictures\ButtonBorderPopup.png">
       <Name>ButtonBorderPopup</Name>
       <Importer>TextureImporter</Importer>

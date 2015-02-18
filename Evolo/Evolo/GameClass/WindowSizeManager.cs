@@ -15,7 +15,6 @@ namespace Evolo.GameClass
     {
         private Vector2 screenSize;
         private GraphicsDeviceManager graphics;
-        private GameWindow Window;
 
         public WindowSizeManager(GraphicsDeviceManager graphics)
         {

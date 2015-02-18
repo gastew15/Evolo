@@ -19,7 +19,7 @@ namespace Evolo.GameClass
 {
     class Player
     {
-        Vector2 drawPoint, scaleSize, playerPos;
+        Vector2 drawPoint, scaleSize;
         Texture2D playerTexture;
         Color drawColor;
 
