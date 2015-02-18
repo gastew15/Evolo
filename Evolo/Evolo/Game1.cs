@@ -19,7 +19,7 @@ namespace Evolo
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        //SUPER IMPORTANT!!! DISABLE FOR ANY RELEASE VERSIONS!!
+        //SUPER IMPORTANT!!! DISABLE FOR ANY RELEASE VERSIONS!! (Also get hung up, so just leave disabled)
         private Boolean devErrorLoggingDisable = false;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
@@ -28,21 +28,16 @@ namespace Evolo
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont SeqoeUIMonoNormal, MenuFont;
-        FPSManager fpsManager;
-        OptionsHandler optionsHandler;
 
-        //TEMP CLASSES
+        //CLASSES
         FieldManager fieldManager;
         Background background;
         SplashScreenManager splashScreen;
-        //TEMP VARIABLES
-        Texture2D[] splashScreenImages;
-        float[] splashScreenWaitTime;
-        float orginalSplashScreenStartTime;
-        float milliScecondsElapsedGameTime;
+        FPSManager fpsManager;
+        OptionsHandler optionsHandler;
 
-        //TEMP Save location, change over to user specific at a later data
-        ErrorHandler errorHandler = new ErrorHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Evolo");// "C:\\Users\\Public\\Saved Games", "Evolo");
+        //Save location
+        ErrorHandler errorHandler = new ErrorHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Evolo");
         MouseState mouseStateCurrent, mouseStatePrevious;
         Menus menus;
         Credits credits;
@@ -67,6 +62,12 @@ namespace Evolo
         //Sounds
         //Song mainMenuMusic;
         Boolean songTripped;
+
+        //Splash Screen
+        Texture2D[] splashScreenImages;
+        float[] splashScreenWaitTime;
+        float orginalSplashScreenStartTime;
+        float milliScecondsElapsedGameTime;
 
         //Credits
         String[] creditsStringArray = new String[13] { "CREDITS", "Team", "G. Stewart - StarByte Designer & Lead Programer", "K. Jones - Main Artist & Generation Programer", "D. Jones - Supporting Programer & Artist", "J. Estrada - Programer & Tester", "A Special Thanks To", "D. Ely" , "L. Powell" , "The Beta Testers", "AND", "To You The Player!", "Thank You For Playing!!!" };
@@ -161,7 +162,7 @@ namespace Evolo
 
                 credits = new Credits(creditsStringArray, SeqoeUIMonoNormal);
 
-                //TEMP FINAL Initilize
+                //FINAL Initilize
                 orginalSplashScreenStartTime = gameTime.ElapsedGameTime.Seconds;
                 splashScreen = new SplashScreenManager(splashScreenImages, splashScreenWaitTime);
             }

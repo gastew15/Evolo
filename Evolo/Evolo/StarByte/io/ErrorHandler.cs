@@ -51,6 +51,7 @@ namespace StarByte.io
 
                 StreamWriter sw = new StreamWriter(folderLocation + "\\" + gameName + "\\Log.txt", true, Encoding.Unicode);
 
+                //Checks if the log file exists and if it doesn't it logs the system information to the top of the log file for easier determination of failure
                 if (firstTimeFileCreation == true)
                 {
                     ManagementObjectSearcher mos = new ManagementObjectSearcher("select * from Win32_OperatingSystem");
@@ -95,6 +96,7 @@ namespace StarByte.io
 
                 }
 
+                //Logs the crash information to the file in an appropriate way
                 if (errorLevel == 1)
                 {
                     sw.WriteLine("");
@@ -112,9 +114,11 @@ namespace StarByte.io
                 }
                 sw.Close();
 
+                //If higher than a non error just log message it displays a message box to the user
                 if(errorLevel >= 2)
                     MessageBox(new IntPtr(0), "Oh no something went Wrong! " + "Error Number " + errorNumber + "\nConsult the log at " + folderLocation + "\\" + gameName + " for more detailed information", gameName + " Prompt", 0);
 
+                //If the error is too major to contiune running it will kill the game
                 if (errorLevel >= 3)
                     System.Diagnostics.Process.GetCurrentProcess().Kill();
 
