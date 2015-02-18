@@ -47,18 +47,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sounds\Sound Effects\menuClickedEffect.wav">
-      <Name>menuClickedEffect</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-    <Compile Include="Sounds\Sound Effects\menuHoverChangeEffect.wav">
-      <Name>menuHoverChangeEffect</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Sprites and Pictures\BasicBlock2.png">
       <Name>BasicBlock2</Name>
       <Importer>TextureImporter</Importer>
@@ -340,8 +328,23 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Sounds\Music\EvoloTheme.mp3">
+      <Name>EvoloTheme</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
     <Compile Include="Sounds\Sound Effects\Sound_MenuClick.wav">
       <Name>Sound_MenuClick</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="Sounds\Sound Effects\Sound_BlockClear.wav">
+      <Name>Sound_BlockClear</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+    <Compile Include="Sounds\Sound Effects\Sound_BlockLock.wav">
+      <Name>Sound_BlockLock</Name>
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
@@ -350,10 +353,10 @@
       <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
-    <Compile Include="Sounds\Music\EvoloTheme.mp3">
-      <Name>EvoloTheme</Name>
-      <Importer>Mp3Importer</Importer>
-      <Processor>SongProcessor</Processor>
+    <Compile Include="Sounds\Sound Effects\Sound_PlayerMove.wav">
+      <Name>Sound_PlayerMove</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
     </Compile>
     <Content Include="Sprites and Pictures\ButtonPopup1.png">
       <Name>ButtonPopup1</Name>

@@ -240,6 +240,7 @@ namespace Evolo.GameClass
             menuClickedSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_MenuClick");
             mainThemeSong = Content.Load<Song>("Sounds/Music/EvoloTheme");
             MediaPlayer.IsRepeating = true;
+            MediaPlayer.Stop();
             #endregion
             #region Menu Starting Positions
             //SP = Starting Position
@@ -365,8 +366,8 @@ namespace Evolo.GameClass
                         GlobalVar.GameState = "Playing";
                         if (GlobalVar.OptionsArray[13].Equals("false"))
                             MediaPlayer.Stop();
-                        else
-                            MediaPlayer.Resume();
+                        else if (MediaPlayer.State.Equals(MediaState.Stopped))
+                            MediaPlayer.Play(mainThemeSong);
                     }
                     else if (pauseMenu.menuNumberSelection() == 2)
                         menuState = "OptionsMenu";

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
 
 /**
  * Evolo Field Manager to handle most game related operations for the player and tetrominos
@@ -46,6 +47,8 @@ namespace Evolo.GameClass
         private int milisecondsElapsedKeyA = 0, milisecondsElapsedKeyD = 0, milisecondsElapsedKeyLeft = 0, milisecondsElapsedKeyRight = 0, milisecondsElapsedKeyUp = 0;
         private String debugStringData = "";
         private Random random = new Random();
+
+        private SoundEffect tetrominoLockSoundEffect, lineClearSoundEffect;
 
         //Content Variables
         private Texture2D blockTexture, playerTexture, blankBlockTexture, fullBlockTexture;
@@ -108,6 +111,8 @@ namespace Evolo.GameClass
             playerTexture = Content.Load<Texture2D>("Sprites and pictures/CharacterTest");
             platformTexture = Content.Load<Texture2D>("Sprites and pictures/Platform");
             hudTexture = Content.Load<Texture2D>("Sprites and pictures/GameHud");
+            tetrominoLockSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_BlockLock");
+            lineClearSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_BlockClear");
             //Teromeno Set Up Reference
             resetGameVariables();
         }
@@ -802,6 +807,7 @@ namespace Evolo.GameClass
                         //Much simple virsion of the line clearing above
                         if (isfilled[n] == true)
                         {
+                            lineClearSoundEffect.Play();
                             lineClearCount++;
                             linesToClear -= 1;
                             if (linesToClear <= 0)
@@ -844,6 +850,7 @@ namespace Evolo.GameClass
                     tetrominoHistoryAddItem(tetristype);
 
                     activeTetromino += 1;
+                    tetrominoLockSoundEffect.Play();
                     //Sets new Tetromino in the Preview
                     tetromino.Add(new Tetromino(tetristype, blockTexture));
                     tetrominoGridPos.Add(new Vector2(28.5f, 4));
