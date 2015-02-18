@@ -47,28 +47,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites and Pictures\BasicBlock2.png">
-      <Name>BasicBlock2</Name>
+    <Compile Include="Sprites and Pictures\BasicBlock.png">
+      <Name>BasicBlock</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="Sprites and Pictures\CharacterTest.png">
       <Name>CharacterTest</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Sprites and Pictures\CloudSheet1.png">
-      <Name>CloudSheet1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Sprites and Pictures\mainMenuButtonBackdrop.png">
-      <Name>mainMenuButtonBackdrop</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Sprites and Pictures\mainMenuButtonBackground.png">
-      <Name>mainMenuButtonBackground</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -92,11 +77,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites and Pictures\menuIndicatorLight.png">
-      <Name>menuIndicatorLight</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Sprites and Pictures\Menu_Logo_Small.png">
       <Name>Menu_Logo_Small</Name>
       <Importer>TextureImporter</Importer>
@@ -114,13 +94,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Compile Include="Sprites and Pictures\SkyBlock1.png">
-      <Name>SkyBlock1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Sprites and Pictures\CognativeThought.png">
       <Name>CognativeThought</Name>
@@ -174,36 +147,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites and Pictures\BlankBlock1.png">
-      <Name>BlankBlock1</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sprites and Pictures\blankBlock2.png">
-      <Name>blankBlock2</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sprites and Pictures\blankBlock3.png">
-      <Name>blankBlock3</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Sprites and Pictures\Logo_MainMenu.png">
       <Name>Logo_MainMenu</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sprites and Pictures\pink-rocket.png">
-      <Name>pink-rocket</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -216,50 +161,15 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites and Pictures\SkyBlock2.png">
-      <Name>SkyBlock2</Name>
+    <Compile Include="Sprites and Pictures\blankBlock.png">
+      <Name>blankBlock</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites and Pictures\SkyBlock3.png">
-      <Name>SkyBlock3</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sprites and Pictures\blankBlock4.png">
-      <Name>blankBlock4</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sprites and Pictures\SkyBlock4.png">
-      <Name>SkyBlock4</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sprites and Pictures\SkyBlock5.png">
-      <Name>SkyBlock5</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sprites and Pictures\SkyBlock6.png">
-      <Name>SkyBlock6</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sprites and Pictures\SkyBlock7.png">
-      <Name>SkyBlock7</Name>
+    <Compile Include="Sprites and Pictures\SkyBlock.png">
+      <Name>SkyBlock</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -288,13 +198,6 @@
   <ItemGroup>
     <Compile Include="Sprites and Pictures\Platform.png">
       <Name>Platform</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Sprites and Pictures\Tutorial.png">
-      <Name>Tutorial</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -365,6 +268,16 @@
     </Content>
     <Compile Include="Sprites and Pictures\ButtonBorderPopup.png">
       <Name>ButtonBorderPopup</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Sprites and Pictures\tutorialPopup.png">
+      <Name>tutorialPopup</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Sprites and Pictures\tutorialPopupCloseButton.png">
+      <Name>tutorialPopupCloseButton</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

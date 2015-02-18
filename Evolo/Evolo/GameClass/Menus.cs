@@ -68,6 +68,7 @@ namespace Evolo.GameClass
         private String[] loadProfileMenuButtonText;
         private String[] renameProfilePopUpText;
         private String[] loadRenameMenuText;
+        private String[] keyRebindingText = new String[1];
         private Color[] mainMenuColors;
         private Color[] optionsMenuColors;
         private Color[] optionsResolutionMenuColors;
@@ -83,7 +84,7 @@ namespace Evolo.GameClass
         private Song mainThemeSong;
         private SingletonLevelSystem levels = SingletonLevelSystem.getInstance();
         private Boolean loadProfileFirstTimeStartUp;
-        private Boolean renameTripped;
+        private Boolean renameTripped, keyBindingTripped;
         private String profileName = "";
         private int localPlayerProfile;
 
@@ -93,7 +94,7 @@ namespace Evolo.GameClass
             encoder = new EncoderSystem(initVectorBytes, keysize);
         }
 
-        public void Initialize(String[] keyBindingInfo)
+        public void Initialize()
         {
             GlobalVar.HighScore = new int[5];
             optionsHandler = new OptionsHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo");
@@ -101,8 +102,8 @@ namespace Evolo.GameClass
             saveHandler = new SaveHandler(6, new String[] { "PROFILE", "1", "0", "0", "0", "0", "0" }, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Evolo", "Save.dat");
             currentKeyboardState = Keyboard.GetState();
             //2 pages to contain all of the key options, treat as seperate menus
-            optionsKeybindingMenuPage1ButtonText = new String[6] { "PlayerLeft: " + keyBindingInfo[0], "PlayerRight: " + keyBindingInfo[1], "PlayerJump: " + keyBindingInfo[2], "Nothing At All", "Next Page ->", "Back" };
-            optionsKeybindingMenuPage2ButtonText = new String[6] { "BlockLeft: " + keyBindingInfo[3], "BlockRight: " + keyBindingInfo[4], "BlockRotate: " + keyBindingInfo[5], "BlockDown: " + keyBindingInfo[6], "<- Previous Page", "Back" };
+            optionsKeybindingMenuPage1ButtonText = new String[6] { "Left: " + GlobalVar.OptionsArray[2], "Right: " + GlobalVar.OptionsArray[3], "Jump: " + GlobalVar.OptionsArray[4], "Nothing At All", "Next Page ->", "Back" };
+            optionsKeybindingMenuPage2ButtonText = new String[6] { "Left: " + GlobalVar.OptionsArray[5], "Right: " + GlobalVar.OptionsArray[6], "Rotate: " + GlobalVar.OptionsArray[7], "Down: " + GlobalVar.OptionsArray[8], "<- Previous Page", "Back" };
             optionsMenuButtonText = new String[7] { "Resolution", "Key Bindings", "Debug Options", "Sound: OFF", "Music: OFF", "Exit & Save", "Exit W/O Saving" };
             optionsResolutionMenuButtonText = new String[7] { "Full Screen", "800 x 600", "1280 x 720", "1366 x 768", "1600 x 900", "1920 x 1080", "Back" };
             mainMenuButtonText = new String[6] { "Level Select", "Load Profile", "Options", "Credits", "Tutorial", "Quit" };
@@ -129,86 +130,85 @@ namespace Evolo.GameClass
 
             #region Level File Checking
 
-                if (!Directory.Exists("Levels"))
+            if (!Directory.Exists("Levels"))
+            {
+                Directory.CreateDirectory("Levels");
+                Directory.CreateDirectory("Levels/CustomLevels");
+
+                StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
+                sw.Write("Player Start Position(0, between 1-19);Start Platform Position(0, 1 more than Player Start Positon's Y Positon);End Platform Position(23, between 2-20);Level Modifier(non negative numbers, unless you want negative points!);Timer(Seconds);Lines to Clear(whole numbers above 0)");
+                sw.WriteLine("");
+                sw.WriteLine("Make sure there are no spaces in the cordinates");
+                sw.WriteLine("");
+                sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
+                sw.WriteLine("");
+                sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
+                sw.WriteLine("");
+                sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
+                sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
+                sw.WriteLine("");
+                sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
+                sw.Close();
+
+                for (int i = 0; i < 6; i++)
                 {
-                    Directory.CreateDirectory("Levels");
-                    Directory.CreateDirectory("Levels/CustomLevels");
-
-                    StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
-                    sw.Write("Player Start Position(0, between 1-19);Start Platform Position(0, 1 more than Player Start Positon's Y Positon);End Platform Position(23, between 2-20);Level Modifier(non negative numbers, unless you want negative points!);Timer(Seconds);Lines to Clear(whole numbers above 0)");
-                    sw.WriteLine("");
-                    sw.WriteLine("Make sure there are no spaces in the cordinates");
-                    sw.WriteLine("");
-                    sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
-                    sw.WriteLine("");
-                    sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
-                    sw.WriteLine("");
-                    sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
-                    sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
-                    sw.WriteLine("");
-                    sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
-                    sw.Close();
-
-                    for (int i = 0; i < 6; i++)
-                    {
-                        StreamWriter sr = new StreamWriter("Levels/Level" + (i + 1) + ".dat");
-                        sr.Write(encoder.EncryptData(levelInfo[i], passPhrase));
-                        sr.Close();
-                    }
+                    StreamWriter sr = new StreamWriter("Levels/Level" + (i + 1) + ".dat");
+                    sr.Write(encoder.EncryptData(levelInfo[i], passPhrase));
+                    sr.Close();
                 }
+            }
 
-                else if (!Directory.Exists("Levels/CustomLevels"))
-                {
-                    Directory.CreateDirectory("Levels/CustomLevels");
-                    StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
-                    sw.Write("Player Start Position(0, between 1-19);Start Platform Position(0, 1 more than Player Start Positon's Y Positon);End Platform Position(23, between 2-20);Level Modifier(non negative numbers, unless you want negative points!);Timer(Seconds);Lines to Clear(whole numbers above 0)");
-                    sw.WriteLine("");
-                    sw.WriteLine("Make sure there are no spaces in the cordinates");
-                    sw.WriteLine("");
-                    sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
-                    sw.WriteLine("");
-                    sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
-                    sw.WriteLine("");
-                    sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
-                    sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
-                    sw.WriteLine("");
-                    sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
-                    sw.Close();
+            else if (!Directory.Exists("Levels/CustomLevels"))
+            {
+                Directory.CreateDirectory("Levels/CustomLevels");
+                StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
+                sw.Write("Player Start Position(0, between 1-19);Start Platform Position(0, 1 more than Player Start Positon's Y Positon);End Platform Position(23, between 2-20);Level Modifier(non negative numbers, unless you want negative points!);Timer(Seconds);Lines to Clear(whole numbers above 0)");
+                sw.WriteLine("");
+                sw.WriteLine("Make sure there are no spaces in the cordinates");
+                sw.WriteLine("");
+                sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
+                sw.WriteLine("");
+                sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
+                sw.WriteLine("");
+                sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
+                sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
+                sw.WriteLine("");
+                sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
+                sw.Close();
 
-                }
-                else if (!File.Exists("Levels/CustomLevels/Level Template.txt"))
-                {
-                    StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
-                    sw.Write("Player Start Position;Start Platform Position;End Platform Position;Level Modifier;Timer(Seconds);Lines to Clear");
-                    sw.WriteLine("");
-                    sw.WriteLine("Make sure there are no spaces in the cordinates");
-                    sw.WriteLine("");
-                    sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
-                    sw.WriteLine("");
-                    sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
-                    sw.WriteLine("");
-                    sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
-                    sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
-                    sw.WriteLine("");
-                    sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
-                    sw.Close();
-                }
+            }
+            else if (!File.Exists("Levels/CustomLevels/Level Template.txt"))
+            {
+                StreamWriter sw = new StreamWriter("Levels/CustomLevels/Level Template.txt", false, Encoding.ASCII);
+                sw.Write("Player Start Position;Start Platform Position;End Platform Position;Level Modifier;Timer(Seconds);Lines to Clear");
+                sw.WriteLine("");
+                sw.WriteLine("Make sure there are no spaces in the cordinates");
+                sw.WriteLine("");
+                sw.WriteLine("0, 14;0, 15;23,10;1;390;10 NO");
+                sw.WriteLine("");
+                sw.WriteLine("0,14;0,15;23,10;1;390;10 YES");
+                sw.WriteLine("");
+                sw.WriteLine("When going to save the file save as a .dat file or else the game will not be able to read the information");
+                sw.WriteLine("This is best done by using Notepad or Notepad++ and while saving the file type out the name of the level you want to call it and then add a '.dat' to it; Example: CustomLevel.dat will result in a level named CustomLevel");
+                sw.WriteLine("");
+                sw.WriteLine("Failure to follow Instructions on this file when creating a custom level may result in a Critical Error in Evolo, Twisted Transistors is not responsible for any custom levels that do not work");
+                sw.Close();
+            }
 
-                DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
-                customLevelFileCount = dInfo.GetFiles("*.dat").Length;
-                customLevelList = new String[customLevelFileCount];
+            DirectoryInfo dInfo = new DirectoryInfo("Levels/CustomLevels");
+            customLevelFileCount = dInfo.GetFiles("*.dat").Length;
+            customLevelList = new String[customLevelFileCount];
 
-                foreach (FileInfo file in dInfo.GetFiles("*.dat"))
-                {
-                    customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
-                    fileAmount++;
-                }
-            
+            foreach (FileInfo file in dInfo.GetFiles("*.dat"))
+            {
+                customLevelList[fileAmount] = file.ToString().Substring(0, (file.ToString().Length - 4));
+                fileAmount++;
+            }
+
             #endregion
 
             var mouseState = Mouse.GetState();
             var mousePosition = new Point(mouseState.X, mouseState.Y);
-            this.keyBindingInfo = keyBindingInfo;
             windowSizeManager = new WindowSizeManager(graphics);
         }
 
@@ -283,7 +283,7 @@ namespace Evolo.GameClass
 
             #endregion
             //Profile Name Load
-            for(int k = 0; k < loadProfileMenuButtonText.Length - 1; k++)
+            for (int k = 0; k < loadProfileMenuButtonText.Length - 1; k++)
             {
                 loadProfileMenuButtonText[k] = saveHandler.loadData(k + 1)[0];
             }
@@ -335,8 +335,6 @@ namespace Evolo.GameClass
                         levels.setLevel("Level" + GlobalVar.CurrentLevel);
                         GlobalVar.ResetGameField = true;
                         GlobalVar.GameState = "Playing";
-                        GlobalVar.GameState = "MenuScreen";
-                        menuState = "PauseMenu";
                     }
                     else if (mainMenu.menuNumberSelection() == 6)
                     {
@@ -514,47 +512,151 @@ namespace Evolo.GameClass
                 #endregion
                 #region Options Key Binding Menu Page1 Update
                 case "OptionsKeybindingMenuPage1":
-                    optionsKeybindingMenuPage1ButtonText = new String[6] { "PlayerLeft: " + GlobalVar.OptionsArray[2], "PlayerRight: " + GlobalVar.OptionsArray[3], "PlayerJump: " + GlobalVar.OptionsArray[4], "Nothing At All", "Next Page ->", "Back" };
-                    optionsKeybindingMenuPage1.Update(gameTime,
-                        mouseStateCurrent,
-                        mouseStatePrevious,
-                        GlobalVar.ScreenSize,
-                        new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindPlayerTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + keybindPlayerTitle.Height * GlobalVar.ScaleSize.Y),
-                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder6.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindPlayerTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + keybindPlayerTitle.Height * GlobalVar.ScaleSize.Y),
-                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((keybindPlayerTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindPlayerTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2)),
-                        GlobalVar.ScaleSize,
-                        optionsKeybindingMenuColors,
-                        Convert.ToBoolean(GlobalVar.OptionsArray[12]));
-                    if (optionsKeybindingMenuPage1.menuNumberSelection() > 0 && optionsKeybindingMenuPage1.menuNumberSelection() < 4)
+                    if (!keyBindingTripped)
                     {
-                        //Pop Up Key Binding Box
+                        optionsKeybindingMenuPage1.Update(gameTime,
+                            mouseStateCurrent,
+                            mouseStatePrevious,
+                            GlobalVar.ScreenSize,
+                            new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindPlayerTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + keybindPlayerTitle.Height * GlobalVar.ScaleSize.Y),
+                            new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder6.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindPlayerTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + keybindPlayerTitle.Height * GlobalVar.ScaleSize.Y),
+                            new Vector2((GlobalVar.ScreenSize.X / 2) - ((keybindPlayerTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindPlayerTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2)),
+                            GlobalVar.ScaleSize,
+                            optionsKeybindingMenuColors,
+                            Convert.ToBoolean(GlobalVar.OptionsArray[12]));
+                        if (optionsKeybindingMenuPage1.menuNumberSelection() > 0 && optionsKeybindingMenuPage1.menuNumberSelection() < 4)
+                        {
+                            optionsKeybindingMenuPage1.resetEnterTripped();
+                            keyBindingTripped = true;
+                            keyRebindingText[0] = GlobalVar.OptionsArray[optionsKeybindingMenuPage1.menuNumberSelection() + 1];
+                        }
+                        else if (optionsKeybindingMenuPage1.menuNumberSelection() == 5)
+                            menuState = "OptionsKeybindingMenuPage2";
+                        else if (optionsKeybindingMenuPage1.menuNumberSelection() == 6)
+                            menuState = "OptionsMenu";
                     }
-                    else if (optionsKeybindingMenuPage1.menuNumberSelection() == 5)
-                        menuState = "OptionsKeybindingMenuPage2";
-                    else if (optionsKeybindingMenuPage1.menuNumberSelection() == 6)
-                        menuState = "OptionsMenu";
+                    else
+                    {
+                        renameProfilePopUp.setText(keyRebindingText, new Color[]{Color.White});
+                        renameProfilePopupPosition = new Vector2((GlobalVar.ScreenSize.X / 2) - ((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2), (GlobalVar.ScreenSize.Y / 2) - ((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y * 2) / 2));
+                        renameProfilePopUp.Update(gameTime, mouseStateCurrent, mouseStatePrevious, new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2) - ((font.MeasureString(keyRebindingText[0]).X * GlobalVar.ScaleSize.X * 2) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y * 2) / 2) - ((font.MeasureString(keyRebindingText[0]).Y * GlobalVar.ScaleSize.Y * 2) / 2))), GlobalVar.ScreenSize, new Vector2(GlobalVar.ScaleSize.X * 2, GlobalVar.ScaleSize.Y * 2));
+                        previousKeyboardState = currentKeyboardState;
+                        currentKeyboardState = Keyboard.GetState();
+
+                        Keys[] pressedKeys;
+                        pressedKeys = currentKeyboardState.GetPressedKeys();
+
+                        foreach (Keys key in pressedKeys)
+                        {
+                            if (previousKeyboardState.IsKeyUp(key))
+                            {
+                                if (key == Keys.Back) // overflows
+                                {
+                                    if (keyRebindingText[0].Length > 0)
+                                        keyRebindingText[0] = keyRebindingText[0].Remove(keyRebindingText[0].Length - 1, 1);
+                                }
+                                else if (key == Keys.Enter)
+                                {
+                                    keyBindingTripped = false;
+
+                                    if(Enum.IsDefined(typeof(Keys), keyRebindingText[0]))
+                                    {
+                                        List<string> words = new List<string>(optionsKeybindingMenuPage1ButtonText[optionsKeybindingMenuPage1.menuNumberSelection() - 1].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                                        optionsKeybindingMenuPage1ButtonText[optionsKeybindingMenuPage1.menuNumberSelection() - 1] = words[0] + " " + keyRebindingText[0];
+                                        GlobalVar.OptionsArray[optionsKeybindingMenuPage1.menuNumberSelection() + 1] = keyRebindingText[0];
+                                    }
+                                }
+                                else if (key == Keys.Space)
+                                {
+                                    if (keyRebindingText[0].Length <= 11)
+                                        keyRebindingText[0] = keyRebindingText[0].Insert(keyRebindingText[0].Length, " ");
+                                }
+                                else
+                                {
+                                    if (keyRebindingText[0].Length <= 11)
+                                    {
+                                        String keyString = key.ToString();
+
+                                        keyRebindingText[0] += keyString;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     break;
                 #endregion
                 #region Options Key Binding Menu Page2 Update
                 case "OptionsKeybindingMenuPage2":
-                    optionsKeybindingMenuPage2ButtonText = new String[6] { "BlockLeft: " + GlobalVar.OptionsArray[5], "BlockRight: " + GlobalVar.OptionsArray[6], "BlockRotate: " + GlobalVar.OptionsArray[7], "BlockDown: " + GlobalVar.OptionsArray[8], "<- Previous Page", "Back" };
-                    optionsKeybindingMenuPage2.Update(gameTime,
-                        mouseStateCurrent,
-                        mouseStatePrevious,
-                        GlobalVar.ScreenSize,
-                        new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindBlockTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + keybindBlockTitle.Height * GlobalVar.ScaleSize.Y),
-                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder6.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindBlockTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + keybindBlockTitle.Height * GlobalVar.ScaleSize.Y),
-                        new Vector2((GlobalVar.ScreenSize.X / 2) - ((keybindBlockTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindBlockTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2)),
-                        GlobalVar.ScaleSize,
-                        optionsKeybindingMenuColors,
-                        Convert.ToBoolean(GlobalVar.OptionsArray[12]));
-                    if (optionsKeybindingMenuPage2.menuNumberSelection() == 5)
-                        menuState = "OptionsKeybindingMenuPage1";
-                    else if (optionsKeybindingMenuPage2.menuNumberSelection() == 6)
-                        menuState = "OptionsMenu";
-                    else if(optionsKeybindingMenuPage2.menuNumberSelection() != 0)
+                    if (!keyBindingTripped)
                     {
-                        //Pop Up Key Binding Box
+                        optionsKeybindingMenuPage2.Update(gameTime,
+                            mouseStateCurrent,
+                            mouseStatePrevious,
+                            GlobalVar.ScreenSize,
+                            new Vector2(((GlobalVar.ScreenSize.X / 2) - (menuButtonBackground.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindBlockTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + keybindBlockTitle.Height * GlobalVar.ScaleSize.Y),
+                            new Vector2((GlobalVar.ScreenSize.X / 2) - ((menuButtonBorder6.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindBlockTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2) + keybindBlockTitle.Height * GlobalVar.ScaleSize.Y),
+                            new Vector2((GlobalVar.ScreenSize.X / 2) - ((keybindBlockTitle.Width * GlobalVar.ScaleSize.X) / 2), ((GlobalVar.ScreenSize.Y / 2) - (((keybindBlockTitle.Height + menuButtonBorder6.Height) * GlobalVar.ScaleSize.Y)) / 2)),
+                            GlobalVar.ScaleSize,
+                            optionsKeybindingMenuColors,
+                            Convert.ToBoolean(GlobalVar.OptionsArray[12]));
+                        if (optionsKeybindingMenuPage2.menuNumberSelection() == 5)
+                            menuState = "OptionsKeybindingMenuPage1";
+                        else if (optionsKeybindingMenuPage2.menuNumberSelection() == 6)
+                            menuState = "OptionsMenu";
+                        else if (optionsKeybindingMenuPage2.menuNumberSelection() > 0 && optionsKeybindingMenuPage2.menuNumberSelection() <= 4)
+                        {
+                            optionsKeybindingMenuPage2.resetEnterTripped();
+                            keyBindingTripped = true;
+                            keyRebindingText[0] = GlobalVar.OptionsArray[optionsKeybindingMenuPage2.menuNumberSelection() + 4];
+                        }
+                    }
+                    else
+                    {
+                        renameProfilePopUp.setText(keyRebindingText, new Color[] { Color.White });
+                        renameProfilePopupPosition = new Vector2((GlobalVar.ScreenSize.X / 2) - ((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2), (GlobalVar.ScreenSize.Y / 2) - ((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y * 2) / 2));
+                        renameProfilePopUp.Update(gameTime, mouseStateCurrent, mouseStatePrevious, new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2) - ((font.MeasureString(keyRebindingText[0]).X * GlobalVar.ScaleSize.X * 2) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y * 2) / 2) - ((font.MeasureString(keyRebindingText[0]).Y * GlobalVar.ScaleSize.Y * 2) / 2))), GlobalVar.ScreenSize, new Vector2(GlobalVar.ScaleSize.X * 2, GlobalVar.ScaleSize.Y * 2));
+                        previousKeyboardState = currentKeyboardState;
+                        currentKeyboardState = Keyboard.GetState();
+
+                        Keys[] pressedKeys;
+                        pressedKeys = currentKeyboardState.GetPressedKeys();
+
+                        foreach (Keys key in pressedKeys)
+                        {
+                            if (previousKeyboardState.IsKeyUp(key))
+                            {
+                                if (key == Keys.Back) // overflows
+                                {
+                                    if (keyRebindingText[0].Length > 0)
+                                        keyRebindingText[0] = keyRebindingText[0].Remove(keyRebindingText[0].Length - 1, 1);
+                                }
+                                else if (key == Keys.Enter)
+                                {
+                                    keyBindingTripped = false;
+
+                                    if (Enum.IsDefined(typeof(Keys), keyRebindingText[0]))
+                                    {
+                                        List<string> words = new List<string>(optionsKeybindingMenuPage2ButtonText[optionsKeybindingMenuPage2.menuNumberSelection() - 1].Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
+                                        optionsKeybindingMenuPage2ButtonText[optionsKeybindingMenuPage2.menuNumberSelection() - 1] = words[0] + " " + keyRebindingText[0];
+                                        GlobalVar.OptionsArray[optionsKeybindingMenuPage2.menuNumberSelection() + 4] = keyRebindingText[0];
+                                    }
+                                }
+                                else if (key == Keys.Space)
+                                {
+                                    if (keyRebindingText[0].Length <= 11)
+                                        keyRebindingText[0] = keyRebindingText[0].Insert(keyRebindingText[0].Length, " ");
+                                }
+                                else
+                                {
+                                    if (keyRebindingText[0].Length <= 11)
+                                    {
+                                        String keyString = key.ToString();
+
+                                        keyRebindingText[0] += keyString;
+                                    }
+                                }
+                            }
+                        }
                     }
                     break;
                 #endregion
@@ -681,6 +783,7 @@ namespace Evolo.GameClass
                     else if (gameLoseMenu.menuNumberSelection() == 2)
                     {
                         menuState = "MainMenu";
+                        MediaPlayer.Stop();
                     }
                     break;
                 #endregion
@@ -722,6 +825,7 @@ namespace Evolo.GameClass
                     else if (gameWinMenu.menuNumberSelection() == 2)
                     {
                         menuState = "MainMenu";
+                        MediaPlayer.Stop();
                     }
                     break;
                 #endregion
@@ -810,18 +914,18 @@ namespace Evolo.GameClass
                     else if (customLevelMenu.menuNumberSelection() != 0 && !(customLevelMenuText[customLevelMenu.menuNumberSelection() - 1].Equals("Blank")))
                     {
                         try
-                        {
-                            if (GlobalVar.OptionsArray[13].Equals("true"))
-                                MediaPlayer.Play(mainThemeSong);
+                        { 
                             GlobalVar.CustomLevel = true;
                             GlobalVar.CurrentLevel = customLevelMenuText[customLevelMenu.menuNumberSelection() - 1];
                             levels.setLevel("CustomLevels/" + GlobalVar.CurrentLevel);
                             levels.Update();
 
-                            if(!levels.getError() == true)
+                            if(!levels.getError())
                             {
                             GlobalVar.ResetGameField = true;
                             GlobalVar.GameState = "Playing";
+                            if (GlobalVar.OptionsArray[13].Equals("true"))
+                                MediaPlayer.Play(mainThemeSong);
                             }
                         }
                         catch
@@ -871,6 +975,7 @@ namespace Evolo.GameClass
                             //rename
                             renameProfilePopUpText[0] = profileName;
                             renameTripped = true;
+                            loadRenameMenu.resetEnterTripped();
                         }
                         else if (loadRenameMenu.menuNumberSelection() == 3)
                         {
@@ -887,6 +992,7 @@ namespace Evolo.GameClass
                     }
                     else
                     {
+                        renameProfilePopUp.setText(renameProfilePopUpText, new Color[] { Color.White });
                         renameProfilePopupPosition = new Vector2((GlobalVar.ScreenSize.X / 2) - ((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2), (GlobalVar.ScreenSize.Y / 2) - ((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y * 2) / 2));
                         renameProfilePopUp.Update(gameTime, mouseStateCurrent, mouseStatePrevious, new Vector2(renameProfilePopupPosition.X + (((renameProfilePopupTexture.Width * GlobalVar.ScaleSize.X * 2) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).X * GlobalVar.ScaleSize.X *2) / 2)), renameProfilePopupPosition.Y + (((renameProfilePopupTexture.Height * GlobalVar.ScaleSize.Y *2) / 2) - ((font.MeasureString(renameProfilePopUpText[0]).Y * GlobalVar.ScaleSize.Y*2) / 2))), GlobalVar.ScreenSize, new Vector2(GlobalVar.ScaleSize.X * 2, GlobalVar.ScaleSize.Y * 2) );
                         previousKeyboardState = currentKeyboardState;
@@ -1018,17 +1124,6 @@ namespace Evolo.GameClass
                 levelSelectMenu.setMenuHoverNumber(1);
                 customLevelMenu.setMenuHoverNumber(1);
                 loadProfileMenu.setMenuHoverNumber(1);
-
-                mainMenu.setMenuHoberNumberPrevious(1);
-                optionsKeybindingMenuPage1.setMenuHoberNumberPrevious(1);
-                optionsKeybindingMenuPage2.setMenuHoberNumberPrevious(1);
-                optionsResolutionMenu.setMenuHoberNumberPrevious(1);
-                optionsMenu.setMenuHoberNumberPrevious(1);
-                pauseMenu.setMenuHoberNumberPrevious(1);
-                debugMenu.setMenuHoberNumberPrevious(1);
-                levelSelectMenu.setMenuHoberNumberPrevious(1);
-                customLevelMenu.setMenuHoberNumberPrevious(1);
-                loadProfileMenu.setMenuHoverNumber(1);
             }
 
             if (menuState != previousMenuState)
@@ -1061,10 +1156,22 @@ namespace Evolo.GameClass
                     optionsResolutionMenu.Draw(spriteBatch);
                     break;
                 case "OptionsKeybindingMenuPage1":
-                    optionsKeybindingMenuPage1.Draw(spriteBatch);
+                    if(!keyBindingTripped)
+                        optionsKeybindingMenuPage1.Draw(spriteBatch);
+                    else
+                    {
+                        renameProfilePopUp.Draw(spriteBatch);
+                        spriteBatch.DrawString(font, "Press Enter to Confirm", new Vector2((GlobalVar.ScreenSize.X / 2) - (font.MeasureString("Press Enter to Confirm").X * GlobalVar.ScaleSize.X / 2), (renameProfilePopupPosition.Y + 205) * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    }
                     break;
                 case "OptionsKeybindingMenuPage2":
-                    optionsKeybindingMenuPage2.Draw(spriteBatch);
+                    if (!keyBindingTripped)
+                        optionsKeybindingMenuPage2.Draw(spriteBatch);
+                    else
+                    {
+                        renameProfilePopUp.Draw(spriteBatch);
+                        spriteBatch.DrawString(font, "Press Enter to Confirm", new Vector2((GlobalVar.ScreenSize.X / 2) - (font.MeasureString("Press Enter to Confirm").X * GlobalVar.ScaleSize.X / 2), (renameProfilePopupPosition.Y + 205) * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+                    }
                     break;
                 case "debugMenu":
                     debugMenu.Draw(spriteBatch);
@@ -1096,23 +1203,15 @@ namespace Evolo.GameClass
             }
         }
 
-      
-
         public void SetMenu(String menuState)
         {
-            if(!renameTripped)
+            if (!renameTripped)
                 this.menuState = menuState;
         }
 
         public void SetGameOver(Boolean gameWin)
         {
             this.gameWin = gameWin;
-        }
-
-        public void SetKeybindingInfo(String[] keyBindingInfo)
-        {
-            //In the future send it back too?
-            this.keyBindingInfo = keyBindingInfo;
         }
 
         public String getMenuState()

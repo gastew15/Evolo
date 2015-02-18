@@ -19,13 +19,15 @@ namespace Evolo.GameClass
     class FieldManager
     {
         #region Variables
-
-        private Boolean gameWin;
-        private Boolean gameOver;
+  
         //Gamefield Variables
         private Boolean[,] gameField = new Boolean[26, 22];
         private Vector2 gridStartPos;
         private int linesToClear;
+        private Boolean gameWin;
+        private Boolean gameOver;
+        private Tutorial tutorial = new Tutorial();
+        private Boolean tutorialFirstUpdateTrip = false;
 
         //Timing Variables
         private int milisecondsElapsedTetrominoTime = 0;
@@ -52,6 +54,7 @@ namespace Evolo.GameClass
 
         //Content Variables
         private Texture2D blockTexture, playerTexture, blankBlockTexture, fullBlockTexture;
+        private SpriteFont font;
 
         //Player Variables
         private SpriteEffects player1SpriteEffects;
@@ -103,929 +106,873 @@ namespace Evolo.GameClass
             levels.setLevel("Level1");
         }
 
-        public void LoadContent(ContentManager Content)
+        public void LoadContent(ContentManager Content, SpriteFont font)
         {
-            blockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
-            fullBlockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock2");
-            blankBlockTexture = Content.Load<Texture2D>("Sprites and pictures/blankBlock4");
+            this.font = font;
+            blockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock");
+            fullBlockTexture = Content.Load<Texture2D>("Sprites and pictures/BasicBlock");
+            blankBlockTexture = Content.Load<Texture2D>("Sprites and pictures/blankBlock");
             playerTexture = Content.Load<Texture2D>("Sprites and pictures/CharacterTest");
             platformTexture = Content.Load<Texture2D>("Sprites and pictures/Platform");
             hudTexture = Content.Load<Texture2D>("Sprites and pictures/GameHud");
             tetrominoLockSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_BlockLock");
             lineClearSoundEffect = Content.Load<SoundEffect>("Sounds/Sound Effects/Sound_BlockClear");
+
+            tutorial.LoadContent(Content, font);
             //Teromeno Set Up Reference
             resetGameVariables();
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, MouseState currentMouseState, MouseState previousMouseState)
         {
-            #region Local Variable Reseting
-
-            //Adds time since last update to the elapsed time for the tetromino
-            milisecondsElapsedTetrominoTime += gameTime.ElapsedGameTime.Milliseconds;
-            milisecondsElapsedPlayerTime1 += gameTime.ElapsedGameTime.Milliseconds;
-            milisecondsElapsedTime += gameTime.ElapsedGameTime.Milliseconds;
-            milisecondsElapsedKeyA += gameTime.ElapsedGameTime.Milliseconds;
-            milisecondsElapsedKeyD += gameTime.ElapsedGameTime.Milliseconds;
-            milisecondsElapsedKeyLeft += gameTime.ElapsedGameTime.Milliseconds;
-            milisecondsElapsedKeyRight += gameTime.ElapsedGameTime.Milliseconds;
-            milisecondsElapsedKeyUp += gameTime.ElapsedGameTime.Milliseconds;
-
-            //Adjusts the grid Starting Postion for resolution changes & such
-            gridStartPos = new Vector2((GlobalVar.ScreenSize.X / 2) - (((blockTexture.Width * GlobalVar.ScaleSize.X) * gameField.GetLength(0)) / 2), -1 * (blockTexture.Height * GlobalVar.ScaleSize.Y));
-
-            //Resets tetromino Movement Booleans
-            tetrominoCanNotMoveRight = false;
-            tetrominoCanNotMoveLeft = false;
-            tetrominoCanNotMoveDown = false;
-            tetrominoCanNotMoveUp = false;
-            tetrominoCanRotate = true;
-
-            playerCanNotMoveRight = false;
-            playerCanNotMoveLeft = false;
-            playerCanNotMoveDown = false;
-            playerCanNotMoveUp = false;
-
-            //Resets absoluote tetromino Positions
-            absTetrominoBlockFarthestLeft = gameField.GetLength(0);
-            absTetrominoBlockFarthestUp = gameField.GetLength(1);
-            absTetrominoBlockFarthestRight = 0;
-            absTetrominoBlockFarthestDown = 0;
-            tetrominoLastRotation = tetrominoRotation;
-
-            if(activeTetromino >= 0 && activeTetromino < tetrominoGridPos.Count)
-                tetrominoLastGridPos = tetrominoGridPos[activeTetromino];
-
-            #endregion
-
-            #region tetromino Collision Box Logic
-
-            //Temporary Holding Variables
-            int tempX, tempY;
-
-            for (int p = 0; p < tetromino[activeTetromino].getPositions().Length; p++)
+            if ((GlobalVar.CurrentLevel.Equals("6") && !tutorial.getIsActive()) || !GlobalVar.CurrentLevel.Equals("6") || !tutorialFirstUpdateTrip)
             {
-                //Clears the hit boxes from the previous Positions
-                if (lastActiveTetromino == activeTetromino)
-                {
-                    gameField[(int)tetrominoBlockLastPositions[p].X, (int)(tetrominoBlockLastPositions[p].Y)] = false;
-                }
+                #region Local Variable Reseting
 
-                //Sets holding X value to the input position respective from the tetromino Object, and if less than 0 corrects the issue
-                if ((int)(tetromino[activeTetromino].getPositions()[p].X) < 0)
-                {
-                    tempX = 0;
-                }
-                else
-                {
-                    tempX = (int)(tetromino[activeTetromino].getPositions()[p].X);
-                }
+                //Adds time since last update to the elapsed time for the tetromino
+                milisecondsElapsedTetrominoTime += gameTime.ElapsedGameTime.Milliseconds;
+                milisecondsElapsedPlayerTime1 += gameTime.ElapsedGameTime.Milliseconds;
+                milisecondsElapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+                milisecondsElapsedKeyA += gameTime.ElapsedGameTime.Milliseconds;
+                milisecondsElapsedKeyD += gameTime.ElapsedGameTime.Milliseconds;
+                milisecondsElapsedKeyLeft += gameTime.ElapsedGameTime.Milliseconds;
+                milisecondsElapsedKeyRight += gameTime.ElapsedGameTime.Milliseconds;
+                milisecondsElapsedKeyUp += gameTime.ElapsedGameTime.Milliseconds;
 
-                //Sets holding Y value to the input position respective from the tetromino Object, and if less than 0 corrects the issue
-                if ((int)(tetromino[activeTetromino].getPositions()[p].Y) < 0)
-                {
-                    tempY = 0;
-                }
-                else
-                {
-                    tempY = (int)(tetromino[activeTetromino].getPositions()[p].Y);
-                }
+                //Adjusts the grid Starting Postion for resolution changes & such
+                gridStartPos = new Vector2((GlobalVar.ScreenSize.X / 2) - (((blockTexture.Width * GlobalVar.ScaleSize.X) * gameField.GetLength(0)) / 2), -1 * (blockTexture.Height * GlobalVar.ScaleSize.Y));
 
-                //Sets the corrected local holding array for the postions of the blocks from the tetromino
-                tetrominoBlockPositions[p] = new Vector2(tempX, tempY);
+                //Resets tetromino Movement Booleans
+                tetrominoCanNotMoveRight = false;
+                tetrominoCanNotMoveLeft = false;
+                tetrominoCanNotMoveDown = false;
+                tetrominoCanNotMoveUp = false;
+                tetrominoCanRotate = true;
 
-                //Sets the hit boxes for the tetromino at the current Positon
-                gameField[(int)tetrominoBlockPositions[p].X, (int)tetrominoBlockPositions[p].Y] = true;
+                playerCanNotMoveRight = false;
+                playerCanNotMoveLeft = false;
+                playerCanNotMoveDown = false;
+                playerCanNotMoveUp = false;
+
+                //Resets absoluote tetromino Positions
+                absTetrominoBlockFarthestLeft = gameField.GetLength(0);
+                absTetrominoBlockFarthestUp = gameField.GetLength(1);
+                absTetrominoBlockFarthestRight = 0;
+                absTetrominoBlockFarthestDown = 0;
+                tetrominoLastRotation = tetrominoRotation;
+
+                if (activeTetromino >= 0 && activeTetromino < tetrominoGridPos.Count)
+                    tetrominoLastGridPos = tetrominoGridPos[activeTetromino];
+
+                #endregion
+
+                #region tetromino Collision Box Logic
+
+                //Temporary Holding Variables
+                int tempX, tempY;
+
+                for (int p = 0; p < tetromino[activeTetromino].getPositions().Length; p++)
+                {
+                    //Clears the hit boxes from the previous Positions
+                    if (lastActiveTetromino == activeTetromino)
+                    {
+                        gameField[(int)tetrominoBlockLastPositions[p].X, (int)(tetrominoBlockLastPositions[p].Y)] = false;
+                    }
+
+                    //Sets holding X value to the input position respective from the tetromino Object, and if less than 0 corrects the issue
+                    if ((int)(tetromino[activeTetromino].getPositions()[p].X) < 0)
+                    {
+                        tempX = 0;
+                    }
+                    else
+                    {
+                        tempX = (int)(tetromino[activeTetromino].getPositions()[p].X);
+                    }
+
+                    //Sets holding Y value to the input position respective from the tetromino Object, and if less than 0 corrects the issue
+                    if ((int)(tetromino[activeTetromino].getPositions()[p].Y) < 0)
+                    {
+                        tempY = 0;
+                    }
+                    else
+                    {
+                        tempY = (int)(tetromino[activeTetromino].getPositions()[p].Y);
+                    }
+
+                    //Sets the corrected local holding array for the postions of the blocks from the tetromino
+                    tetrominoBlockPositions[p] = new Vector2(tempX, tempY);
+
+                    //Sets the hit boxes for the tetromino at the current Positon
+                    gameField[(int)tetrominoBlockPositions[p].X, (int)tetrominoBlockPositions[p].Y] = true;
+
+                    //Resets the variable
+                    tetrominoBlockLastPositions[p] = new Vector2(tempX, tempY);
+                }
 
                 //Resets the variable
-                tetrominoBlockLastPositions[p] = new Vector2(tempX, tempY);
-            }
+                lastActiveTetromino = activeTetromino;
 
-            //Resets the variable
-            lastActiveTetromino = activeTetromino;
+                #endregion
 
-            #endregion
+                #region tetromino Block Constraint Information
 
-            #region tetromino Block Constraint Information
+                //Finds the parts of the axis relative to their opposite
 
-            //Finds the parts of the axis relative to their opposite
+                #region X's On Y Values
 
-            #region X's On Y Values
+                //Local Varaibles used in calculations
+                Boolean yPosAlreadyInList = false;
+                List<int> yValuesUsedForX = new List<int>();
+                List<List<int>> xValuesUsed = new List<List<int>>();
 
-            //Local Varaibles used in calculations
-            Boolean yPosAlreadyInList = false;
-            List<int> yValuesUsedForX = new List<int>();
-            List<List<int>> xValuesUsed = new List<List<int>>();
-
-            //Finds all the unqiue Y Values in tetromino's indivdual blocks
-            for (int w = 0; w < tetrominoBlockPositions.Length; w++)
-            {
-                List<int> yPosSublist = new List<int>();
-
-                if (yValuesUsedForX != null)
+                //Finds all the unqiue Y Values in tetromino's indivdual blocks
+                for (int w = 0; w < tetrominoBlockPositions.Length; w++)
                 {
-                    for (int j = 0; j < yValuesUsedForX.Count; j++)
+                    List<int> yPosSublist = new List<int>();
+
+                    if (yValuesUsedForX != null)
                     {
-                        if (tetrominoBlockPositions[w].Y == yValuesUsedForX[j])
+                        for (int j = 0; j < yValuesUsedForX.Count; j++)
                         {
-                            yPosAlreadyInList = true;
+                            if (tetrominoBlockPositions[w].Y == yValuesUsedForX[j])
+                            {
+                                yPosAlreadyInList = true;
+                            }
+                        }
+                        if (yPosAlreadyInList == false)
+                        {
+                            yValuesUsedForX.Add((int)tetrominoBlockPositions[w].Y);
+
                         }
                     }
-                    if (yPosAlreadyInList == false)
+                    else
                     {
                         yValuesUsedForX.Add((int)tetrominoBlockPositions[w].Y);
 
                     }
+                    yPosAlreadyInList = false;
                 }
-                else
+
+                yValuesUsedForX.Sort();
+
+                //Finds the X values that exist relative to the Y values in the Tetrimino
+                for (int k = 0; k < yValuesUsedForX.Count; k++)
                 {
-                    yValuesUsedForX.Add((int)tetrominoBlockPositions[w].Y);
+                    List<int> xHoldingValues = new List<int>();
 
-                }
-                yPosAlreadyInList = false;
-            }
-
-            yValuesUsedForX.Sort();
-
-            //Finds the X values that exist relative to the Y values in the Tetrimino
-            for (int k = 0; k < yValuesUsedForX.Count; k++)
-            {
-                List<int> xHoldingValues = new List<int>();
-
-                for (int i = 0; i < tetrominoBlockPositions.Length; i++)
-                {
-                    if (tetrominoBlockPositions[i].Y == yValuesUsedForX[k])
+                    for (int i = 0; i < tetrominoBlockPositions.Length; i++)
                     {
-                        xHoldingValues.Add((int)tetrominoBlockPositions[i].X);
-                    }
-                }
-                xValuesUsed.Add(xHoldingValues);
-            }
-
-            #endregion
-
-            #region Y's On X Values
-
-            //Local Varaibles used in calculations
-            Boolean xPosAlreadyInList = false;
-            List<int> xValuesUsedForY = new List<int>();
-            List<List<int>> yValuesUsed = new List<List<int>>();
-
-            //Finds all the unqiue X Values in tetromino's indivdual blocks
-            for (int g = 0; g < tetrominoBlockPositions.Length; g++)
-            {
-                List<int> xPosSublist = new List<int>();
-
-                if (xValuesUsedForY != null)
-                {
-                    for (int j = 0; j < xValuesUsedForY.Count; j++)
-                    {
-                        if (tetrominoBlockPositions[g].X == xValuesUsedForY[j])
+                        if (tetrominoBlockPositions[i].Y == yValuesUsedForX[k])
                         {
-                            xPosAlreadyInList = true;
+                            xHoldingValues.Add((int)tetrominoBlockPositions[i].X);
                         }
                     }
-                    if (xPosAlreadyInList == false)
+                    xValuesUsed.Add(xHoldingValues);
+                }
+
+                #endregion
+
+                #region Y's On X Values
+
+                //Local Varaibles used in calculations
+                Boolean xPosAlreadyInList = false;
+                List<int> xValuesUsedForY = new List<int>();
+                List<List<int>> yValuesUsed = new List<List<int>>();
+
+                //Finds all the unqiue X Values in tetromino's indivdual blocks
+                for (int g = 0; g < tetrominoBlockPositions.Length; g++)
+                {
+                    List<int> xPosSublist = new List<int>();
+
+                    if (xValuesUsedForY != null)
+                    {
+                        for (int j = 0; j < xValuesUsedForY.Count; j++)
+                        {
+                            if (tetrominoBlockPositions[g].X == xValuesUsedForY[j])
+                            {
+                                xPosAlreadyInList = true;
+                            }
+                        }
+                        if (xPosAlreadyInList == false)
+                        {
+                            xValuesUsedForY.Add((int)tetrominoBlockPositions[g].X);
+
+                        }
+                    }
+                    else
                     {
                         xValuesUsedForY.Add((int)tetrominoBlockPositions[g].X);
 
                     }
+                    xPosAlreadyInList = false;
                 }
-                else
+
+                xValuesUsedForY.Sort();
+
+                //Finds the Y values that exist relative to the X values in the Tetrimino
+                for (int q = 0; q < xValuesUsedForY.Count; q++)
                 {
-                    xValuesUsedForY.Add((int)tetrominoBlockPositions[g].X);
+                    List<int> yHoldingValues = new List<int>();
 
-                }
-                xPosAlreadyInList = false;
-            }
-
-            xValuesUsedForY.Sort();
-
-            //Finds the Y values that exist relative to the X values in the Tetrimino
-            for (int q = 0; q < xValuesUsedForY.Count; q++)
-            {
-                List<int> yHoldingValues = new List<int>();
-
-                for (int i = 0; i < tetrominoBlockPositions.Length; i++)
-                {
-                    if (tetrominoBlockPositions[i].X == xValuesUsedForY[q])
+                    for (int i = 0; i < tetrominoBlockPositions.Length; i++)
                     {
-                        yHoldingValues.Add((int)tetrominoBlockPositions[i].Y);
-                    }
-                }
-                yValuesUsed.Add(yHoldingValues);
-            }
-
-            #endregion
-
-            //Debug Info Write
-            debugStringData = "\n" + "yValuesUsed:";
-            for (int m = 0; m < yValuesUsedForX.Count; m++)
-            {
-                xValuesUsed[m].Sort();
-
-                debugStringData += "\nY" + (m + 1) + ": " + yValuesUsedForX[m];
-
-                debugStringData += " X's:";
-                for (int j = 0; j < xValuesUsed[m].Count; j++)
-                {
-                    debugStringData += " " + xValuesUsed[m][j] + ",";
-                }
-
-            }
-
-            //Sets array index size for the farthest blocks
-            farthestTetrominoBlockLeft = new int[xValuesUsed.Count];
-            farthestTetrominoBlockRight = new int[xValuesUsed.Count];
-            farthestTetrominoBlockDown = new int[yValuesUsed.Count];
-            farthestTetrominoBlockUp = new int[yValuesUsed.Count];
-
-            #region extremas of X Values on the Y axis
-
-            //Checks the farthest x Values for their repsective Y's in the List
-            for (int p = 0; p < xValuesUsed.Count; p++)
-            {
-                int mostRightXOnY = 0;
-                int mostLeftXOnY = gameField.GetLength(0);
-
-                //Checks for Max X values On Y
-                for (int i = 0; i < xValuesUsed[p].Count; i++)
-                {
-                    if (xValuesUsed[p][i] > mostRightXOnY)
-                    {
-                        mostRightXOnY = xValuesUsed[p][i];
-                    }
-
-                    if (xValuesUsed[p][i] < mostLeftXOnY)
-                    {
-                        mostLeftXOnY = xValuesUsed[p][i];
-                    }
-                }
-
-                farthestTetrominoBlockLeft[p] = mostLeftXOnY;
-                farthestTetrominoBlockRight[p] = mostRightXOnY;
-
-                //Checks for Overall Max X Values
-                if (mostRightXOnY > absTetrominoBlockFarthestRight)
-                {
-                    absTetrominoBlockFarthestRight = mostRightXOnY;
-                }
-
-                if (mostLeftXOnY < absTetrominoBlockFarthestLeft)
-                {
-                    absTetrominoBlockFarthestLeft = mostLeftXOnY;
-                }
-            }
-
-            #endregion
-
-            #region extremas of Y Values on the X axis
-
-            //Checks the farthest Y Values for their repsective X's in the List
-            for (int v = 0; v < yValuesUsed.Count; v++)
-            {
-                int mostUpYOnX = gameField.GetLength(1);
-                int mostDownYOnX = 0;
-
-                //Checks for Max Y values On X
-                for (int i = 0; i < yValuesUsed[v].Count; i++)
-                {
-                    if (yValuesUsed[v][i] < mostUpYOnX)
-                    {
-                        mostUpYOnX = yValuesUsed[v][i];
-                    }
-
-                    if (yValuesUsed[v][i] > mostDownYOnX)
-                    {
-                        mostDownYOnX = yValuesUsed[v][i];
-                    }
-                }
-
-                farthestTetrominoBlockDown[v] = mostDownYOnX;
-                farthestTetrominoBlockUp[v] = mostUpYOnX;
-
-                //Checks for Overall Max Y Values
-                if (mostUpYOnX < absTetrominoBlockFarthestUp)
-                {
-                    absTetrominoBlockFarthestUp = mostUpYOnX;
-                }
-
-                if (mostDownYOnX > absTetrominoBlockFarthestDown)
-                {
-                    absTetrominoBlockFarthestDown = mostDownYOnX;
-                }
-            }
-
-            #endregion
-
-            #endregion
-
-            #region tetromino Collision Detection
-
-            //(Left / Right)
-            for (int i = 0; i < farthestTetrominoBlockLeft.Length; i++)
-            {
-                if (farthestTetrominoBlockLeft[i] > 0)
-                {
-                    if (gameField[farthestTetrominoBlockLeft[i] - 1, yValuesUsedForX[i]] == true)
-                    {
-                        tetrominoCanNotMoveLeft = true;
-                    }
-                }
-
-                if (farthestTetrominoBlockRight[i] < gameField.GetLength(0))
-                {
-                    if (gameField[farthestTetrominoBlockRight[i] + 1, yValuesUsedForX[i]] == true)
-                    {
-                        tetrominoCanNotMoveRight = true;
-                    }
-                }
-            }
-
-            //(Up / Down)
-            for (int i = 0; i < farthestTetrominoBlockUp.Length; i++)
-            {
-                if (farthestTetrominoBlockUp[i] > 0)
-                {
-                    if (gameField[xValuesUsedForY[i], farthestTetrominoBlockUp[i] - 1] == true)
-                    {
-                        tetrominoCanNotMoveUp = true;
-                    }
-                }
-
-                if (farthestTetrominoBlockDown[i] < gameField.GetLength(1) - 1)
-                {
-                    if (gameField[xValuesUsedForY[i], farthestTetrominoBlockDown[i] + 1] == true)
-                    {
-                        tetrominoCanNotMoveDown = true;
-                    }
-                }
-            }
-
-            #endregion
-
-            #region Player Collision Detection
-
-            //Fail safe for player falling out of array
-            if (player1GridPos.Y > gameField.GetLength(1) - 1)
-            {
-                player1GridPos.Y = player1GridPosPrevious.Y - 25;
-            }
-
-            //Check
-            if (player1GridPos.X - 1 >= 0 && player1GridPos.X + 1 < gameField.GetLength(0))
-            {
-                //Right
-                if (gameField[(int)player1GridPos.X + 1, (int)player1GridPos.Y] == true)
-                {
-                    playerCanNotMoveRight = true;
-                }
-
-                //Left
-                if (gameField[(int)player1GridPos.X - 1, (int)player1GridPos.Y] == true)
-                {
-                    playerCanNotMoveLeft = true;
-                }
-            }
-
-            //Y Check
-            //Down
-            if (player1GridPos.Y < gameField.GetLength(1) - 1 && gameField[(int)player1GridPos.X, (int)player1GridPos.Y + 1] == true)
-            {
-                playerCanNotMoveDown = true;
-            }
-            //Up
-            if (player1GridPos.Y > 0 && gameField[(int)player1GridPos.X, (int)player1GridPos.Y - 1] == true)
-            {
-                playerCanNotMoveUp = true;
-            }
-
-            //Block Falling on Player Check
-            if (gameField[(int)player1GridPos.X, (int)player1GridPos.Y] == true)
-            {
-                gameWin = false;
-                gameOver = true;
-            }
-
-            //Player Reaching End Platform Check
-            if ((player1GridPos.Y == (endPlatformGridPos.Y - 1) && (player1GridPos.X == endPlatformGridPos.X) || (player1GridPos.X == endPlatformGridPos.X + 1) || (player1GridPos.X == endPlatformGridPos.X + 2)) && linesToClear == 0)
-            {
-                gameWin = true;
-
-                GlobalVar.GameState = "GameOver";
-                
-                        GlobalVar.Score = (int)(((timer - milisecondsElapsedTime) * .75 * levelModifier)); 
-
-
-                gameOver = true;
-
-            }
-            #endregion
-
-            #region tetromino Keyboard Input
-
-            //Keyboard Input (Left Key)
-            if (absTetrominoBlockFarthestLeft > 3 && tetrominoCanNotMoveLeft == false)
-            {
-                if (keyLeftDown == true)
-                {
-                    if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                    {
-                        keyLeftDown = false;
-                        tetrominoGridPos[activeTetromino] = new Vector2(tetrominoGridPos[activeTetromino].X - 1, tetrominoGridPos[activeTetromino].Y);
-                    }
-                }
-                if ((milisecondsElapsedKeyLeft - milisecondExpirationKeyLeft) >= 0)
-                {
-                    if (keyLeftDown == false)
-                    {
-                        keyLeftDown = true;
-                    }
-
-                    milisecondsElapsedKeyLeft -= milisecondExpirationKeyLeft;
-                }
-                else if (Keyboard.GetState().IsKeyUp(Keys.Left))
-                {
-                    if (keyLeftDown == false)
-                    {
-                        keyLeftDown = true;
-                    }
-                }
-            }
-
-            //Keyboard Input (Right Key)
-            if (absTetrominoBlockFarthestRight < gameField.GetLength(0) - 4 && tetrominoCanNotMoveRight == false)
-            {
-                if (keyRightDown == true)
-                {
-                    if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                    {
-                        keyRightDown = false;
-                        tetrominoGridPos[activeTetromino] = new Vector2(tetrominoGridPos[activeTetromino].X + 1, tetrominoGridPos[activeTetromino].Y);
-                    }
-                }
-                if ((milisecondsElapsedKeyRight - milisecondExpirationKeyRight) >= 0)
-                {
-                    if (keyRightDown == false)
-                    {
-                        keyRightDown = true;
-                    }
-
-                    milisecondsElapsedKeyRight -= milisecondExpirationKeyRight;
-                }
-                else if (Keyboard.GetState().IsKeyUp(Keys.Right))
-                {
-                    if (keyRightDown == false)
-                    {
-                        keyRightDown = true;
-                    }
-                }
-            }
-
-            //Keyboard Input (Down Key) *Speed Up
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
-            {
-                milisecondsTetrominoFallTime = 100;
-
-            }
-            else if (Keyboard.GetState().IsKeyUp(Keys.Down))
-            {
-                milisecondsTetrominoFallTime = 300;
-            }
-
-            //Keyboard Input (Up Key) *Rotation
-            if (tetromino[activeTetromino].getTetrisType() != 5)
-            {
-                //Sets test block rotation one ahead of the current rotation
-                if (tetrominoRotation < 3)
-                    rotationTestTetromino.setRotation(tetrominoRotation + 1);
-                else
-                    rotationTestTetromino.setRotation(0);
-
-                if (keyUpDown == true)
-                {
-                    if (Keyboard.GetState().IsKeyDown(Keys.Up))
-                    {
-                        keyUpDown = false;
-
-                        //Rotation Checking
-                        for (int p = 0; p < rotationTestTetromino.getPositions().Length; p++)
+                        if (tetrominoBlockPositions[i].X == xValuesUsedForY[q])
                         {
-                            //check if the rotation would be inside the game field bounds
-                            if (((int)rotationTestTetromino.getPositions()[p].X > 2 && (int)rotationTestTetromino.getPositions()[p].X < gameField.GetLength(0) - 3) && ((int)rotationTestTetromino.getPositions()[p].Y > 0 && (int)rotationTestTetromino.getPositions()[p].Y < gameField.GetLength(1)))
+                            yHoldingValues.Add((int)tetrominoBlockPositions[i].Y);
+                        }
+                    }
+                    yValuesUsed.Add(yHoldingValues);
+                }
+
+                #endregion
+
+                //Debug Info Write
+                debugStringData = "\n" + "yValuesUsed:";
+                for (int m = 0; m < yValuesUsedForX.Count; m++)
+                {
+                    xValuesUsed[m].Sort();
+
+                    debugStringData += "\nY" + (m + 1) + ": " + yValuesUsedForX[m];
+
+                    debugStringData += " X's:";
+                    for (int j = 0; j < xValuesUsed[m].Count; j++)
+                    {
+                        debugStringData += " " + xValuesUsed[m][j] + ",";
+                    }
+
+                }
+
+                //Sets array index size for the farthest blocks
+                farthestTetrominoBlockLeft = new int[xValuesUsed.Count];
+                farthestTetrominoBlockRight = new int[xValuesUsed.Count];
+                farthestTetrominoBlockDown = new int[yValuesUsed.Count];
+                farthestTetrominoBlockUp = new int[yValuesUsed.Count];
+
+                #region extremas of X Values on the Y axis
+
+                //Checks the farthest x Values for their repsective Y's in the List
+                for (int p = 0; p < xValuesUsed.Count; p++)
+                {
+                    int mostRightXOnY = 0;
+                    int mostLeftXOnY = gameField.GetLength(0);
+
+                    //Checks for Max X values On Y
+                    for (int i = 0; i < xValuesUsed[p].Count; i++)
+                    {
+                        if (xValuesUsed[p][i] > mostRightXOnY)
+                        {
+                            mostRightXOnY = xValuesUsed[p][i];
+                        }
+
+                        if (xValuesUsed[p][i] < mostLeftXOnY)
+                        {
+                            mostLeftXOnY = xValuesUsed[p][i];
+                        }
+                    }
+
+                    farthestTetrominoBlockLeft[p] = mostLeftXOnY;
+                    farthestTetrominoBlockRight[p] = mostRightXOnY;
+
+                    //Checks for Overall Max X Values
+                    if (mostRightXOnY > absTetrominoBlockFarthestRight)
+                    {
+                        absTetrominoBlockFarthestRight = mostRightXOnY;
+                    }
+
+                    if (mostLeftXOnY < absTetrominoBlockFarthestLeft)
+                    {
+                        absTetrominoBlockFarthestLeft = mostLeftXOnY;
+                    }
+                }
+
+                #endregion
+
+                #region extremas of Y Values on the X axis
+
+                //Checks the farthest Y Values for their repsective X's in the List
+                for (int v = 0; v < yValuesUsed.Count; v++)
+                {
+                    int mostUpYOnX = gameField.GetLength(1);
+                    int mostDownYOnX = 0;
+
+                    //Checks for Max Y values On X
+                    for (int i = 0; i < yValuesUsed[v].Count; i++)
+                    {
+                        if (yValuesUsed[v][i] < mostUpYOnX)
+                        {
+                            mostUpYOnX = yValuesUsed[v][i];
+                        }
+
+                        if (yValuesUsed[v][i] > mostDownYOnX)
+                        {
+                            mostDownYOnX = yValuesUsed[v][i];
+                        }
+                    }
+
+                    farthestTetrominoBlockDown[v] = mostDownYOnX;
+                    farthestTetrominoBlockUp[v] = mostUpYOnX;
+
+                    //Checks for Overall Max Y Values
+                    if (mostUpYOnX < absTetrominoBlockFarthestUp)
+                    {
+                        absTetrominoBlockFarthestUp = mostUpYOnX;
+                    }
+
+                    if (mostDownYOnX > absTetrominoBlockFarthestDown)
+                    {
+                        absTetrominoBlockFarthestDown = mostDownYOnX;
+                    }
+                }
+
+                #endregion
+
+                #endregion
+
+                #region tetromino Collision Detection
+
+                //(Left / Right)
+                for (int i = 0; i < farthestTetrominoBlockLeft.Length; i++)
+                {
+                    if (farthestTetrominoBlockLeft[i] > 0)
+                    {
+                        if (gameField[farthestTetrominoBlockLeft[i] - 1, yValuesUsedForX[i]] == true)
+                        {
+                            tetrominoCanNotMoveLeft = true;
+                        }
+                    }
+
+                    if (farthestTetrominoBlockRight[i] < gameField.GetLength(0))
+                    {
+                        if (gameField[farthestTetrominoBlockRight[i] + 1, yValuesUsedForX[i]] == true)
+                        {
+                            tetrominoCanNotMoveRight = true;
+                        }
+                    }
+                }
+
+                //(Up / Down)
+                for (int i = 0; i < farthestTetrominoBlockUp.Length; i++)
+                {
+                    if (farthestTetrominoBlockUp[i] > 0)
+                    {
+                        if (gameField[xValuesUsedForY[i], farthestTetrominoBlockUp[i] - 1] == true)
+                        {
+                            tetrominoCanNotMoveUp = true;
+                        }
+                    }
+
+                    if (farthestTetrominoBlockDown[i] < gameField.GetLength(1) - 1)
+                    {
+                        if (gameField[xValuesUsedForY[i], farthestTetrominoBlockDown[i] + 1] == true)
+                        {
+                            tetrominoCanNotMoveDown = true;
+                        }
+                    }
+                }
+
+                #endregion
+
+                #region Player Collision Detection
+
+                //Fail safe for player falling out of array
+                if (player1GridPos.Y > gameField.GetLength(1) - 1)
+                {
+                    player1GridPos.Y = player1GridPosPrevious.Y - 25;
+                }
+
+                //Check
+                if (player1GridPos.X - 1 >= 0 && player1GridPos.X + 1 < gameField.GetLength(0))
+                {
+                    //Right
+                    if (gameField[(int)player1GridPos.X + 1, (int)player1GridPos.Y] == true)
+                    {
+                        playerCanNotMoveRight = true;
+                    }
+
+                    //Left
+                    if (gameField[(int)player1GridPos.X - 1, (int)player1GridPos.Y] == true)
+                    {
+                        playerCanNotMoveLeft = true;
+                    }
+                }
+
+                //Y Check
+                //Down
+                if (player1GridPos.Y < gameField.GetLength(1) - 1 && gameField[(int)player1GridPos.X, (int)player1GridPos.Y + 1] == true)
+                {
+                    playerCanNotMoveDown = true;
+                }
+                //Up
+                if (player1GridPos.Y > 0 && gameField[(int)player1GridPos.X, (int)player1GridPos.Y - 1] == true)
+                {
+                    playerCanNotMoveUp = true;
+                }
+
+                //Block Falling on Player Check
+                if (gameField[(int)player1GridPos.X, (int)player1GridPos.Y] == true)
+                {
+                    gameWin = false;
+                    gameOver = true;
+                }
+
+                //Player Reaching End Platform Check
+                if ((player1GridPos.Y == (endPlatformGridPos.Y - 1) && (player1GridPos.X == endPlatformGridPos.X) || (player1GridPos.X == endPlatformGridPos.X + 1) || (player1GridPos.X == endPlatformGridPos.X + 2)) && linesToClear == 0)
+                {
+                    gameWin = true;
+
+                    GlobalVar.GameState = "GameOver";
+
+                    GlobalVar.Score = (int)(((timer - milisecondsElapsedTime) * .75 * levelModifier));
+
+
+                    gameOver = true;
+
+                }
+                #endregion
+
+                #region tetromino Keyboard Input
+
+                //Keyboard Input (Left Key)
+                if (absTetrominoBlockFarthestLeft > 3 && tetrominoCanNotMoveLeft == false)
+                {
+                    if (keyLeftDown == true)
+                    {
+                        if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[5], true)))
+                        {
+                            keyLeftDown = false;
+                            tetrominoGridPos[activeTetromino] = new Vector2(tetrominoGridPos[activeTetromino].X - 1, tetrominoGridPos[activeTetromino].Y);
+                        }
+                    }
+                    if ((milisecondsElapsedKeyLeft - milisecondExpirationKeyLeft) >= 0)
+                    {
+                        if (keyLeftDown == false)
+                        {
+                            keyLeftDown = true;
+                        }
+
+                        milisecondsElapsedKeyLeft -= milisecondExpirationKeyLeft;
+                    }
+                    else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[5], true)))
+                    {
+                        if (keyLeftDown == false)
+                        {
+                            keyLeftDown = true;
+                        }
+                    }
+                }
+
+                //Keyboard Input (Right Key)
+                if (absTetrominoBlockFarthestRight < gameField.GetLength(0) - 4 && tetrominoCanNotMoveRight == false)
+                {
+                    if (keyRightDown == true)
+                    {
+                        if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[6], true)))
+                        {
+                            keyRightDown = false;
+                            tetrominoGridPos[activeTetromino] = new Vector2(tetrominoGridPos[activeTetromino].X + 1, tetrominoGridPos[activeTetromino].Y);
+                        }
+                    }
+                    if ((milisecondsElapsedKeyRight - milisecondExpirationKeyRight) >= 0)
+                    {
+                        if (keyRightDown == false)
+                        {
+                            keyRightDown = true;
+                        }
+
+                        milisecondsElapsedKeyRight -= milisecondExpirationKeyRight;
+                    }
+                    else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[6], true)))
+                    {
+                        if (keyRightDown == false)
+                        {
+                            keyRightDown = true;
+                        }
+                    }
+                }
+
+                //Keyboard Input (Down Key) *Speed Up
+                if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[8], true)))
+                {
+                    milisecondsTetrominoFallTime = 100;
+
+                }
+                else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[8], true)))
+                {
+                    milisecondsTetrominoFallTime = 300;
+                }
+
+                //Keyboard Input (Up Key) *Rotation
+                if (tetromino[activeTetromino].getTetrisType() != 5)
+                {
+                    //Sets test block rotation one ahead of the current rotation
+                    if (tetrominoRotation < 3)
+                        rotationTestTetromino.setRotation(tetrominoRotation + 1);
+                    else
+                        rotationTestTetromino.setRotation(0);
+
+                    if (keyUpDown == true)
+                    {
+                        if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[7], true)))
+                        {
+                            keyUpDown = false;
+
+                            //Rotation Checking
+                            for (int p = 0; p < rotationTestTetromino.getPositions().Length; p++)
                             {
-                                //checks if the rotation will collide with any blocks set to active                           
-                                if (gameField[(int)rotationTestTetromino.getPositions()[p].X, (int)rotationTestTetromino.getPositions()[p].Y] == true)
+                                //check if the rotation would be inside the game field bounds
+                                if (((int)rotationTestTetromino.getPositions()[p].X > 2 && (int)rotationTestTetromino.getPositions()[p].X < gameField.GetLength(0) - 3) && ((int)rotationTestTetromino.getPositions()[p].Y > 0 && (int)rotationTestTetromino.getPositions()[p].Y < gameField.GetLength(1)))
                                 {
-                                    //checks if the postions that are true are part of the main active tetromino before setting to true.
-                                    Boolean tripped = false;
-                                    for (int q = 0; q < tetromino[activeTetromino].getPositions().Length; q++)
+                                    //checks if the rotation will collide with any blocks set to active                           
+                                    if (gameField[(int)rotationTestTetromino.getPositions()[p].X, (int)rotationTestTetromino.getPositions()[p].Y] == true)
                                     {
-                                        if (rotationTestTetromino.getPositions()[p] == tetromino[activeTetromino].getPositions()[q])
+                                        //checks if the postions that are true are part of the main active tetromino before setting to true.
+                                        Boolean tripped = false;
+                                        for (int q = 0; q < tetromino[activeTetromino].getPositions().Length; q++)
                                         {
-                                            tripped = true;
+                                            if (rotationTestTetromino.getPositions()[p] == tetromino[activeTetromino].getPositions()[q])
+                                            {
+                                                tripped = true;
+                                            }
+                                        }
+
+                                        if (tripped == false)
+                                        {
+                                            tetrominoCanRotate = false;
                                         }
                                     }
-
-                                    if (tripped == false)
-                                    {
-                                        tetrominoCanRotate = false;
-                                    }
+                                }
+                                else
+                                {
+                                    tetrominoCanRotate = false;
                                 }
                             }
-                            else
+
+                            if (tetrominoCanRotate == true)
                             {
-                                tetrominoCanRotate = false;
+                                //Sets current rotation value based off 0 - 3
+                                if (tetrominoRotation < 3)
+                                    tetrominoRotation++;
+                                else
+                                    tetrominoRotation = 0;
+
+                                //Sends rotation value to the currently active tetromino
+                                tetromino[activeTetromino].setRotation(tetrominoRotation);
                             }
                         }
+                    }
 
-                        if (tetrominoCanRotate == true)
+                    else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[7], true)))
+                    {
+                        if (keyUpDown == false)
                         {
-                            //Sets current rotation value based off 0 - 3
-                            if (tetrominoRotation < 3)
-                                tetrominoRotation++;
-                            else
-                                tetrominoRotation = 0;
-
-                            //Sends rotation value to the currently active tetromino
-                            tetromino[activeTetromino].setRotation(tetrominoRotation);
+                            keyUpDown = true;
                         }
                     }
                 }
 
-                else if (Keyboard.GetState().IsKeyUp(Keys.Up))
+                #endregion
+
+                #region tetromino Movement Down
+
+                //Checks to see if the block is able to move down 1 gridPos or not
+                if (absTetrominoBlockFarthestDown < gameField.GetLength(1) - 1 && tetrominoCanNotMoveDown == false)
                 {
-                    if (keyUpDown == false)
+                    //Checks if the block can move down based off the elapsed time, and makes up for any lost movement since the last update
+                    if (milisecondsElapsedTetrominoTime - milisecondsTetrominoFallTime >= 1)
                     {
-                        keyUpDown = true;
-                    }
-                }
-            }
-
-            #endregion
-
-            #region tetromino Movement Down
-
-            //Checks to see if the block is able to move down 1 gridPos or not
-            if (absTetrominoBlockFarthestDown < gameField.GetLength(1) - 1 && tetrominoCanNotMoveDown == false)
-            {
-                //Checks if the block can move down based off the elapsed time, and makes up for any lost movement since the last update
-                if (milisecondsElapsedTetrominoTime - milisecondsTetrominoFallTime >= 1)
-                {
-                    //Extra Check if it can move while moving through the while loop (Speed & Droped frames protection mostly)
-                    if (absTetrominoBlockFarthestDown < gameField.GetLength(1) - 1 && tetrominoCanNotMoveDown == false)
-                    {
-                        //Move the tetromino down one and takes away 1 movement worth of time from the elapsed time
-                        tetrominoGridPos[activeTetromino] = new Vector2(tetrominoGridPos[activeTetromino].X, tetrominoGridPos[activeTetromino].Y + 1);
-                        milisecondsElapsedTetrominoTime -= milisecondsTetrominoFallTime;
-
-                        if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                        //Extra Check if it can move while moving through the while loop (Speed & Droped frames protection mostly)
+                        if (absTetrominoBlockFarthestDown < gameField.GetLength(1) - 1 && tetrominoCanNotMoveDown == false)
                         {
-                            GlobalVar.Score += 2;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                //Checks for block lock delay before locking in place and spawning new block
-                if (milisecondsElapsedTetrominoTime - milisecondsTetrominoLockDelayTime >= 1)
-                {
-                    //New Boolean Array to tell the game which lines are filled
-                    Boolean[] isfilled = new Boolean[4];
-                    for (int o = 0; o < isfilled.Length; o++)
-                    {
-                        isfilled[o] = true;
-                    }
-                    //Checking the lines from the Lowest block that just feel to 4 lines above to make sure all lines that could be filled are accounted for
-                    for (int l = 0; l < 4; l++)
-                    {
-                        for (int i = 3; i < gameField.GetLength(0) - 3; i++)
-                        {
-                            if ((i >= 0 && i < gameField.GetLength(0)) && ((absTetrominoBlockFarthestDown - 3) + l >= 0 && (absTetrominoBlockFarthestDown - 3) + l < gameField.GetLength(1)))
+                            //Move the tetromino down one and takes away 1 movement worth of time from the elapsed time
+                            tetrominoGridPos[activeTetromino] = new Vector2(tetrominoGridPos[activeTetromino].X, tetrominoGridPos[activeTetromino].Y + 1);
+                            milisecondsElapsedTetrominoTime -= milisecondsTetrominoFallTime;
+
+                            if (Keyboard.GetState().IsKeyDown(Keys.Down))
                             {
-                                //Where the loop checks to see if the line is not filled
-                                if (gameField[i, (absTetrominoBlockFarthestDown - 3) + l] == false)
+                                GlobalVar.Score += 2;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //Checks for block lock delay before locking in place and spawning new block
+                    if (milisecondsElapsedTetrominoTime - milisecondsTetrominoLockDelayTime >= 1)
+                    {
+                        //New Boolean Array to tell the game which lines are filled
+                        Boolean[] isfilled = new Boolean[4];
+                        for (int o = 0; o < isfilled.Length; o++)
+                        {
+                            isfilled[o] = true;
+                        }
+                        //Checking the lines from the Lowest block that just feel to 4 lines above to make sure all lines that could be filled are accounted for
+                        for (int l = 0; l < 4; l++)
+                        {
+                            for (int i = 3; i < gameField.GetLength(0) - 3; i++)
+                            {
+                                if ((i >= 0 && i < gameField.GetLength(0)) && ((absTetrominoBlockFarthestDown - 3) + l >= 0 && (absTetrominoBlockFarthestDown - 3) + l < gameField.GetLength(1)))
+                                {
+                                    //Where the loop checks to see if the line is not filled
+                                    if (gameField[i, (absTetrominoBlockFarthestDown - 3) + l] == false)
+                                    {
+                                        isfilled[l] = false;
+                                    }
+                                }
+                                else
                                 {
                                     isfilled[l] = false;
                                 }
                             }
-                            else
-                            {
-                                isfilled[l] = false;
-                            }
                         }
-                    }
 
-                    //Tetromino Line Clearing (DISABLED)
-                    /*
-                    //Acessing all the tetromino Y values that are within the lines needed to be clear
-                    for (int i = 0; i < tetromino.Count - 1; i++)
-                    {
-                        for (int j = 0; j < 4; j++)
+                        //Hit box clearing
+                        int lineClearCount = 0;
+                        for (int n = 0; n < isfilled.Length; n++)
                         {
-                            //Checks which tetromino's are within the playing field
-                            if ((int)tetromino[i].getPositions()[j].Y >= 3 && (int)tetromino[i].getPositions()[j].Y < gameField.GetLength(1))
-                            {
-                                for (int n = 0; n < isfilled.Length; n++)
-                                {
-                                    //Checking to see if the Y positons of the tetromino is within 4 blocks from the tetromino that just landed and to see if they are within a line that is needed to be cleared
-                                    if (isfilled[n] == true && (int)tetromino[i].getPositions()[j].Y == (absTetrominoBlockFarthestDown - 3) + n)
-                                    {
-                                        // temp boolean to later set the Active Pos to false or true.
-                                        Boolean[] tempHolding = new Boolean[4];
-
-                                        for (int a = 0; a < tempHolding.Length; a++)
-                                        {
-                                            //Seeing which Y pos of the blocks are apart of the temp boolean array
-                                            if (a == j)
-                                            {
-                                                //Sets the boolean to false to then later set the whether the block is Active or not to false
-                                                tempHolding[a] = false;
-                                            }
-                                            else
-                                            {
-                                                //Leaves the Active Pos as is.
-                                                tempHolding[a] = tetromino[i].getBlockPosActive()[a];
-                                            }
-                                        }
-                                        //Sets the tetromino PosActive to the temp Holding array
-                                        tetromino[i].setBlockPosActive(tempHolding);
-                                    }
-                                }
-                            }
-                        }
-                        //If Tetromino Positions array is empty it's removed from the list
-                        if (tetromino[i].getPositions().Length == 0)
-                        {
-                            tetromino.RemoveAt(i);
-                            tetrominoGridPos.RemoveAt(i);
-                        }
-                    }
-
-                    //Line Down For What?
-                    for (int a = 0; a < 4; a++)
-                    {
-                        for (int i = 0; i < tetrominoGridPos.Count - 1; i++)
-                        {
-                            if (tetrominoGridPos[i].Y <= (absTetrominoBlockFarthestDown - 3) + a && isfilled[a] == true)
-                            {
-                                tetrominoGridPos[i] = new Vector2(tetrominoGridPos[i].X, tetrominoGridPos[i].Y + 1);
-
-                                tetromino[i].Update(tetrominoGridPos[i], gridStartPos, GlobalVar.ScaleSize);
-
-                                for (int j = 0; j < 4; j++)
-                                {
-                                    if (tetromino[i].getRawBlockPositions()[j].Y > (absTetrominoBlockFarthestDown - 3) + a)
-                                    {
-                                        Vector2[] tempHolding = new Vector2[4];
-
-                                        for (int k = 0; k < tempHolding.Length; k++)
-                                        {
-                                            if (k == j)
-                                            {
-                                                tempHolding[k] = new Vector2(tetromino[i].getRawBlockPositions()[k].X, tetromino[i].getRawBlockPositions()[k].Y - 1);
-                                            }
-                                            else
-                                            {
-                                                tempHolding[k] = tetromino[i].getRawBlockPositions()[k];
-                                            }
-                                        }
-
-                                        tetromino[i].setBlockPositions(tempHolding);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                     */
-
-                    //Hit box clearing
-                    int lineClearCount = 0;
-                    for (int n = 0; n < isfilled.Length; n++)
-                    {
-                        //Much simple virsion of the line clearing above
-                        if (isfilled[n] == true)
-                        {
-                            lineClearSoundEffect.Play();
-                            lineClearCount++;
-                            linesToClear -= 1;
-                            if (linesToClear <= 0)
-                            {
-                                linesToClear = 0;
-                            }
                             for (int i = 3; i < gameField.GetLength(0) - 3; i++)
+                            //Much simple virsion of the line clearing above
+                            if (isfilled[n] == true)
                             {
-                                gameField[i, (absTetrominoBlockFarthestDown - 3) + n] = false;
-                            }
+                                if (GlobalVar.OptionsArray[12].Equals("true"))
+                                    lineClearSoundEffect.Play();
 
-                            //Moves all the blocks down
-                            for (int j = (absTetrominoBlockFarthestDown - 3) + n; j > 2; j--)
-                            {
-                                for (int e = 3; e < gameField.GetLength(0) - 3; e++)
+                                lineClearCount++;
+                                linesToClear -= 1;
+                                if (linesToClear <= 0)
                                 {
-                                    gameField[e, j] = gameField[e, j - 1];
+                                    linesToClear = 0;
+                                }
+                                for (int c = 3; c < gameField.GetLength(0) - 3; c++)
+                                {
+                                    gameField[c, (absTetrominoBlockFarthestDown - 3) + n] = false;
+                                }
+
+                                //Moves all the blocks down
+                                for (int j = (absTetrominoBlockFarthestDown - 3) + n; j > 2; j--)
+                                {
+                                    for (int e = 3; e < gameField.GetLength(0) - 3; e++)
+                                    {
+                                        gameField[e, j] = gameField[e, j - 1];
+                                    }
                                 }
                             }
                         }
-                    }
-                    //Adds Points for the lines cleared
-                    GlobalVar.Score += (int)(750 * lineClearCount * 1.5 * levelModifier);
+                        //Adds Points for the lines cleared
+                        GlobalVar.Score += (int)(750 * lineClearCount * 1.5 * levelModifier);
 
-                    //Setting various variables required to spawn a new clean tetromino and checks to see if the new tetromino is not part of the History Array then trys to spawn a new block atlest 2 times
-                    bool repeat = false;
-                    int index = 0;
-                    do
-                    {
-                        tetristype = random.Next(1, 8);
-
-                        if (tetrominoHistory.Contains<int>(tetristype))
+                        //Setting various variables required to spawn a new clean tetromino and checks to see if the new tetromino is not part of the History Array then trys to spawn a new block atlest 2 times
+                        bool repeat = false;
+                        int index = 0;
+                        do
                         {
-                            repeat = true;
-                        }
-                        index++;
-                    }
-                    while (repeat == true && index != 3);
+                            tetristype = random.Next(1, 8);
 
-                    tetrominoHistoryAddItem(tetristype);
+                            if (tetrominoHistory.Contains<int>(tetristype))
+                            {
+                                repeat = true;
+                            }
+                            index++;
+                        }
+                        while (repeat == true && index != 3);
+
+                        tetrominoHistoryAddItem(tetristype);
+
 
                     activeTetromino += 1;
-                    tetrominoLockSoundEffect.Play();
+                    if (GlobalVar.OptionsArray[12].Equals("true"))
+                        tetrominoLockSoundEffect.Play();
                     //Sets new Tetromino in the Preview
                     tetromino.Add(new Tetromino(tetristype, blockTexture));
                     tetrominoGridPos.Add(new Vector2(28.5f, 4));
+                        activeTetromino += 1;
+                        //Sets new Tetromino in the Preview
+                        tetromino.Add(new Tetromino(tetristype, blockTexture));
+                        tetrominoGridPos.Add(new Vector2(28.5f, 4));
 
-                    //Moves previous Tetromino from the Preview to the game field
-                    tetrominoGridPos[activeTetromino] = new Vector2(13, 0);
+                        //Moves previous Tetromino from the Preview to the game field
+                        tetrominoGridPos[activeTetromino] = new Vector2(13, 0);
 
-                    tetrominoGridPos[activeTetromino] = new Vector2(12, 0);
+                        tetrominoGridPos[activeTetromino] = new Vector2(12, 0);
 
-                    tetrominoRotation = 0;
-                    tetrominoLastRotation = 0;
+                        tetrominoRotation = 0;
+                        tetrominoLastRotation = 0;
 
-                    if (tetrominoGridPos[activeTetromino - 1].Y == 0)
-                    {
-                        gameOver = true;
-                        gameWin = false;
-                    }
+                        if (tetrominoGridPos[activeTetromino - 1].Y == 0)
+                        {
+                            gameOver = true;
+                            gameWin = false;
+                        }
 
-                    rotationTestTetromino.setTetrisType(tetromino[activeTetromino].getTetrisType());
-                    rotationTestTetromino.setRotation(0);
+                        rotationTestTetromino.setTetrisType(tetromino[activeTetromino].getTetrisType());
+                        rotationTestTetromino.setRotation(0);
 
-                    milisecondsElapsedTetrominoTime -= milisecondsTetrominoLockDelayTime;
-                }
-            }
-
-            #endregion
-
-            #region Player Movement / Key Input
-
-            //Left
-            if (keyADown == true && playerCanNotMoveLeft == false && player1GridPos.X > 0)
-            {
-                if (Keyboard.GetState().IsKeyDown(Keys.A))
-                {
-                    keyADown = false;
-                    player1SpriteEffects = SpriteEffects.FlipHorizontally;
-                    player1GridPos.X -= 1;
-                }
-            }
-            if ((milisecondsElapsedKeyA - milisecondExpirationKeyA) >= 0)
-            {
-                if (keyADown == false)
-                {
-                    keyADown = true;
-                }
-
-                milisecondsElapsedKeyA -= milisecondExpirationKeyA;
-            }
-            else if (Keyboard.GetState().IsKeyUp(Keys.A))
-            {
-                if (keyADown == false)
-                {
-                    keyADown = true;
-                }
-            }
-
-            //Right
-            if (keyDDown == true && playerCanNotMoveRight == false && player1GridPos.X < gameField.GetLength(0) - 1)
-            {
-                if (Keyboard.GetState().IsKeyDown(Keys.D))
-                {
-                    keyDDown = false;
-                    player1SpriteEffects = SpriteEffects.None;
-                    player1GridPos.X += 1;
-                }
-            }
-            if ((milisecondsElapsedKeyD - milisecondExpirationKeyD) >= 0)
-            {
-                if (keyDDown == false)
-                {
-                    keyDDown = true;
-                }
-
-                milisecondsElapsedKeyD -= milisecondExpirationKeyD;
-            }
-            else if (Keyboard.GetState().IsKeyUp(Keys.D))
-            {
-                if (keyDDown == false)
-                {
-                    keyDDown = true;
-                }
-            }
-
-            //Up
-            if (keyWDown == true && playerCanNotMoveUp == false)
-            {
-                if (Keyboard.GetState().IsKeyDown(Keys.W))
-                {
-                    if (player1Jump == false)
-                    {
-                        keyWDown = false;
-                        player1GridPos.Y -= 1;
-                        player1Jump = true;
+                        milisecondsElapsedTetrominoTime -= milisecondsTetrominoLockDelayTime;
                     }
                 }
-            }
-            else if (Keyboard.GetState().IsKeyUp(Keys.W))
-            {
-                if (keyWDown == false)
-                {
-                    keyWDown = true;
-                }
-            }
 
-            //Player Jump Logic
-            if (player1Jump == true && !playerCanNotMoveUp)
-            {
-               if (milisecondsElapsedPlayerTime2 - milisecondsPlayerGravityTime2 >= 0)
+                #endregion
+
+                #region Player Movement / Key Input
+
+                //Left
+                if (keyADown == true && playerCanNotMoveLeft == false && player1GridPos.X > 0)
                 {
-                    if (!playerCanNotMoveDown && player1GridPos.Y < gameField.GetLength(1) - 1)
+                    if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[2], true)))
                     {
-                        player1GridPos.Y += 1;
+                        keyADown = false;
+                        player1SpriteEffects = SpriteEffects.FlipHorizontally;
+                        player1GridPos.X -= 1;
                     }
-                    milisecondsElapsedPlayerTime2 = 0;
-                    player1Jump = false;
                 }
-               milisecondsElapsedPlayerTime2 += gameTime.ElapsedGameTime.Milliseconds;
-            }
-            else
-            {
-                if (player1GridPos.Y < gameField.GetLength(1) && !playerCanNotMoveDown)
+                if ((milisecondsElapsedKeyA - milisecondExpirationKeyA) >= 0)
                 {
-                    if (milisecondsElapsedPlayerTime1 - milisecondsPlayerGravityTime1 >= 0)
+                    if (keyADown == false)
                     {
-                        if (player1GridPos.Y < gameField.GetLength(1) - 1 && !playerCanNotMoveDown)
+                        keyADown = true;
+                    }
+
+                    milisecondsElapsedKeyA -= milisecondExpirationKeyA;
+                }
+                else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[2], true)))
+                {
+                    if (keyADown == false)
+                    {
+                        keyADown = true;
+                    }
+                }
+
+                //Right
+                if (keyDDown == true && playerCanNotMoveRight == false && player1GridPos.X < gameField.GetLength(0) - 1)
+                {
+                    if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[3], true)))
+                    {
+                        keyDDown = false;
+                        player1SpriteEffects = SpriteEffects.None;
+                        player1GridPos.X += 1;
+                    }
+                }
+                if ((milisecondsElapsedKeyD - milisecondExpirationKeyD) >= 0)
+                {
+                    if (keyDDown == false)
+                    {
+                        keyDDown = true;
+                    }
+
+                    milisecondsElapsedKeyD -= milisecondExpirationKeyD;
+                }
+                else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[3], true)))
+                {
+                    if (keyDDown == false)
+                    {
+                        keyDDown = true;
+                    }
+                }
+
+                //Up
+                if (keyWDown == true && playerCanNotMoveUp == false)
+                {
+                    if (Keyboard.GetState().IsKeyDown((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[4], true)))
+                    {
+                        if (player1Jump == false)
+                        {
+                            keyWDown = false;
+                            player1GridPos.Y -= 1;
+                            player1Jump = true;
+                        }
+                    }
+                }
+                else if (Keyboard.GetState().IsKeyUp((Keys)Enum.Parse(typeof(Keys), GlobalVar.OptionsArray[4], true)))
+                {
+                    if (keyWDown == false)
+                    {
+                        keyWDown = true;
+                    }
+                }
+
+                //Player Jump Logic
+                if (player1Jump == true && !playerCanNotMoveUp)
+                {
+                    if (milisecondsElapsedPlayerTime2 - milisecondsPlayerGravityTime2 >= 0)
+                    {
+                        if (!playerCanNotMoveDown && player1GridPos.Y < gameField.GetLength(1) - 1)
                         {
                             player1GridPos.Y += 1;
                         }
-                        milisecondsElapsedPlayerTime1 -= milisecondsPlayerGravityTime1;
+                        milisecondsElapsedPlayerTime2 = 0;
+                        player1Jump = false;
+                    }
+                    milisecondsElapsedPlayerTime2 += gameTime.ElapsedGameTime.Milliseconds;
+                }
+                else
+                {
+                    if (player1GridPos.Y < gameField.GetLength(1) && !playerCanNotMoveDown)
+                    {
+                        if (milisecondsElapsedPlayerTime1 - milisecondsPlayerGravityTime1 >= 0)
+                        {
+                            if (player1GridPos.Y < gameField.GetLength(1) - 1 && !playerCanNotMoveDown)
+                            {
+                                player1GridPos.Y += 1;
+                            }
+                            milisecondsElapsedPlayerTime1 -= milisecondsPlayerGravityTime1;
+                        }
                     }
                 }
-            }
 
-            #endregion
+                #endregion
 
-            //Tetromino Updates
-            for (int k = 0; k < tetromino.Count - 1; k++)
-            {
-                tetromino[k].Update(tetrominoGridPos[k], gridStartPos, GlobalVar.ScaleSize);
-            }
-
-            //Block Preview Position
-            float farthestLeft = float.MaxValue, farthestRight = float.MinValue;
-
-            for (int p = 0; p < tetromino[tetromino.Count - 1].getPositions().Length; p++)
-            {
-                if (tetromino[tetromino.Count - 1].getPositions()[p].X < farthestLeft)
+                //Tetromino Updates
+                for (int k = 0; k < tetromino.Count - 1; k++)
                 {
-                    farthestLeft = tetromino[tetromino.Count - 1].getPositions()[p].X;
+                    tetromino[k].Update(tetrominoGridPos[k], gridStartPos, GlobalVar.ScaleSize);
                 }
-                if (tetromino[tetromino.Count - 1].getPositions()[p].X > farthestRight)
+
+                //Block Preview Position
+                float farthestLeft = float.MaxValue, farthestRight = float.MinValue;
+
+                for (int p = 0; p < tetromino[tetromino.Count - 1].getPositions().Length; p++)
                 {
-                    farthestRight = tetromino[tetromino.Count - 1].getPositions()[p].X;
+                    if (tetromino[tetromino.Count - 1].getPositions()[p].X < farthestLeft)
+                    {
+                        farthestLeft = tetromino[tetromino.Count - 1].getPositions()[p].X;
+                    }
+                    if (tetromino[tetromino.Count - 1].getPositions()[p].X > farthestRight)
+                    {
+                        farthestRight = tetromino[tetromino.Count - 1].getPositions()[p].X;
+                    }
                 }
+                tetrominoGridPos[tetromino.Count - 1] = new Vector2((GlobalVar.ScreenSize.X - (((224 * GlobalVar.ScaleSize.X) / 2) + ((((farthestRight - farthestLeft) + 1) * (blockTexture.Width * GlobalVar.ScaleSize.X)) / 2))) / (blockTexture.Width * GlobalVar.ScaleSize.X), 4);
+                tetromino[tetromino.Count - 1].Update(tetrominoGridPos[tetromino.Count - 1], new Vector2(0, gridStartPos.Y), GlobalVar.ScaleSize);
+
+                rotationTestTetromino.Update(tetrominoGridPos[activeTetromino], gridStartPos, GlobalVar.ScaleSize);
+
+                //Player Update
+                player1.Update(new Vector2(gridStartPos.X + (player1GridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (player1GridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), GlobalVar.ScaleSize, Color.White);
+
+                //Tutorial Update (A little ghetto)
+                if (GlobalVar.CurrentLevel.Equals("6"))
+                {
+                    tutorial.Update(gameTime, currentMouseState, previousMouseState);
+                }
+
+                //Store in Variable Last
+                player1GridPosPrevious = player1GridPos;
+
+                //checking to see if timer is 0
+                if ((timer - milisecondsElapsedTime) / 1000 <= 0)
+                {
+                    gameOver = true;
+                    gameWin = false;
+                }
+
+                tutorialFirstUpdateTrip = true;
             }
-            tetrominoGridPos[tetromino.Count - 1] = new Vector2((GlobalVar.ScreenSize.X - (((224 * GlobalVar.ScaleSize.X) / 2) + ((((farthestRight - farthestLeft) + 1) * (blockTexture.Width * GlobalVar.ScaleSize.X)) / 2))) / (blockTexture.Width * GlobalVar.ScaleSize.X), 4);
-            tetromino[tetromino.Count - 1].Update(tetrominoGridPos[tetromino.Count - 1], new Vector2(0, gridStartPos.Y), GlobalVar.ScaleSize);
-
-            rotationTestTetromino.Update(tetrominoGridPos[activeTetromino], gridStartPos, GlobalVar.ScaleSize);
-
-            //Player Update
-            player1.Update(new Vector2(gridStartPos.X + (player1GridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (player1GridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), GlobalVar.ScaleSize, Color.White);
-
-            //Store in Variable Last
-            player1GridPosPrevious = player1GridPos;
-
-            //checking to see if timer is 0
-            if ((timer - milisecondsElapsedTime) / 1000 <= 0)
+            else
             {
-                gameOver = true;
-                gameWin = false;
+                tutorial.Update(gameTime, currentMouseState, previousMouseState);
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch, SpriteFont font)
+        public void Draw(SpriteBatch spriteBatch)
         {
             Color backdropColor;
 
@@ -1060,8 +1007,6 @@ namespace Evolo.GameClass
 
                     //Draws the block to the screen at the specified point based on the for loop
                     spriteBatch.Draw(blockTexture, new Vector2(gridStartPos.X + ((blockTexture.Width * GlobalVar.ScaleSize.X) * j), gridStartPos.Y + ((blockTexture.Height * GlobalVar.ScaleSize.Y) * i)), null, backdropColor, 0, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 0);
-
-                    //spriteBatch.DrawString(SeqoeUIMonoNormal, "FPS: " + fpsManager.getFPS(), new Vector2((GlobalVar.ScreenSize.X - (SeqoeUIMonoNormal.MeasureString("FPS: " + fpsManager.getFPS()).X) * GlobalVar.ScaleSize.X) - 10, (5 * GlobalVar.ScaleSize.Y)), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 }
            
                 spriteBatch.DrawString(font, "Next Block:" , new Vector2(1090 * GlobalVar.ScaleSize.X, 35 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
@@ -1083,12 +1028,6 @@ namespace Evolo.GameClass
                     spriteBatch.DrawString(font, "HIGH SCORE " + "N/A", new Vector2(1120 * GlobalVar.ScaleSize.X, 265 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 }
 
-                //Tutorial Draw (A little ghetto)
-                if(GlobalVar.CurrentLevel.Equals("6"))
-                {
-                    spriteBatch.DrawString(font, "Objective:\nMove player to\the other platform and \nclear the number\nof lines indicated \non the right\n\nControls:\n -Player-\n Left: A\n Right: D\n Jump: W\n\n -Blocks-\n Left: LArrow\n Right: RArrow\n Rotate: UArrow\n SpeedUp: DArrow", new Vector2(blankBlockTexture.Width * GlobalVar.ScaleSize.X + 5, blankBlockTexture.Height * GlobalVar.ScaleSize.Y + 5), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
-                }
-
                 spriteBatch.DrawString(font, "Score: " + GlobalVar.Score, new Vector2(1120 * GlobalVar.ScaleSize.X, 305 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 spriteBatch.DrawString(font, "Lines left: " + linesToClear, new Vector2(1120 * GlobalVar.ScaleSize.X, 345 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 spriteBatch.DrawString(font, "Time left: " + (timer - milisecondsElapsedTime) / 1000, new Vector2(1120 * GlobalVar.ScaleSize.X, 385 * GlobalVar.ScaleSize.Y), Color.SpringGreen, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
@@ -1104,7 +1043,6 @@ namespace Evolo.GameClass
                         spriteBatch.DrawString(font, tetrominoHistory[p].ToString(), new Vector2((10 + (10 * p)) * GlobalVar.ScaleSize.X, 400 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                     }
                 }
-
 
                 //Debuging information for rotation
 
@@ -1129,6 +1067,12 @@ namespace Evolo.GameClass
 
                 spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (endPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (endPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), null, Color.White, 0f, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
                 spriteBatch.Draw(platformTexture, new Vector2(gridStartPos.X + (startPlatformGridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (startPlatformGridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), null, Color.White, 0f, new Vector2(0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
+
+                //Tutorial Draw (A little ghetto)
+                if (GlobalVar.CurrentLevel.Equals("6"))
+                {
+                    tutorial.Draw(spriteBatch);
+                }
             }
         }
 
@@ -1147,6 +1091,18 @@ namespace Evolo.GameClass
             return gameOver;
         }
 
+        public Boolean getTutorialActive()
+        {
+            if (GlobalVar.CurrentLevel.Equals("6"))
+            {
+                return tutorial.getIsActive();
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private void tetrominoHistoryAddItem(int tetrominoType)
         {
             for (int i = 3; i > 0; i--)
@@ -1162,6 +1118,10 @@ namespace Evolo.GameClass
             milisecondsElapsedTetrominoTime = 0;
             milisecondsElapsedPlayerTime1 = 0;
             milisecondsElapsedTime = 0;
+
+            //Reset Tutorial
+            tutorialFirstUpdateTrip = false;
+            tutorial.resetTutorial();
 
             //Level System Values
             levels.Update();

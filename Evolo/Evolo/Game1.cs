@@ -19,7 +19,7 @@ namespace Evolo
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        //SUPER IMPORTANT!!! DISABLE FOR ANY RELEASE VERSIONS!!
+        //SUPER IMPORTANT!!! DISABLE FOR ANY RELEASE VERSIONS!! (Also get hung up, so just leave disabled)
         private Boolean devErrorLoggingDisable = false;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
@@ -28,21 +28,16 @@ namespace Evolo
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         SpriteFont SeqoeUIMonoNormal, MenuFont;
-        FPSManager fpsManager;
-        OptionsHandler optionsHandler;
 
-        //TEMP CLASSES
+        //CLASSES
         FieldManager fieldManager;
         Background background;
         SplashScreenManager splashScreen;
-        //TEMP VARIABLES
-        Texture2D[] splashScreenImages;
-        float[] splashScreenWaitTime;
-        float orginalSplashScreenStartTime;
-        float milliScecondsElapsedGameTime;
+        FPSManager fpsManager;
+        OptionsHandler optionsHandler;
 
-        //TEMP Save location, change over to user specific at a later data
-        ErrorHandler errorHandler = new ErrorHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Evolo");// "C:\\Users\\Public\\Saved Games", "Evolo");
+        //Save location
+        ErrorHandler errorHandler = new ErrorHandler(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Evolo");
         MouseState mouseStateCurrent, mouseStatePrevious;
         Menus menus;
         Credits credits;
@@ -56,18 +51,23 @@ namespace Evolo
         //Variables
 
         //Game
-        String version = "Build V: 1.9.8.5"; // Major, Minor, Build, Revision #
+        String version = "Build V: 0.9.9.2"; // Major, Minor, Build, Revision #
         Boolean mainMenuTripped = false; //Boolean to chekc to see if the menus are active
         const int defualtWidth = 1280, defualtHeight = 720;
 
         //Keys
-        string[] keyBindingInfo = new string[8];
         Boolean isPressedEsc;
         Boolean isPressedRightBtn;
         Texture2D gameMouseTexture;
         //Sounds
         //Song mainMenuMusic;
         Boolean songTripped;
+
+        //Splash Screen
+        Texture2D[] splashScreenImages;
+        float[] splashScreenWaitTime;
+        float orginalSplashScreenStartTime;
+        float milliScecondsElapsedGameTime;
 
         //Credits
         String[] creditsStringArray = new String[13] { "CREDITS", "Team", "G. Stewart - StarByte Designer & Lead Programer", "K. Jones - Main Artist & Generation Programer", "D. Jones - Supporting Programer & Artist", "J. Estrada - Programer & Tester", "A Special Thanks To", "D. Ely" , "L. Powell" , "The Beta Testers", "AND", "To You The Player!", "Thank You For Playing!!!" };
@@ -105,12 +105,6 @@ namespace Evolo
                 graphics.IsFullScreen = Convert.ToBoolean(GlobalVar.OptionsArray[14]);
                 graphics.ApplyChanges();
 
-                //Sets Keybinding Info from options Load
-                for (int i = 0; i < keyBindingInfo.Length; i++)
-                {
-                    keyBindingInfo[i] = GlobalVar.OptionsArray[i + 2];
-                }
-
                 GlobalVar.ScaleSize = new Vector2(GlobalVar.ScreenSize.X / defualtWidth, GlobalVar.ScreenSize.Y / defualtHeight);
                 GlobalVar.GameState = "SplashScreen";
                 //Load up classes we need
@@ -125,7 +119,7 @@ namespace Evolo
                 fieldManager.Initialize();
                 background.Initialize();
 
-                menus.Initialize(keyBindingInfo);
+                menus.Initialize();
                 base.Initialize();
             }
             catch (Exception e)
@@ -158,7 +152,7 @@ namespace Evolo
 
                 //TEMP LOAD CONTENT
                 background.LoadContent(this.Content);
-                fieldManager.LoadContent(this.Content);
+                fieldManager.LoadContent(this.Content, SeqoeUIMonoNormal);
                 splashScreenImages = new Texture2D[3];
                 splashScreenImages[0] = Content.Load<Texture2D>("Sprites and pictures/CognativeThought");
                 splashScreenImages[1] = Content.Load<Texture2D>("Sprites and pictures/TwistedTransistors");
@@ -168,7 +162,7 @@ namespace Evolo
 
                 credits = new Credits(creditsStringArray, SeqoeUIMonoNormal);
 
-                //TEMP FINAL Initilize
+                //FINAL Initilize
                 orginalSplashScreenStartTime = gameTime.ElapsedGameTime.Seconds;
                 splashScreen = new SplashScreenManager(splashScreenImages, splashScreenWaitTime);
             }
@@ -238,7 +232,7 @@ namespace Evolo
 
                     case "Playing":
                         //MediaPlayer.Pause(mainMenuMusic);
-                        fieldManager.Update(gameTime);
+                        fieldManager.Update(gameTime, mouseStateCurrent, mouseStatePrevious);
                         background.Update(gameTime, milliScecondsElapsedGameTime);
 
                         if (fieldManager.getGameOver())
@@ -398,13 +392,13 @@ namespace Evolo
                 {
                     case "Playing":
                         background.Draw(spriteBatch, SeqoeUIMonoNormal);
-                        fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
+                        fieldManager.Draw(spriteBatch);
                         break;
                     case "MenuScreen":
                         background.Draw(spriteBatch, SeqoeUIMonoNormal);
                         if (menus.getMenuState() == "PauseMenu" || menus.getMenuState() == "GameWinMenu" || menus.getMenuState() == "GameLoseMenu")
                         {
-                            fieldManager.Draw(spriteBatch, SeqoeUIMonoNormal);
+                            fieldManager.Draw(spriteBatch);
                         }
                         menus.Draw(spriteBatch);
                         spriteBatch.DrawString(SeqoeUIMonoNormal, "LMB/RMB to navigate through menus", new Vector2(970 * GlobalVar.ScaleSize.X, 700 * GlobalVar.ScaleSize.Y), Color.White, 0f, new Vector2(0, 0), GlobalVar.ScaleSize, SpriteEffects.None, 1f);
@@ -422,7 +416,7 @@ namespace Evolo
               
 
                 //MOUSE DRAWING LOGIC
-                if (!(gameState == "Credits" || gameState == "SplashScreen" || gameState == "Playing"))
+                if (!(gameState == "Credits" || gameState == "SplashScreen" || (gameState == "Playing" && !fieldManager.getTutorialActive())))
                 {
                     if (GlobalVar.OptionsArray[9].Equals("false"))
                     {

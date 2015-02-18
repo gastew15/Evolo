@@ -25,7 +25,7 @@ namespace StarByte.ui
         private String[] buttonText;
         private int verticalSpacing, menuNumberSelected, menuNumberHover = 1, menuNumberHoverPrevious = 1;
         private Color[] textColor, orginalTextColor;
-        private Boolean testButtonMouseOver, isPressedUp, isPressedDown, isPressedEnter;
+        private Boolean testButtonMouseOver, isPressedUp, isPressedDown, isPressedEnter = true;
         private KeyboardState keybState;
         private SoundEffect menuHoverChangeSoundEffect, menuClickedSoundEffect;
         private Boolean overRideButtonPress = false;
@@ -412,6 +412,11 @@ namespace StarByte.ui
             menuNumberHover = buttonToPress;
             menuNumberHoverPrevious = buttonToPress;
             overRideButtonPress = true;
+        }
+
+        public void resetEnterTripped()
+        {
+            isPressedEnter = true;
         }
     }
 }
