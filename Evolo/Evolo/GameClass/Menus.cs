@@ -109,8 +109,8 @@ namespace Evolo.GameClass
             pauseMenuButtonText = new String[3] { "Resume", "Options", "Exit" };
             debugMenuButtonText = new String[4] { "Cursor: Game", "FPS: Off", "Debug Info: Off", "Back" };
             loadProfileMenuButtonText = new String[7] { "Profile 1", "Profile 2", "Profile 3", "Profile 4", "Profile 5", "Profile 6", "Back" };
-            gameLoseMenuText = new String[2] { "Restart", "Main Menu" };
-            gameWinMenuText = new String[2] { "Restart", "Main Menu" };
+            gameLoseMenuText = new String[2] { "Restart", "Level Select" };
+            gameWinMenuText = new String[2] { "Restart", "Level Select" };
             levelSelectMenuText = new String[7] { "Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Custom Level", "Back" };
             customLevelMenuText = new String[7] { "(Blank)", "(Blank)", "(Blank)", "(Blank)", "Previous", "Next", "Back" };
             loadRenameMenuText = new String[4] { "Load Profile", "Rename Profile", "Reset Profile", "Back" };
@@ -548,12 +548,12 @@ namespace Evolo.GameClass
                         {
                             if (previousKeyboardState.IsKeyUp(key))
                             {
-                                if (key == Keys.Back) // overflows
+                                if (key == Keys.Back) 
                                 {
-                                    if (keyRebindingText[0].Length > 0)
-                                        keyRebindingText[0] = keyRebindingText[0].Remove(keyRebindingText[0].Length - 1, 1);
+                                    //Clears Line
+                                    keyRebindingText[0] = "";
                                 }
-                                else if (key == Keys.Enter)
+                                else if (key == Keys.Enter && keyRebindingText[0].Length > 0)
                                 {
                                     keyBindingTripped = false;
 
@@ -564,18 +564,13 @@ namespace Evolo.GameClass
                                         GlobalVar.OptionsArray[optionsKeybindingMenuPage1.menuNumberSelection() + 1] = keyRebindingText[0];
                                     }
                                 }
-                                else if (key == Keys.Space)
-                                {
-                                    if (keyRebindingText[0].Length <= 11)
-                                        keyRebindingText[0] = keyRebindingText[0].Insert(keyRebindingText[0].Length, " ");
-                                }
                                 else
                                 {
                                     if (keyRebindingText[0].Length <= 11)
                                     {
                                         String keyString = key.ToString();
 
-                                        keyRebindingText[0] += keyString;
+                                        keyRebindingText[0] = keyString;
                                     }
                                 }
                             }
@@ -623,12 +618,12 @@ namespace Evolo.GameClass
                         {
                             if (previousKeyboardState.IsKeyUp(key))
                             {
-                                if (key == Keys.Back) // overflows
+                                if (key == Keys.Back)
                                 {
-                                    if (keyRebindingText[0].Length > 0)
-                                        keyRebindingText[0] = keyRebindingText[0].Remove(keyRebindingText[0].Length - 1, 1);
+                                    //Clears Line
+                                    keyRebindingText[0] = "";
                                 }
-                                else if (key == Keys.Enter)
+                                else if (key == Keys.Enter && keyRebindingText[0].Length > 0)
                                 {
                                     keyBindingTripped = false;
 
@@ -639,18 +634,13 @@ namespace Evolo.GameClass
                                         GlobalVar.OptionsArray[optionsKeybindingMenuPage2.menuNumberSelection() + 4] = keyRebindingText[0];
                                     }
                                 }
-                                else if (key == Keys.Space)
-                                {
-                                    if (keyRebindingText[0].Length <= 11)
-                                        keyRebindingText[0] = keyRebindingText[0].Insert(keyRebindingText[0].Length, " ");
-                                }
                                 else
                                 {
                                     if (keyRebindingText[0].Length <= 11)
                                     {
                                         String keyString = key.ToString();
 
-                                        keyRebindingText[0] += keyString;
+                                        keyRebindingText[0] = keyString;
                                     }
                                 }
                             }
@@ -780,7 +770,7 @@ namespace Evolo.GameClass
                     }
                     else if (gameLoseMenu.menuNumberSelection() == 2)
                     {
-                        menuState = "MainMenu";
+                        menuState = "LevelSelect";
                         MediaPlayer.Stop();
                     }
                     break;
@@ -822,7 +812,7 @@ namespace Evolo.GameClass
                     }
                     else if (gameWinMenu.menuNumberSelection() == 2)
                     {
-                        menuState = "MainMenu";
+                        menuState = "LevelSelect";
                         MediaPlayer.Stop();
                     }
                     break;
@@ -1203,7 +1193,7 @@ namespace Evolo.GameClass
 
         public void SetMenu(String menuState)
         {
-            if (!renameTripped)
+            if (!renameTripped && !keyBindingTripped)
                 this.menuState = menuState;
         }
 
