@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Audio;
 /**
  * Evolo Field Manager to handle most game related operations for the player and tetrominos
  * Author: Dalton, Josh, Gavin
- * Version: 1/29/15
+ * Version: 4/22/15
  */
 
 namespace Evolo.GameClass
@@ -692,7 +692,10 @@ namespace Evolo.GameClass
                     //Checks for block lock delay before locking in place and spawning new block
                     if (milisecondsElapsedTetrominoTime - milisecondsTetrominoLockDelayTime >= 1)
                     {
-                        blockLock.Play();
+                        if (Convert.ToBoolean(GlobalVar.OptionsArray[12]))
+                        {
+                            blockLock.Play();
+                        }
 
                         //New Boolean Array to tell the game which lines are filled
                         Boolean[] isfilled = new Boolean[4];
@@ -829,7 +832,10 @@ namespace Evolo.GameClass
                                         gameField[e, j] = gameField[e, j - 1];
                                     }
                                 }
-                                blockClear.Play();
+                                if (Convert.ToBoolean(GlobalVar.OptionsArray[12]))
+                                {
+                                    blockClear.Play();
+                                }
                             }        
                         }
                         //Adds Points for the lines cleared
