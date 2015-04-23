@@ -510,7 +510,7 @@ namespace Evolo.GameClass
                 }
 
                 //Player Reaching End Platform Check
-                if ((player1GridPos.Y == (endPlatformGridPos.Y - 1) && (player1GridPos.X == endPlatformGridPos.X) || (player1GridPos.X == endPlatformGridPos.X + 1) || (player1GridPos.X == endPlatformGridPos.X + 2)) && linesToClear == 0)
+                if ((player1GridPos.Y == (endPlatformGridPos.Y - 1) && (player1GridPos.X == endPlatformGridPos.X)) && linesToClear == 0)
                 {
                     gameWin = true;
 
