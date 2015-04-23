@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Audio;
 /**
  * Evolo Field Manager to handle most game related operations for the player and tetrominos
  * Author: Dalton, Josh, Gavin
- * Version: 4/22/15
+ * Version: 4/23/15
  */
 
 namespace Evolo.GameClass
@@ -39,6 +39,7 @@ namespace Evolo.GameClass
         private int milisecondsPlayerGravityTime2 = 450;
         private int timer;
         private int milisecondsElapsedTime = 0;
+        private double playerMovementASecond = 150;
 
         //Keyboard Variables / Misc
         private bool keyLeftDown, keyRightDown, keyUpDown;

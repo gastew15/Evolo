@@ -11,7 +11,7 @@ using StarByte.ui;
 /**
 * Evolo Tutorial System to be used to display tutorial information
 * Author: G. Stewart
-* Version: 2/13/15
+* Version: 4/23/15
 */
 namespace Evolo.GameClass
 {
@@ -123,7 +123,11 @@ namespace Evolo.GameClass
         {
                 isActive = true;
                 tutorialPopup.closeButtonPressed = false;
-                tutorialPopupCurrentTextSelection = 0;  
+                tutorialPopupCurrentTextSelection = 0;
+                tutorialPopupPosition = new Vector2((GlobalVar.ScreenSize.X / 2) - (tutorialPopupTexture.Width / 2), (GlobalVar.ScreenSize.Y / 2) - (tutorialPopupTexture.Height / 2));
+                tutorialPopupTextPosition = new Vector2(tutorialPopupTextPosition.X + (12 * GlobalVar.ScaleSize.X), tutorialPopupTextPosition.Y + (20 * GlobalVar.ScaleSize.Y));
+                tutorialPopupCloseButtonRect = new Rectangle((int)tutorialPopupPosition.X + (int)(380 * GlobalVar.ScaleSize.X), (int)tutorialPopupPosition.Y + (int)(2 * GlobalVar.ScaleSize.Y), (int)(tutorialPopupTexture.Width * GlobalVar.ScaleSize.X), (int)(tutorialPopupTexture.Height * GlobalVar.ScaleSize.Y));
+                tutorialPopup = new PopUpHandler(tutorialPopupTexture, tutorialPopupCloseButtonTexture, tutorialPopupPosition, tutorialPopupTextPosition, tutorialPopupVerticalLineSpacing, tutorialPopupLinesOnPage, getCurrentTextData(), font, getCurrentColorData(), GlobalVar.ScreenSize, tutorialPopupCloseButtonRect, tutorialPopupIsDragable);
         }
 
         public Boolean getIsActive()
