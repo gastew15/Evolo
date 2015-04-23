@@ -368,6 +368,7 @@ namespace Evolo.GameClass
                     else if (pauseMenu.menuNumberSelection() == 2)
                     {
                         GlobalVar.ResetGameField = true;
+                        GlobalVar.Score = 0;
                         GlobalVar.GameState = "Playing";
                     }
                     else if (pauseMenu.menuNumberSelection() == 3)
