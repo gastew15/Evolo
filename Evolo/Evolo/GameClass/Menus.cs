@@ -122,7 +122,7 @@ namespace Evolo.GameClass
             pauseMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
             debugMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
             loadProfileMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
-            levelSelectMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
+            levelSelectMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.LightBlue };
             customLevelMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
             loadRenameMenuColors = new Color[] { Color.DarkGray, Color.DarkGray, Color.DarkGray, Color.DarkGray };
             #endregion
@@ -1103,6 +1103,7 @@ namespace Evolo.GameClass
                 else
                     levelSelectMenuColors[u] = Color.DimGray;
             }
+            levelSelectMenuColors[5] = Color.LightBlue;
 
             //Checks if the menuState changed and if so set the menu hover back to 1
             if (previousMenuState != menuState)
