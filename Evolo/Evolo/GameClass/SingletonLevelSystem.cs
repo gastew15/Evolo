@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework;
 /**
 * Evolo Level System: uses a Singleton pattern to create a level system that will read dat files that contain data on the layout of each level
 * Author: Dalton
-* Version: 1/30/15
+* Version: 4/23/15
 */
 
 namespace Evolo.GameClass
@@ -117,44 +117,77 @@ namespace Evolo.GameClass
                         switch (i)
                         {
                             case 0:
-                                if (Convert.ToInt32(dataTest[i].Split(',')[0]) == null || Convert.ToInt32(dataTest[i].Split(',')[1]) == null)
+                                try
                                 {
+                                    Convert.ToInt32(dataTest[i].Split(',')[0]);
+                                    Convert.ToInt32(dataTest[i].Split(',')[1]);
+                                }
+                                catch(Exception e)
+                                {
+                                    String surpressWarning = e.Message;
                                     MessageBox.Show("The Player Position for this custom level is invalid, please revise custom level to assure it follows the level template provided in the Custom Level folder", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                                     error = true;
                                 }
                                 break;
                             case 1:
-                                if (Convert.ToInt32(dataTest[i].Split(',')[0]) == null || Convert.ToInt32(dataTest[i].Split(',')[1]) == null)
+                                try
                                 {
+                                    Convert.ToInt32(dataTest[i].Split(',')[0]);
+                                    Convert.ToInt32(dataTest[i].Split(',')[1]);
+                                }
+                                catch (Exception e)
+                                {
+                                    String surpressWarning = e.Message;
                                     MessageBox.Show("The Start Platform Position for this custom level is invalid, please revise custom level to assure it follows the level template provided in the Custom Level folder", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                                     error = true;
                                 }
                                 break;
                             case 2:
-                                if (Convert.ToInt32(dataTest[i].Split(',')[0]) == null || Convert.ToInt32(dataTest[i].Split(',')[1]) == null)
+                                try
                                 {
+                                    Convert.ToInt32(dataTest[i].Split(',')[0]);
+                                    Convert.ToInt32(dataTest[i].Split(',')[1]);
+                                }
+                                catch (Exception e)
+                                {
+                                    String surpressWarning = e.Message;
                                     MessageBox.Show("The End Platform Position for this custom level is invalid, please revise custom level to assure it follows the level template provided in the Custom Level folder", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                                     error = true;
                                 }
                                 break;
                             case 3:
-                                if (Convert.ToDouble(dataTest[i]) == null)
+                                try
                                 {
+                                    Convert.ToDouble(dataTest[i]);
+                                }
+                                catch (Exception e)
+                                {
+                                    String surpressWarning = e.Message;
                                     MessageBox.Show("The level mod for this custom level is invalid, please revise custom level to assure it follows the level template provided in the Custom Level folder", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                                     error = true;
                                 }
                                 break;
                             case 4:
-                                if (Convert.ToInt32(dataTest[i]) == null)
+                                try
                                 {
+                                    Convert.ToInt32(dataTest[i]);
+                                }
+                                catch (Exception e)
+                                {
+                                    String surpressWarning = e.Message;
                                     MessageBox.Show("The timer for this custom level is invalid, please revise custom level to assure it follows the level template provided in the Custom Level folder", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                                     error = true;
                                 }
                                 break;
                             case 5:
-                                if (Convert.ToInt32(dataTest[i]) == null)
+                                try
                                 {
-                                    MessageBox.Show("The Line needed to clear the level for this custom level is invalid, please revise custom level to assure it follows the level template provided in the Custom Level folder","File Error",MessageBoxButtons.OK,MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                                    Convert.ToInt32(dataTest[i]);
+                                }
+                                catch (Exception e)
+                                {
+                                    String surpressWarning = e.Message;
+                                    MessageBox.Show("The Line needed to clear the level for this custom level is invalid, please revise custom level to assure it follows the level template provided in the Custom Level folder", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                                     error = true;
                                 }
                                 break;
@@ -165,15 +198,12 @@ namespace Evolo.GameClass
                 {
                     MessageBox.Show("Level File is invalid, please edit the file to contain valid data. Read the Level Template file provided for more information on valid level data.", "File Error",MessageBoxButtons.OK,MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     error = true;
-
                 }
 
                 #endregion
             }
 
         }
-
-
 
         public void setLevel(String levelName)
         {
