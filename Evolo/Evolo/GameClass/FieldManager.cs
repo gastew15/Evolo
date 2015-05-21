@@ -1021,7 +1021,7 @@ namespace Evolo.GameClass
                 rotationTestTetromino.Update(tetrominoGridPos[activeTetromino], gridStartPos, GlobalVar.ScaleSize);
 
                 //Player Update
-                player1.Update(GlobalVar.ScaleSize);
+                player1.Update(new Vector2(gridStartPos.X + (player1GridPos.X * (blockTexture.Width * GlobalVar.ScaleSize.X)), gridStartPos.Y + (player1GridPos.Y * (blockTexture.Height * GlobalVar.ScaleSize.Y))), GlobalVar.ScaleSize, Color.White);
 
                 //Tutorial Update (A little ghetto)
                 if (GlobalVar.CurrentLevel.Equals("6"))
@@ -1252,7 +1252,7 @@ namespace Evolo.GameClass
             lastActiveTetromino = activeTetromino;
 
             //Player Set Up
-            player1 = new Player(playerTexture, new Vector2(player1GridPos.X * fullBlockTexture.Width * GlobalVar.ScaleSize.X, player1GridPos.Y * fullBlockTexture.Height * GlobalVar.ScaleSize.Y));
+            player1 = new Player(playerTexture);
 
             for (int i = 0; i < 3; i++)
             {
