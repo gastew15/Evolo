@@ -847,8 +847,9 @@ namespace Evolo.GameClass
                         int index = 0;
                         do
                         {
-                            tetristype = random.Next(1, 8);
 
+                            tetristype = random.Next(1, 8);
+                            repeat = false;
                             if (tetrominoHistory.Contains<int>(tetristype))
                             {
                                 repeat = true;
